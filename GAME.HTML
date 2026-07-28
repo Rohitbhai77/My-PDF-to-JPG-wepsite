@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Web Tools & Gaming Suite</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EJPG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --neon-pink: #ff2a75;
+      --neon-cyan: #00f2fe;
+      --neon-yellow: #ffd166;
+      --btn-gradient: linear-gradient(135deg, #ff007f, #7928ca);
+      --btn-success: linear-gradient(135deg, #00b09b, #96c93d);
+      --glass-bg: rgba(13, 21, 39, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.9) 100%),
+                  url('https://wallpapercave.com/uwp/uwp5068026.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: #ffffff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Cross-Navigation Bar */
+    .top-nav-bar {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: rgba(8, 12, 22, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 10px 20px;
+      border-radius: 40px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      margin-bottom: 25px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 30px;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: linear-gradient(135deg, var(--neon-cyan), #4facfe);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+      border-color: transparent;
+    }
+
+    .nav-btn.crop-btn:hover, .nav-btn.crop-btn.active {
+      background: linear-gradient(135deg, #00f2fe, #7928ca);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.8);
+    }
+
+    .nav-btn.game-btn:hover, .nav-btn.game-btn.active {
+      background: linear-gradient(135deg, #ff2a75, #ff007f);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 42, 117, 0.8);
+    }
+
+    .sound-toggle-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--glass-border);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Modules Section */
+    .module-section {
+      display: none;
+      width: 100%;
+      max-width: 950px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .module-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main Card Layout */
+    .main-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 30px 25px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+    }
+
+    .animated-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #ffffff, var(--neon-cyan), var(--neon-pink), var(--neon-yellow));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowGlow 4s ease infinite;
+      margin-bottom: 8px;
+    }
+
+    @keyframes rainbowGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    .btn-primary { background: var(--btn-gradient); box-shadow: 0 0 15px rgba(255, 0, 127, 0.5); }
+    .btn-success { background: var(--btn-success); box-shadow: 0 0 15px rgba(0, 176, 155, 0.5); }
+    .btn-cyan { background: linear-gradient(135deg, #00f2fe, #00b4d8); color: #000; box-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ==========================================
+       1. CROP TOOL STYLES & FIXES
+       ========================================== */
+    .crop-box-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 20px auto;
+      border: 2px dashed var(--neon-pink);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #080c16;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: move;
+      box-shadow: 0 0 20px rgba(255, 42, 117, 0.3);
+    }
+
+    .crop-mask {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      border-radius: 50%;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75);
+      border: 2px solid var(--neon-cyan);
+      transition: border-radius 0.3s ease;
+    }
+
+    .crop-mask.square-mask {
+      border-radius: 0%;
+    }
+
+    #cropCanvas {
+      position: absolute;
+      z-index: 1;
+      cursor: grab;
+    }
+
+    #cropCanvas:active {
+      cursor: grabbing;
+    }
+
+    .crop-placeholder {
+      color: var(--neon-cyan);
+      font-weight: 700;
+      font-size: 1.1rem;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    /* ==========================================
+       2. PDF CONVERTER STYLES
+       ========================================== */
+    .drop-zone {
+      border: 2px dashed rgba(0, 242, 254, 0.7);
+      border-radius: 20px;
+      padding: 40px 20px;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .drop-zone:hover {
+      border-color: var(--neon-pink);
+      background: rgba(255, 42, 117, 0.15);
+    }
+
+    .progress-bar-container { margin-top: 25px; display: none; }
+    .progress-track {
+      width: 100%; height: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+    .progress-fill {
+      width: 0%; height: 100%;
+      background: linear-gradient(90deg, #00f2fe, #ff2a75);
+      border-radius: 20px;
+      transition: width 0.2s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px; margin-top: 20px;
+    }
+    .page-card {
+      background: rgba(10, 15, 28, 0.85);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      padding: 10px;
+    }
+    .page-card img { width: 100%; border-radius: 8px; }
+
+    /* ==========================================
+       3. EMOJI & MEMORY GAME STYLES
+       ========================================== */
+    .hud-bar {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(0,0,0,0.4);
+      padding: 12px;
+      border-radius: 16px;
+      margin-bottom: 15px;
+      border: 1px solid var(--glass-border);
+    }
+    .hud-val { font-size: 1.2rem; font-weight: bold; color: var(--neon-cyan); }
+
+    .emoji-grid {
+      display: grid; gap: 10px; margin: 20px auto;
+      justify-content: center; align-items: center; max-width: 500px;
+    }
+    .emoji-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      display: flex; justify-content: center; align-items: center;
+      cursor: pointer; transition: transform 0.15s, background 0.2s;
+    }
+    .emoji-card:hover { transform: scale(1.08); background: rgba(0, 242, 254, 0.2); }
+
+    .memory-grid {
+      display: grid; gap: 10px; margin: 20px auto; perspective: 1000px;
+    }
+    .grid-4x4 { grid-template-columns: repeat(4, 1fr); width: 320px; height: 320px; }
+
+    .card {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.4s; cursor: pointer;
+    }
+    .card.flipped, .card.matched { transform: rotateY(180deg); }
+    .card-face {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; border: 1px solid var(--glass-border);
+    }
+    .card-back { background: rgba(30, 41, 59, 0.9); }
+    .card-front { background: rgba(10, 10, 10, 0.95); transform: rotateY(180deg); border-color: var(--neon-cyan); }
+
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
+    }
+    .modal.active { display: flex; }
+    .modal-box {
+      background: #0d1527; padding: 30px; border-radius: 20px;
+      border: 1px solid var(--glass-border); text-align: center; max-width: 400px; width: 90%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CROSS NAVIGATION BAR -->
+  <div class="top-nav-bar">
+    <button class="nav-btn crop-btn active" id="btnCrop" onclick="switchModule('crop')">🔴 Ultimate Crop</button>
+    <button class="nav-btn" id="btnPdf" onclick="switchModule('pdf')">📄 PDF to JPG</button>
+    <button class="nav-btn game-btn" id="btnEmoji" onclick="switchModule('emoji')">🕵️ Find Emoji</button>
+    <button class="nav-btn game-btn" id="btnMemory" onclick="switchModule('memory')">🧠 Memory Master</button>
+    <button class="sound-toggle-btn" id="soundBtn" onclick="toggleAudio()">🔊 Sound</button>
+  </div>
+
+  <!-- ==========================================
+       MODULE 1: ULTIMATE CROP TOOL (FIXED)
+       ========================================== -->
+  <div class="module-section active" id="moduleCrop">
+    <div class="main-card" style="max-width: 550px; margin: 0 auto;">
+      <h1 class="animated-title">✨ Ultimate Crop Tool</h1>
+      <p style="color: #ccc; font-size: 0.9rem;">Crop your images in perfect Circle or Square shapes</p>
+
+      <!-- Crop Area Box -->
+      <div class="crop-box-wrapper" id="cropWrapper">
+        <div class="crop-mask" id="cropMask"></div>
+        <div class="crop-placeholder" id="cropPlaceholder">Upload an image to start cropping</div>
+        <canvas id="cropCanvas"></canvas>
+      </div>
+
+      <!-- Drag / Scroll Hint -->
+      <div style="font-size: 0.85rem; color: var(--neon-yellow); margin-bottom: 10px;">
+        💡 Drag image to move • Use Mouse Scroll or Buttons to Zoom
+      </div>
+
+      <!-- Controls Row -->
+      <div class="controls-row">
+        <button class="btn btn-secondary" onclick="zoomImage(1.1)">🔍 Zoom In</button>
+        <button class="btn btn-secondary" onclick="zoomImage(0.9)">🔍 Zoom Out</button>
+        <button class="btn btn-secondary" onclick="resetCrop()">🔄 Reset</button>
+      </div>
+
+      <!-- Hidden Input for Image Upload -->
+      <input type="file" id="imageUploader" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+
+      <div class="controls-row" style="margin-top: 15px;">
+        <button class="btn btn-cyan" onclick="triggerFileSelect()">📁 Upload Image</button>
+        <button class="btn btn-secondary" onclick="toggleShape()">🔄 Circle / Square</button>
+        <button class="btn btn-success" id="downloadCropBtn" onclick="downloadCroppedImage()" disabled>⬇ Download Crop</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODULE 2: BULK PDF TO JPG CONVERTER
+       ========================================== -->
+  <div class="module-section" id="modulePdf">
+    <div class="main-card">
+      <h1 class="animated-title">⚡ Bulk PDF to JPG Pro</h1>
+      <p style="color: #ccc; margin-bottom: 20px;">Fast Multi-PDF Conversion • Ultra HD Quality</p>
+
+      <div class="drop-zone" onclick="document.getElementById('pdfInput').click()">
+        <span style="font-size: 40px;">🚀</span>
+        <div style="font-weight: 800; font-size: 1.2rem; margin-top: 10px;">Drag & Drop PDFs here</div>
+        <div style="color: #aaa; font-size: 0.9rem;">or click to browse from device</div>
+        <input type="file" id="pdfInput" accept="application/pdf" multiple style="display:none;" />
+      </div>
+
+      <div class="controls-row" style="margin-top: 20px;">
+        <button id="convertBtn" class="btn btn-primary" onclick="processAllFiles()" disabled>⚡ Convert All PDFs</button>
+        <button id="downloadZipBtn" class="btn btn-success" onclick="downloadMasterZip()" style="display: none;">📦 Download Master ZIP</button>
+      </div>
+
+      <div class="progress-bar-container" id="progressContainer">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div style="margin-top: 10px; font-weight: bold; color: var(--neon-cyan);" id="statusText">Processing...</div>
+      </div>
+    </div>
+    <div id="outputSection" style="margin-top: 25px;"></div>
+  </div>
+
+  <!-- ==========================================
+       MODULE 3: FIND THE DIFFERENT EMOJI GAME
+       ========================================== -->
+  <div class="module-section" id="moduleEmoji">
+    <div class="main-card">
+      <h1 class="animated-title">🕵️ Emoji Detective</h1>
+      <p style="color: #ccc; margin-bottom: 15px;">Spot the odd emoji before time runs out!</p>
+
+      <div class="hud-bar">
+        <div><div class="hud-val" id="emLevel">1</div><div>LEVEL</div></div>
+        <div><div class="hud-val" id="emTimer">15s</div><div>TIME</div></div>
+        <div><div class="hud-val" id="emScore">0</div><div>SCORE</div></div>
+      </div>
+
+      <div class="emoji-grid" id="emojiGrid"></div>
+
+      <div class="controls-row">
+        <button class="btn btn-secondary" onclick="useEmojiHint()">💡 Hint (<span id="emHints">3</span>)</button>
+        <button class="btn btn-secondary" onclick="startEmojiGame()">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODULE 4: MEMORY MASTER GAME
+       ========================================== -->
+  <div class="module-section" id="moduleMemory">
+    <div class="main-card">
+      <h1 class="animated-title">🧠 Memory Master</h1>
+      <p style="color: #ccc; margin-bottom: 15px;">Match all pairs of cards!</p>
+
+      <div class="hud-bar">
+        <div><div class="hud-val" id="memTimer">00:00</div><div>TIME</div></div>
+        <div><div class="hud-val" id="memMoves">0</div><div>MOVES</div></div>
+        <div><div class="hud-val" id="memMatches">0/8</div><div>MATCHES</div></div>
+      </div>
+
+      <div class="memory-grid grid-4x4" id="memoryGrid"></div>
+
+      <div class="controls-row">
+        <button class="btn btn-primary" onclick="startMemoryGame()">▶ Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL POPUP -->
+  <div class="modal" id="gameOverModal">
+    <div class="modal-box">
+      <h2 id="modalTitle">🎉 LEVEL COMPLETE!</h2>
+      <p id="modalDesc" style="margin: 15px 0; color: #ccc;"></p>
+      <button class="btn btn-primary" onclick="closeModal()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================
+       AUDIO SYNTHESIZER
+       ========================================== */
+    class SoundEngine {
+      constructor() { this.ctx = null; this.enabled = true; }
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      tone(freq, type, duration) {
+        if (!this.enabled) return;
+        this.init();
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(); osc.stop(this.ctx.currentTime + duration);
+        } catch(e){}
+      }
+      pop() { this.tone(600, 'sine', 0.08); }
+      wrong() { this.tone(150, 'sawtooth', 0.2); }
+      win() { this.tone(523, 'triangle', 0.3); }
+    }
+    const sound = new SoundEngine();
+    function toggleAudio() {
+      sound.enabled = !sound.enabled;
+      document.getElementById('soundBtn').innerText = sound.enabled ? '🔊 Sound' : '🔇 Muted';
+    }
+
+    /* ==========================================
+       MODULE NAVIGATION
+       ========================================== */
+    function switchModule(mod) {
+      document.querySelectorAll('.module-section').forEach(m => m.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      if (mod === 'crop') {
+        document.getElementById('moduleCrop').classList.add('active');
+        document.getElementById('btnCrop').classList.add('active');
+      } else if (mod === 'pdf') {
+        document.getElementById('modulePdf').classList.add('active');
+        document.getElementById('btnPdf').classList.add('active');
+      } else if (mod === 'emoji') {
+        document.getElementById('moduleEmoji').classList.add('active');
+        document.getElementById('btnEmoji').classList.add('active');
+        startEmojiGame();
+      } else if (mod === 'memory') {
+        document.getElementById('moduleMemory').classList.add('active');
+        document.getElementById('btnMemory').classList.add('active');
+        startMemoryGame();
+      }
+    }
+
+    /* ==========================================
+       1. CROP TOOL ENGINE (COMPLETE FIX)
+       ========================================== */
+    const cropCanvas = document.getElementById('cropCanvas');
+    const ctx = cropCanvas.getContext('2d');
+    const cropWrapper = document.getElementById('cropWrapper');
+    const cropPlaceholder = document.getElementById('cropPlaceholder');
+    const downloadCropBtn = document.getElementById('downloadCropBtn');
+    const cropMask = document.getElementById('cropMask');
+
+    let loadedImg = null;
+    let imgX = 0, imgY = 0;
+    let imgScale = 1;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let isCircleShape = true;
+
+    function triggerFileSelect() {
+      document.getElementById('imageUploader').click();
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        loadedImg = new Image();
+        loadedImg.onload = function() {
+          cropPlaceholder.style.display = 'none';
+          downloadCropBtn.disabled = false;
+          resetCrop();
+        };
+        loadedImg.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function drawCropCanvas() {
+      if (!loadedImg) return;
+      cropCanvas.width = cropWrapper.clientWidth;
+      cropCanvas.height = cropWrapper.clientHeight;
+
+      ctx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
+      ctx.save();
+      
+      const drawW = loadedImg.width * imgScale;
+      const drawH = loadedImg.height * imgScale;
+
+      ctx.drawImage(loadedImg, imgX, imgY, drawW, drawH);
+      ctx.restore();
+    }
+
+    function resetCrop() {
+      if (!loadedImg) return;
+      const wrapW = cropWrapper.clientWidth;
+      const wrapH = cropWrapper.clientHeight;
+
+      // Fit image smoothly inside wrapper
+      const scaleW = wrapW / loadedImg.width;
+      const scaleH = wrapH / loadedImg.height;
+      imgScale = Math.max(scaleW, scaleH);
+
+      imgX = (wrapW - loadedImg.width * imgScale) / 2;
+      imgY = (wrapH - loadedImg.height * imgScale) / 2;
+
+      drawCropCanvas();
+    }
+
+    function zoomImage(factor) {
+      if (!loadedImg) return;
+      const prevScale = imgScale;
+      imgScale *= factor;
+
+      // Zoom towards center of box
+      const wrapW = cropWrapper.clientWidth / 2;
+      const wrapH = cropWrapper.clientHeight / 2;
+      
+      imgX = wrapW - (wrapW - imgX) * (imgScale / prevScale);
+      imgY = wrapH - (wrapH - imgY) * (imgScale / prevScale);
+
+      drawCropCanvas();
+    }
+
+    function toggleShape() {
+      isCircleShape = !isCircleShape;
+      cropMask.classList.toggle('square-mask', !isCircleShape);
+    }
+
+    // Drag / Move Events
+    cropWrapper.addEventListener('mousedown', (e) => {
+      if (!loadedImg) return;
+      isDragging = true;
+      startX = e.clientX - imgX;
+      startY = e.clientY - imgY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging || !loadedImg) return;
+      imgX = e.clientX - startX;
+      imgY = e.clientY - startY;
+      drawCropCanvas();
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    // Scroll Zoom
+    cropWrapper.addEventListener('wheel', (e) => {
+      if (!loadedImg) return;
+      e.preventDefault();
+      zoomImage(e.deltaY < 0 ? 1.08 : 0.92);
+    });
+
+    // Download Rendered Crop
+    function downloadCroppedImage() {
+      if (!loadedImg) return;
+
+      const exportCanvas = document.createElement('canvas');
+      const exportCtx = exportCanvas.getContext('2d');
+      const size = 500; // High Quality Output
+      exportCanvas.width = size;
+      exportCanvas.height = size;
+
+      if (isCircleShape) {
+        exportCtx.beginPath();
+        exportCtx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+        exportCtx.clip();
+      }
+
+      // Map positions accurately
+      const scaleRatio = size / cropWrapper.clientWidth;
+      exportCtx.drawImage(
+        loadedImg, 
+        imgX * scaleRatio, 
+        imgY * scaleRatio, 
+        (loadedImg.width * imgScale) * scaleRatio, 
+        (loadedImg.height * imgScale) * scaleRatio
+      );
+
+      const link = document.createElement('a');
+      link.download = isCircleShape ? 'Circle_Crop.png' : 'Square_Crop.png';
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+      sound.win();
+    }
+
+    /* ==========================================
+       2. PDF CONVERTER LOGIC
+       ========================================== */
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    let fileQueue = [];
+    let processedResults = [];
+
+    const pdfInput = document.getElementById('pdfInput');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadZipBtn = document.getElementById('downloadZipBtn');
+
+    pdfInput.addEventListener('change', (e) => {
+      fileQueue = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
+      convertBtn.disabled = fileQueue.length === 0;
+    });
+
+    async function processAllFiles() {
+      document.getElementById('progressContainer').style.display = 'block';
+      const output = document.getElementById('outputSection');
+      output.innerHTML = ''; processedResults = [];
+
+      let globalPages = 0, currentProcessed = 0;
+      for (let f of fileQueue) {
+        const buf = await f.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+        globalPages += pdf.numPages;
+
+        const group = document.createElement('div');
+        group.innerHTML = `<h3 style="margin: 15px 0;">📄 ${f.name}</h3><div class="grid" id="grid-${f.name}"></div>`;
+        output.appendChild(group);
+        const grid = group.querySelector('.grid');
+
+        const fileImgs = [];
+        for (let p = 1; p <= pdf.numPages; p++) {
+          currentProcessed++;
+          document.getElementById('progressFill').style.width = `${Math.round((currentProcessed/globalPages)*100)}%`;
+
+          const page = await pdf.getPage(p);
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width; canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+          const imgUrl = canvas.toDataURL('image/jpeg', 0.9);
+          fileImgs.push({ name: `${f.name}_page_${p}.jpg`, data: imgUrl.split(',')[1] });
+
+          grid.innerHTML += `<div class="page-card"><img src="${imgUrl}"><span>Page ${p}</span></div>`;
+        }
+        processedResults.push({ folder: f.name, images: fileImgs });
+      }
+      downloadZipBtn.style.display = 'inline-flex';
+    }
+
+    function downloadMasterZip() {
+      const zip = new JSZip();
+      processedResults.forEach(r => {
+        const f = zip.folder(r.folder);
+        r.images.forEach(img => f.file(img.name, img.data, { base64: true }));
+      });
+      zip.generateAsync({ type: 'blob' }).then(c => saveAs(c, 'Converted_PDFs.zip'));
+    }
+
+    /* ==========================================
+       3. EMOJI DETECTIVE LOGIC
+       ========================================== */
+    const emojiPairs = [
+      ['😀', '😁'], ['😃', '😄'], ['🌮', '🌯'], ['🐶', '🐺'], ['🚗', '🏎️'],
+      ['👑', '👒'], ['⚽', '🏀'], ['🔥', '💥'], ['⭐', '🌟'], ['🍕', '🍔']
+    ];
+
+    let emLevel = 1, emScore = 0, emTime = 15, emTimerInt = null, emHints = 3;
+
+    function startEmojiGame() {
+      emLevel = 1; emScore = 0; emHints = 3;
+      document.getElementById('emHints').innerText = emHints;
+      loadEmojiLevel();
+    }
+
+    function loadEmojiLevel() {
+      clearInterval(emTimerInt);
+      emTime = Math.max(5, 16 - Math.floor(emLevel / 2));
+      document.getElementById('emLevel').innerText = emLevel;
+      document.getElementById('emScore').innerText = emScore;
+      document.getElementById('emTimer').innerText = `${emTime}s`;
+
+      const grid = document.getElementById('emojiGrid');
+      grid.innerHTML = '';
+
+      let cols = 3;
+      if (emLevel > 3) cols = 4;
+      if (emLevel > 8) cols = 5;
+
+      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      const totalItems = cols * cols;
+      const oddIndex = Math.floor(Math.random() * totalItems);
+      const pair = emojiPairs[Math.floor(Math.random() * emojiPairs.length)];
+
+      for (let i = 0; i < totalItems; i++) {
+        const card = document.createElement('div');
+        card.className = 'emoji-card';
+        card.style.fontSize = cols > 4 ? '1.5rem' : '2.2rem';
+        card.style.height = cols > 4 ? '50px' : '65px';
+        card.innerText = i === oddIndex ? pair[1] : pair[0];
+
+        card.onclick = () => {
+          if (i === oddIndex) {
+            sound.pop();
+            emScore += 10 * emLevel;
+            emLevel++;
+            confetti({ particleCount: 30, spread: 60 });
+            loadEmojiLevel();
+          } else {
+            sound.wrong();
+            emTime = Math.max(0, emTime - 3);
+            document.getElementById('emTimer').innerText = `${emTime}s`;
+          }
+        };
+        grid.appendChild(card);
+      }
+
+      emTimerInt = setInterval(() => {
+        emTime--;
+        document.getElementById('emTimer').innerText = `${emTime}s`;
+        if (emTime <= 0) {
+          clearInterval(emTimerInt);
+          sound.wrong();
+          showModal('GAME OVER!', `Reached Level ${emLevel} with Score: ${emScore}`);
+        }
+      }, 1000);
+    }
+
+    function useEmojiHint() {
+      if (emHints <= 0) return;
+      emHints--;
+      document.getElementById('emHints').innerText = emHints;
+      document.getElementById('emojiGrid').style.background = 'rgba(255, 209, 102, 0.3)';
+      setTimeout(() => document.getElementById('emojiGrid').style.background = 'transparent', 300);
+    }
+
+    /* ==========================================
+       4. MEMORY MASTER LOGIC
+       ========================================== */
+    let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0;
+
+    function startMemoryGame() {
+      const icons = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+      const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+      const grid = document.getElementById('memoryGrid');
+      grid.innerHTML = ''; memFlipped = []; memMatched = 0; memMoves = 0;
+      document.getElementById('memMoves').innerText = '0';
+      document.getElementById('memMatches').innerText = '0/8';
+
+      memCards = deck.map((icon, idx) => {
+        const c = document.createElement('div');
+        c.className = 'card';
+        c.innerHTML = `<div class="card-face card-back">🧠</div><div class="card-face card-front">${icon}</div>`;
+        c.onclick = () => flipMemCard(idx, c, icon);
+        grid.appendChild(c);
+        return { icon, element: c, matched: false };
+      });
+    }
+
+    function flipMemCard(idx, el, icon) {
+      if (memFlipped.length === 2 || memCards[idx].matched || memFlipped.includes(idx)) return;
+      sound.pop();
+      el.classList.add('flipped');
+      memFlipped.push(idx);
+
+      if (memFlipped.length === 2) {
+        memMoves++;
+        document.getElementById('memMoves').innerText = memMoves;
+        const [i1, i2] = memFlipped;
+
+        if (memCards[i1].icon === memCards[i2].icon) {
+          sound.win();
+          memCards[i1].matched = memCards[i2].matched = true;
+          memMatched++;
+          document.getElementById('memMatches').innerText = `${memMatched}/8`;
+          memFlipped = [];
+          if (memMatched === 8) {
+            confetti({ particleCount: 100 });
+            showModal('VICTORY!', `Cleared in ${memMoves} moves!`);
+          }
+        } else {
+          setTimeout(() => {
+            memCards[i1].element.classList.remove('flipped');
+            memCards[i2].element.classList.remove('flipped');
+            memFlipped = [];
+          }, 800);
+        }
+      }
+    }
+
+    /* MODAL HELPERS */
+    function showModal(title, desc) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalDesc').innerText = desc;
+      document.getElementById('gameOverModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('gameOverModal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
