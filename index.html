@@ -62,7 +62,7 @@
       filter: brightness(0.85) contrast(1.05);
     }
 
-    /* Soft Dark Overlay to ensure video visibility & UI readability */
+    /* Soft Dark Overlay for UI Readability */
     .bg-overlay {
       position: fixed;
       top: 0;
@@ -469,7 +469,7 @@
 
   <div class="bg-video-container">
     <video autoplay loop muted playsinline>
-      <source src="http://googleusercontent.com/generated_video_content/5252090959653923575" type="video/mp4">
+      <source src="oggy-bg.mp4" type="video/mp4">
       Your browser does not support video background.
     </video>
   </div>
@@ -535,7 +535,7 @@
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    let currentMode = 'pdf2jpg'; // Default mode
+    let currentMode = 'pdf2jpg';
     let fileQueue = [];
     let processedResults = [];
     let createdPdfBlob = null;
