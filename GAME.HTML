@@ -357,8 +357,8 @@
 </head>
 <body>
 
-<STYLE>
-<a href="index.html">home 🏠</a>
+<style>
+.home-btn {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -375,14 +375,16 @@
     text-decoration: none;
     color: #fff;
     box-shadow: 0 8px 30px rgba(0,0,0,.3);
-    transition: .3s;
+    transition: 0.3s;
 }
 
-.home-btn:hover{
+.home-btn:hover {
     transform: scale(1.15);
-    background:#0d6efd;
+    background: #0d6efd;
 }
-</STYLE>
+</style>
+
+<a href="index.html" class="home-btn">🏠</a>
 
 <!-- CROSS NAVIGATION BAR -->
   <div class="top-nav-bar">
