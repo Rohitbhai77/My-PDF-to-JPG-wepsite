@@ -357,8 +357,33 @@
 </head>
 <body>
 
-
+<STYLE>
 <a href="index.html">home 🏠</a>
+.home-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    text-decoration: none;
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(0,0,0,.3);
+    transition: .3s;
+}
+
+.home-btn:hover{
+    transform: scale(1.15);
+    background:#0d6efd;
+}
+</STYLE>
 
 <!-- CROSS NAVIGATION BAR -->
   <div class="top-nav-bar">
