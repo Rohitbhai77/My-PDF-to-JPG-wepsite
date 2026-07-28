@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk PDF to JPG Converter - Pro Suite</title>
+  <title>Bulk PDF to Image Converter - Pro Suite</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EJPG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EIMG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
   
   <!-- PDF.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -67,7 +67,6 @@
       z-index: 1;
     }
 
-    /* Animated Colorful & Bright Glowing Title */
     .animated-title {
       font-size: 3.5rem;
       font-weight: 900;
@@ -161,6 +160,50 @@
       display: none;
     }
 
+    /* Format Options Bar */
+    .options-bar {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .option-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .option-group label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #00f2fe;
+    }
+
+    .select-input {
+      background: rgba(10, 15, 28, 0.9);
+      color: #ffffff;
+      border: 1px solid rgba(0, 242, 254, 0.5);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .select-input:focus {
+      border-color: var(--neon-pink);
+      box-shadow: 0 0 10px rgba(255, 42, 117, 0.5);
+    }
+
     .controls {
       margin-top: 25px;
       display: flex;
@@ -207,7 +250,6 @@
       box-shadow: 0 0 35px rgba(0, 176, 155, 0.9);
     }
 
-    /* Game Button Style */
     .btn-game {
       background: var(--btn-game);
       color: white;
@@ -226,7 +268,6 @@
       box-shadow: none !important;
     }
 
-    /* Progress Bar Container */
     .progress-bar-container {
       margin-top: 35px;
       display: none;
@@ -251,7 +292,6 @@
       position: relative;
     }
 
-    /* Cat and Mouse Chase Elements Attached to Progress Bar */
     .runner-chase-group {
       position: absolute;
       right: -25px;
@@ -293,7 +333,6 @@
       text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
     }
 
-    /* Cute Thank You Banner */
     .thank-you-box {
       margin-top: 15px;
       background: linear-gradient(135deg, rgba(255, 42, 117, 0.3), rgba(0, 242, 254, 0.3));
@@ -420,8 +459,8 @@
 
   <div class="container">
     <div class="header">
-      <h1 class="animated-title">⚡ Bulk PDF to JPG Pro</h1>
-      <p>Lightning Fast Multi-PDF Conversion • Ultra HD Quality</p>
+      <h1 class="animated-title">⚡ Bulk PDF to Image Pro</h1>
+      <p>Convert PDF to JPG / PNG • Multi-File Supported</p>
     </div>
 
     <div class="main-card">
@@ -432,6 +471,26 @@
         <input type="file" id="pdfInput" accept="application/pdf" multiple />
       </div>
 
+      <!-- Format & Quality Options -->
+      <div class="options-bar">
+        <div class="option-group">
+          <label for="formatSelect">🖼 Output Format:</label>
+          <select id="formatSelect" class="select-input">
+            <option value="jpg">JPG (.jpg)</option>
+            <option value="png">PNG (.png)</option>
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label for="qualitySelect">✨ Image Quality:</label>
+          <select id="qualitySelect" class="select-input">
+            <option value="2.0">Ultra HD (High Quality)</option>
+            <option value="1.5">Standard HD</option>
+            <option value="1.0">Fast / Small File</option>
+          </select>
+        </div>
+      </div>
+
       <div class="controls">
         <button id="convertBtn" class="btn btn-primary" onclick="processAllFiles()" disabled>
           ⚡ Convert All PDFs
@@ -439,7 +498,6 @@
         <button id="downloadZipBtn" class="btn btn-success" onclick="downloadMasterZip()" style="display: none;">
           📦 Download Master ZIP
         </button>
-        <!-- Game Page Button -->
         <a href="GAME.HTML" class="btn btn-game">
           🎮 Play Game
         </a>
@@ -448,7 +506,6 @@
       <div class="progress-bar-container" id="progressContainer">
         <div class="progress-track">
           <div class="progress-fill" id="progressFill">
-            <!-- Cat & Mouse Chase Group -->
             <div class="runner-chase-group">
               <span class="mouse-runner">🐭</span>
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaGC2AN0T62Y4ID9LQqI5PzdVqG-LFA_bZmhbgt8KP-A&s=10" class="cat-runner" alt="Cat Runner">
@@ -481,6 +538,8 @@
     const statusText = document.getElementById('statusText');
     const thankYouBox = document.getElementById('thankYouBox');
     const outputSection = document.getElementById('outputSection');
+    const formatSelect = document.getElementById('formatSelect');
+    const qualitySelect = document.getElementById('qualitySelect');
 
     let fileQueue = [];
     let processedResults = [];
@@ -526,6 +585,11 @@
       thankYouBox.style.display = 'none';
       progressContainer.style.display = 'block';
 
+      const selectedFormat = formatSelect.value; // 'jpg' or 'png'
+      const mimeType = selectedFormat === 'png' ? 'image/png' : 'image/jpeg';
+      const fileExt = selectedFormat;
+      const renderScale = parseFloat(qualitySelect.value) || 2.0;
+
       let totalPagesAcrossAll = 0;
       let globalPageCounter = 0;
 
@@ -560,7 +624,7 @@
         fileGroupDiv.innerHTML = `
           <div class="pdf-group-header">
             <span>📄 ${name}</span>
-            <span style="font-size: 0.9rem; color: #00f2fe;">(${pdfDoc.numPages} Pages)</span>
+            <span style="font-size: 0.9rem; color: #00f2fe;">(${pdfDoc.numPages} Pages • Format: ${selectedFormat.toUpperCase()})</span>
           </div>
           <div class="grid" id="grid-${i}"></div>
         `;
@@ -577,8 +641,7 @@
           updateStatus(`Converting Page ${pageNum}/${pdfDoc.numPages} of "${name}" (${percent}%)`);
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = 2.0; 
-          const viewport = page.getViewport({ scale: scale });
+          const viewport = page.getViewport({ scale: renderScale });
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
@@ -587,13 +650,13 @@
 
           await page.render({ canvasContext: context, viewport: viewport }).promise;
 
-          const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-          const base64Data = jpgDataUrl.split(',')[1];
-          const imgName = `${cleanFileName}_page_${pageNum}.jpg`;
+          const imgDataUrl = canvas.toDataURL(mimeType, 0.92);
+          const base64Data = imgDataUrl.split(',')[1];
+          const imgName = `${cleanFileName}_page_${pageNum}.${fileExt}`;
 
           fileImages.push({ name: imgName, data: base64Data });
 
-          renderSingleCard(fileGrid, jpgDataUrl, pageNum, imgName);
+          renderSingleCard(fileGrid, imgDataUrl, pageNum, imgName, selectedFormat.toUpperCase());
         }
 
         processedResults.push({
@@ -608,14 +671,14 @@
       downloadZipBtn.style.display = 'inline-flex';
     }
 
-    function renderSingleCard(parentGrid, dataUrl, pageNum, fileName) {
+    function renderSingleCard(parentGrid, dataUrl, pageNum, fileName, formatText) {
       const card = document.createElement('div');
       card.className = 'page-card';
       card.innerHTML = `
         <img src="${dataUrl}" alt="Page ${pageNum}" loading="lazy">
         <div class="page-info">
-          <span>Page ${pageNum}</span>
-          <a href="${dataUrl}" download="${fileName}" class="dl-btn">⬇ Download JPG</a>
+          <span>Page ${pageNum} (${formatText})</span>
+          <a href="${dataUrl}" download="${fileName}" class="dl-btn">⬇ Download ${formatText}</a>
         </div>
       `;
       parentGrid.appendChild(card);
