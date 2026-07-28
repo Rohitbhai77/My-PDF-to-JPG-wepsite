@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk PDF to Image Converter - Pro Suite</title>
+  <title>Bulk File Converter - Pro Suite</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EIMG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EJPG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
   
   <!-- PDF.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- JSZip Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <!-- FileSaver Library -->
@@ -99,6 +101,33 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
+    /* Mode Selector Tabs */
+    .mode-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 12px 26px;
+      border-radius: 30px;
+      border: 1.5px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .tab-btn.active {
+      background: var(--btn-gradient);
+      border-color: transparent;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+    }
+
     .main-card {
       background: var(--glass-bg);
       backdrop-filter: blur(5px);
@@ -158,50 +187,6 @@
 
     input[type="file"] {
       display: none;
-    }
-
-    /* Format Options Bar */
-    .options-bar {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 12px 20px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .option-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .option-group label {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #00f2fe;
-    }
-
-    .select-input {
-      background: rgba(10, 15, 28, 0.9);
-      color: #ffffff;
-      border: 1px solid rgba(0, 242, 254, 0.5);
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      outline: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .select-input:focus {
-      border-color: var(--neon-pink);
-      box-shadow: 0 0 10px rgba(255, 42, 117, 0.5);
     }
 
     .controls {
@@ -459,44 +444,33 @@
 
   <div class="container">
     <div class="header">
-      <h1 class="animated-title">⚡ Bulk PDF to Image Pro</h1>
-      <p>Convert PDF to JPG / PNG • Multi-File Supported</p>
+      <h1 class="animated-title">⚡ File Converter Pro</h1>
+      <p>Multi-Format Conversion • Ultra HD Quality</p>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="mode-tabs">
+      <button class="tab-btn active" id="modePdfToJpgBtn" onclick="switchMode('pdf2jpg')">📄 PDF to JPG</button>
+      <button class="tab-btn" id="modeImgToPdfBtn" onclick="switchMode('img2pdf')">🖼️ JPG / PNG to PDF</button>
     </div>
 
     <div class="main-card">
-      <div class="drop-zone" id="dropZone" onclick="document.getElementById('pdfInput').click()">
-        <span class="drop-zone-icon">🚀</span>
-        <div class="drop-zone-title">Drag & Drop your PDFs here</div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <span class="drop-zone-icon" id="dropIcon">🚀</span>
+        <div class="drop-zone-title" id="dropTitle">Drag & Drop your PDFs here</div>
         <div class="drop-zone-subtitle">or click anywhere to browse from your device</div>
-        <input type="file" id="pdfInput" accept="application/pdf" multiple />
-      </div>
-
-      <!-- Format & Quality Options -->
-      <div class="options-bar">
-        <div class="option-group">
-          <label for="formatSelect">🖼 Output Format:</label>
-          <select id="formatSelect" class="select-input">
-            <option value="jpg">JPG (.jpg)</option>
-            <option value="png">PNG (.png)</option>
-          </select>
-        </div>
-
-        <div class="option-group">
-          <label for="qualitySelect">✨ Image Quality:</label>
-          <select id="qualitySelect" class="select-input">
-            <option value="2.0">Ultra HD (High Quality)</option>
-            <option value="1.5">Standard HD</option>
-            <option value="1.0">Fast / Small File</option>
-          </select>
-        </div>
+        <input type="file" id="fileInput" accept="application/pdf" multiple />
       </div>
 
       <div class="controls">
-        <button id="convertBtn" class="btn btn-primary" onclick="processAllFiles()" disabled>
-          ⚡ Convert All PDFs
+        <button id="convertBtn" class="btn btn-primary" onclick="startConversion()" disabled>
+          ⚡ Convert Files
         </button>
         <button id="downloadZipBtn" class="btn btn-success" onclick="downloadMasterZip()" style="display: none;">
           📦 Download Master ZIP
+        </button>
+        <button id="downloadPdfBtn" class="btn btn-success" onclick="downloadSinglePdf()" style="display: none;">
+          📄 Download Combined PDF
         </button>
         <a href="GAME.HTML" class="btn btn-game">
           🎮 Play Game
@@ -529,20 +503,46 @@
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    const pdfInput = document.getElementById('pdfInput');
+    let currentMode = 'pdf2jpg'; // Default mode
+    let fileQueue = [];
+    let processedResults = [];
+    let createdPdfBlob = null;
+
+    const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
+    const dropTitle = document.getElementById('dropTitle');
     const convertBtn = document.getElementById('convertBtn');
     const downloadZipBtn = document.getElementById('downloadZipBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
     const progressContainer = document.getElementById('progressContainer');
     const progressFill = document.getElementById('progressFill');
     const statusText = document.getElementById('statusText');
     const thankYouBox = document.getElementById('thankYouBox');
     const outputSection = document.getElementById('outputSection');
-    const formatSelect = document.getElementById('formatSelect');
-    const qualitySelect = document.getElementById('qualitySelect');
 
-    let fileQueue = [];
-    let processedResults = [];
+    function switchMode(mode) {
+      currentMode = mode;
+      fileQueue = [];
+      convertBtn.disabled = true;
+      downloadZipBtn.style.display = 'none';
+      downloadPdfBtn.style.display = 'none';
+      thankYouBox.style.display = 'none';
+      progressContainer.style.display = 'none';
+      outputSection.innerHTML = '';
+
+      document.getElementById('modePdfToJpgBtn').classList.toggle('active', mode === 'pdf2jpg');
+      document.getElementById('modeImgToPdfBtn').classList.toggle('active', mode === 'img2pdf');
+
+      if (mode === 'pdf2jpg') {
+        fileInput.accept = "application/pdf";
+        dropTitle.innerText = "Drag & Drop your PDFs here";
+        convertBtn.innerHTML = "⚡ Convert All PDFs";
+      } else {
+        fileInput.accept = "image/jpeg, image/jpg, image/png";
+        dropTitle.innerText = "Drag & Drop JPG or PNG Images here";
+        convertBtn.innerHTML = "⚡ Merge Images to PDF";
+      }
+    }
 
     ['dragenter', 'dragover'].forEach(eventName => {
       dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
@@ -554,46 +554,56 @@
 
     dropZone.addEventListener('drop', (e) => {
       const dt = e.dataTransfer;
-      const files = dt.files;
-      handleFiles(files);
+      handleFiles(dt.files);
     });
 
-    pdfInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', (e) => {
       handleFiles(e.target.files);
     });
 
     function handleFiles(files) {
-      fileQueue = Array.from(files).filter(file => file.type === 'application/pdf');
+      if (currentMode === 'pdf2jpg') {
+        fileQueue = Array.from(files).filter(file => file.type === 'application/pdf');
+      } else {
+        fileQueue = Array.from(files).filter(file => file.type.startsWith('image/'));
+      }
+
       if (fileQueue.length > 0) {
         convertBtn.disabled = false;
         downloadZipBtn.style.display = 'none';
+        downloadPdfBtn.style.display = 'none';
         thankYouBox.style.display = 'none';
         updateStatus(`Ready! ${fileQueue.length} file(s) selected.`);
       } else {
         convertBtn.disabled = true;
-        updateStatus(`Please select valid PDF files.`);
+        updateStatus(`Please select valid files.`);
       }
     }
 
-    async function processAllFiles() {
+    function startConversion() {
+      if (currentMode === 'pdf2jpg') {
+        processPdfToJpg();
+      } else {
+        processImgToPdf();
+      }
+    }
+
+    /* === 1. PDF TO JPG LOGIC === */
+    async function processPdfToJpg() {
       if (fileQueue.length === 0) return;
 
       outputSection.innerHTML = '';
       processedResults = [];
       convertBtn.disabled = true;
       downloadZipBtn.style.display = 'none';
+      downloadPdfBtn.style.display = 'none';
       thankYouBox.style.display = 'none';
       progressContainer.style.display = 'block';
-
-      const selectedFormat = formatSelect.value; // 'jpg' or 'png'
-      const mimeType = selectedFormat === 'png' ? 'image/png' : 'image/jpeg';
-      const fileExt = selectedFormat;
-      const renderScale = parseFloat(qualitySelect.value) || 2.0;
 
       let totalPagesAcrossAll = 0;
       let globalPageCounter = 0;
 
-      updateStatus("Analyzing files...");
+      updateStatus("Analyzing PDF files...");
       const parsedPdfs = [];
 
       for (let i = 0; i < fileQueue.length; i++) {
@@ -624,7 +634,7 @@
         fileGroupDiv.innerHTML = `
           <div class="pdf-group-header">
             <span>📄 ${name}</span>
-            <span style="font-size: 0.9rem; color: #00f2fe;">(${pdfDoc.numPages} Pages • Format: ${selectedFormat.toUpperCase()})</span>
+            <span style="font-size: 0.9rem; color: #00f2fe;">(${pdfDoc.numPages} Pages)</span>
           </div>
           <div class="grid" id="grid-${i}"></div>
         `;
@@ -641,7 +651,8 @@
           updateStatus(`Converting Page ${pageNum}/${pdfDoc.numPages} of "${name}" (${percent}%)`);
 
           const page = await pdfDoc.getPage(pageNum);
-          const viewport = page.getViewport({ scale: renderScale });
+          const scale = 2.0; 
+          const viewport = page.getViewport({ scale: scale });
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
@@ -650,13 +661,12 @@
 
           await page.render({ canvasContext: context, viewport: viewport }).promise;
 
-          const imgDataUrl = canvas.toDataURL(mimeType, 0.92);
-          const base64Data = imgDataUrl.split(',')[1];
-          const imgName = `${cleanFileName}_page_${pageNum}.${fileExt}`;
+          const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const base64Data = jpgDataUrl.split(',')[1];
+          const imgName = `${cleanFileName}_page_${pageNum}.jpg`;
 
           fileImages.push({ name: imgName, data: base64Data });
-
-          renderSingleCard(fileGrid, imgDataUrl, pageNum, imgName, selectedFormat.toUpperCase());
+          renderSingleCard(fileGrid, jpgDataUrl, pageNum, imgName);
         }
 
         processedResults.push({
@@ -671,14 +681,92 @@
       downloadZipBtn.style.display = 'inline-flex';
     }
 
-    function renderSingleCard(parentGrid, dataUrl, pageNum, fileName, formatText) {
+    /* === 2. JPG/PNG TO PDF LOGIC === */
+    async function processImgToPdf() {
+      if (fileQueue.length === 0) return;
+
+      outputSection.innerHTML = '';
+      convertBtn.disabled = true;
+      downloadZipBtn.style.display = 'none';
+      downloadPdfBtn.style.display = 'none';
+      thankYouBox.style.display = 'none';
+      progressContainer.style.display = 'block';
+
+      const { jsPDF } = window.jspdf;
+      let pdf = null;
+
+      const fileGroupDiv = document.createElement('div');
+      fileGroupDiv.className = 'pdf-group';
+      fileGroupDiv.innerHTML = `
+        <div class="pdf-group-header">
+          <span>🖼️ Images Preview</span>
+          <span style="font-size: 0.9rem; color: #00f2fe;">(${fileQueue.length} Images)</span>
+        </div>
+        <div class="grid" id="imgGrid"></div>
+      `;
+      outputSection.appendChild(fileGroupDiv);
+      const imgGrid = document.getElementById('imgGrid');
+
+      for (let i = 0; i < fileQueue.length; i++) {
+        const file = fileQueue[i];
+        const percent = Math.round(((i + 1) / fileQueue.length) * 100);
+        progressFill.style.width = `${percent}%`;
+        updateStatus(`Adding Image ${i + 1}/${fileQueue.length} (${percent}%)`);
+
+        const dataUrl = await readFileAsDataURL(file);
+        const imgProps = await getImageProperties(dataUrl);
+
+        const orientation = imgProps.width > imgProps.height ? 'l' : 'p';
+
+        if (i === 0) {
+          pdf = new jsPDF({
+            orientation: orientation,
+            unit: 'px',
+            format: [imgProps.width, imgProps.height]
+          });
+        } else {
+          pdf.addPage([imgProps.width, imgProps.height], orientation);
+        }
+
+        pdf.addImage(dataUrl, 'JPEG', 0, 0, imgProps.width, imgProps.height);
+        renderSingleCard(imgGrid, dataUrl, i + 1, file.name);
+      }
+
+      createdPdfBlob = pdf.output('blob');
+
+      updateStatus("✨ Images Successfully Converted to PDF!");
+      thankYouBox.style.display = 'block';
+      convertBtn.disabled = false;
+      downloadPdfBtn.style.display = 'inline-flex';
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getImageProperties(dataUrl) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          resolve({ width: img.width, height: img.height });
+        };
+        img.src = dataUrl;
+      });
+    }
+
+    function renderSingleCard(parentGrid, dataUrl, pageNum, fileName) {
       const card = document.createElement('div');
       card.className = 'page-card';
       card.innerHTML = `
-        <img src="${dataUrl}" alt="Page ${pageNum}" loading="lazy">
+        <img src="${dataUrl}" alt="Item ${pageNum}" loading="lazy">
         <div class="page-info">
-          <span>Page ${pageNum} (${formatText})</span>
-          <a href="${dataUrl}" download="${fileName}" class="dl-btn">⬇ Download ${formatText}</a>
+          <span># ${pageNum}</span>
+          <a href="${dataUrl}" download="${fileName}" class="dl-btn">⬇ Download</a>
         </div>
       `;
       parentGrid.appendChild(card);
@@ -704,6 +792,12 @@
         console.error(err);
         updateStatus("❌ Failed to create ZIP.");
       });
+    }
+
+    function downloadSinglePdf() {
+      if (!createdPdfBlob) return;
+      saveAs(createdPdfBlob, 'Converted_Images.pdf');
+      updateStatus("✅ PDF Downloaded Successfully!");
     }
 
     function updateStatus(msg) {
