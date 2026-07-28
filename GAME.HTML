@@ -362,8 +362,8 @@
     position: fixed;
     top: 20px;
     left: 150px;
-    width: 65px;
-    height: 65px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background: rgba(255,255,255,0.15);
     backdrop-filter: blur(12px);
@@ -371,30 +371,43 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
     text-decoration: none;
-    color: #fff;
-    box-shadow: 0 8px 30px rgba(0,0,0,.3);
+    font-size: 38px;
     transition: all 0.4s ease;
-}
 
-/* Hover Effect */
-.home-btn:hover {
-    background: linear-gradient(135deg, #00FFFF, #7928CA);
-    border: 2px solid #00FFFF;
-    color: #fff;
-    transform: scale(1.15);
-
-    /* Neon Glow */
-    box-shadow:
+    /* Home Icon Glow */
+    color: #00FFFF;
+    text-shadow:
         0 0 10px #00FFFF,
         0 0 20px #00FFFF,
         0 0 40px #00FFFF,
-        0 0 60px #7928CA;
+        0 0 60px #00FFFF;
+}
+
+.home-btn:hover {
+    background: linear-gradient(135deg, #00FFFF, #7928CA);
+    border: 2px solid #00FFFF;
+    transform: scale(1.15);
+
+    /* Button Glow */
+    box-shadow:
+        0 0 20px #00FFFF,
+        0 0 40px #00FFFF,
+        0 0 70px #00FFFF,
+        0 0 100px #7928CA;
+
+    /* Icon Glow Bigger */
+    color: #ffffff;
+    text-shadow:
+        0 0 20px #00FFFF,
+        0 0 40px #00FFFF,
+        0 0 70px #00FFFF,
+        0 0 100px #ffffff;
 }
 </style>
 
 <a href="index.html" class="home-btn">🏠</a>
+
 
 
 <!-- CROSS NAVIGATION BAR -->
