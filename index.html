@@ -21,7 +21,7 @@
       --btn-gradient: linear-gradient(135deg, #ff007f, #7928ca);
       --btn-success: linear-gradient(135deg, #00b09b, #96c93d);
       --btn-game: linear-gradient(135deg, #ffaa00, #ff0055);
-      --glass-bg: rgba(10, 15, 30, 0.45);
+      --glass-bg: rgba(8, 12, 22, 0.4);
       --glass-border: rgba(255, 255, 255, 0.25);
     }
 
@@ -35,16 +35,17 @@
     body {
       min-height: 100vh;
       color: #ffffff;
-      padding: 20px;
+      padding: 20px 40px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start; /* Shifted everything to left */
+      justify-content: flex-start;
       overflow-x: hidden;
       position: relative;
       background: #000;
     }
 
-    /* Video Background Container */
+    /* Fullscreen Video Background */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -59,52 +60,76 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.85) contrast(1.05);
+      filter: brightness(0.9) contrast(1.05);
     }
 
-    /* Soft Dark Overlay for UI Readability */
+    /* Subtle Overlay */
     .bg-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(4, 7, 18, 0.35);
+      background: linear-gradient(90deg, rgba(4, 7, 18, 0.6) 0%, rgba(4, 7, 18, 0.2) 60%, rgba(4, 7, 18, 0) 100%);
       z-index: -1;
       pointer-events: none;
     }
 
+    /* Sound Toggle Floating Button */
+    .sound-control {
+      position: fixed;
+      top: 20px;
+      right: 25px;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .sound-control:hover {
+      transform: scale(1.05);
+      background: var(--neon-cyan);
+      color: #000;
+    }
+
     .container {
       width: 100%;
-      max-width: 950px;
+      max-width: 580px; /* Compact width so video characters stay visible on right */
       animation: fadeIn 0.8s ease-in-out;
       position: relative;
       z-index: 1;
+      margin-top: 10px;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 25px;
-      position: relative;
-      z-index: 1;
+      text-align: left;
+      margin-bottom: 15px;
     }
 
     .animated-title {
-      font-size: 3.5rem;
+      font-size: 2.8rem;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #ffffff, #00f2fe, #ff2a75, #ffaa00, #00f2fe, #ffffff);
+      background: linear-gradient(90deg, #ffffff, #00f2fe, #ff2a75, #ffaa00);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: rainbowGlow 4s ease infinite;
-      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 25px rgba(0, 242, 254, 0.6));
-      margin-bottom: 8px;
+      filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.6));
+      margin-bottom: 4px;
     }
 
     @keyframes rainbowGlow {
@@ -115,13 +140,13 @@
 
     .header p {
       color: #ffffff;
-      font-size: 1.15rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-      background: rgba(0, 0, 0, 0.5);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.45);
       display: inline-block;
-      padding: 6px 22px;
-      border-radius: 30px;
+      padding: 4px 16px;
+      border-radius: 20px;
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
@@ -129,18 +154,18 @@
     /* Mode Selector Tabs */
     .mode-tabs {
       display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 15px;
     }
 
     .tab-btn {
-      padding: 12px 26px;
-      border-radius: 30px;
+      padding: 10px 20px;
+      border-radius: 25px;
       border: 1.5px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(0, 0, 0, 0.5);
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -150,7 +175,7 @@
     .tab-btn.active {
       background: var(--btn-gradient);
       border-color: transparent;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
     }
 
     .main-card {
@@ -158,53 +183,51 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 35px 25px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
+      border-radius: 20px;
+      padding: 22px 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 
                   inset 0 1px 1px rgba(255, 255, 255, 0.3);
-      position: relative;
-      z-index: 2;
     }
 
     .drop-zone {
       border: 2px dashed rgba(0, 242, 254, 0.8);
-      border-radius: 20px;
-      padding: 40px 20px;
+      border-radius: 16px;
+      padding: 25px 15px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.3);
     }
 
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--neon-pink);
-      background: rgba(255, 42, 117, 0.25);
+      background: rgba(255, 42, 117, 0.2);
       transform: scale(1.01);
-      box-shadow: 0 0 25px rgba(255, 42, 117, 0.5);
+      box-shadow: 0 0 20px rgba(255, 42, 117, 0.4);
     }
 
     .drop-zone-icon {
-      font-size: 48px;
-      margin-bottom: 10px;
+      font-size: 38px;
+      margin-bottom: 6px;
       display: inline-block;
       animation: floatIcon 3s ease-in-out infinite;
     }
 
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-6px); }
     }
 
     .drop-zone-title {
-      font-size: 1.35rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-      margin-bottom: 6px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+      margin-bottom: 4px;
     }
 
     .drop-zone-subtitle {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       color: #f1f5f9;
       font-weight: 600;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
@@ -215,24 +238,24 @@
     }
 
     .controls {
-      margin-top: 25px;
+      margin-top: 18px;
       display: flex;
-      gap: 15px;
-      justify-content: center;
+      gap: 12px;
+      justify-content: flex-start;
       flex-wrap: wrap;
     }
 
     .btn {
-      padding: 15px 34px;
+      padding: 12px 26px;
       border: none;
-      border-radius: 14px;
-      font-size: 1.05rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       text-decoration: none;
@@ -241,34 +264,24 @@
     .btn-primary {
       background: var(--btn-gradient);
       color: white;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
     }
 
     .btn-primary:hover:not(:disabled) {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 35px rgba(255, 0, 127, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
     }
 
     .btn-success {
       background: var(--btn-success);
       color: white;
-      box-shadow: 0 0 20px rgba(0, 176, 155, 0.6);
-    }
-
-    .btn-success:hover:not(:disabled) {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 35px rgba(0, 176, 155, 0.9);
+      box-shadow: 0 0 15px rgba(0, 176, 155, 0.5);
     }
 
     .btn-game {
       background: var(--btn-game);
       color: white;
-      box-shadow: 0 0 20px rgba(255, 170, 0, 0.6);
-    }
-
-    .btn-game:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 35px rgba(255, 170, 0, 0.9);
+      box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
     }
 
     .btn:disabled {
@@ -279,17 +292,17 @@
     }
 
     .progress-bar-container {
-      margin-top: 35px;
+      margin-top: 25px;
       display: none;
     }
 
     .progress-track {
       width: 100%;
-      height: 22px;
+      height: 18px;
       background: rgba(0, 0, 0, 0.85);
       border-radius: 20px;
       position: relative;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .progress-fill {
@@ -298,73 +311,65 @@
       background: linear-gradient(90deg, #00f2fe, #ff2a75);
       border-radius: 20px;
       transition: width 0.2s ease;
-      box-shadow: 0 0 15px #00f2fe;
+      box-shadow: 0 0 12px #00f2fe;
       position: relative;
     }
 
     .runner-chase-group {
       position: absolute;
-      right: -25px;
-      top: -24px;
+      right: -20px;
+      top: -20px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       pointer-events: none;
     }
 
     .mouse-runner {
-      font-size: 28px;
+      font-size: 22px;
       transform: scaleX(-1);
       animation: runVibe 0.15s infinite alternate;
-      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));
     }
 
     .cat-runner {
-      width: 44px;
-      height: 44px;
+      width: 36px;
+      height: 36px;
       object-fit: cover;
       border-radius: 50%;
       border: 2px solid #00f2fe;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.9);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.9);
       animation: runVibe 0.15s infinite alternate-reverse;
     }
 
     @keyframes runVibe {
       0% { transform: translateY(0); }
-      100% { transform: translateY(-4px); }
+      100% { transform: translateY(-3px); }
     }
 
     .status-text {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 1.1rem;
+      text-align: left;
+      margin-top: 12px;
+      font-size: 0.95rem;
       color: #00f2fe;
       font-weight: 800;
-      text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
     }
 
     .thank-you-box {
-      margin-top: 15px;
+      margin-top: 12px;
       background: linear-gradient(135deg, rgba(255, 42, 117, 0.4), rgba(0, 242, 254, 0.4));
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      padding: 12px 20px;
-      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 10px 15px;
+      border-radius: 12px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: #ffffff;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
       display: none;
-      animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popUp {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
 
     .output-section {
-      margin-top: 35px;
+      margin-top: 25px;
       width: 100%;
     }
 
@@ -372,103 +377,87 @@
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
       border: 1.5px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 25px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 20px;
     }
 
     .pdf-group-header {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 800;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+      padding-bottom: 8px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
     }
 
     .page-card {
       background: rgba(10, 15, 28, 0.85);
-      border-radius: 14px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.25);
-      transition: all 0.3s ease;
-    }
-
-    .page-card:hover {
-      transform: translateY(-5px);
-      border-color: #00f2fe;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
     }
 
     .page-card img {
       width: 100%;
       height: auto;
       display: block;
-      background: #ffffff;
     }
 
     .page-info {
-      padding: 12px;
+      padding: 8px;
       text-align: center;
     }
 
     .page-info span {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: #ffffff;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 700;
     }
 
     .dl-btn {
       display: inline-block;
       width: 100%;
-      padding: 9px 0;
+      padding: 6px 0;
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.3), rgba(255, 42, 117, 0.3));
       color: #ffffff;
       border: 1px solid rgba(0, 242, 254, 0.5);
-      border-radius: 8px;
+      border-radius: 6px;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 800;
-      transition: all 0.3s ease;
-    }
-
-    .dl-btn:hover {
-      background: var(--btn-gradient);
-      color: #ffffff;
-      border-color: transparent;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
     }
 
     .footer {
-      margin-top: 35px;
+      margin-top: 20px;
       color: #ffffff;
-      font-size: 0.95rem;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+      font-size: 0.85rem;
       font-weight: 700;
       background: rgba(0, 0, 0, 0.5);
-      padding: 8px 24px;
-      border-radius: 20px;
+      padding: 6px 18px;
+      border-radius: 15px;
       backdrop-filter: blur(8px);
     }
   </style>
 </head>
 <body>
 
+  <button class="sound-control" id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
+  <audio id="bgAudio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+
   <div class="bg-video-container">
-    <video autoplay loop muted playsinline>
+    <video autoplay loop muted playsinline id="bgVideo">
       <source src="oggy-bg.mp4" type="video/mp4">
       Your browser does not support video background.
     </video>
@@ -490,7 +479,7 @@
       <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
         <span class="drop-zone-icon" id="dropIcon">🚀</span>
         <div class="drop-zone-title" id="dropTitle">Drag & Drop your PDFs here</div>
-        <div class="drop-zone-subtitle">or click anywhere to browse from your device</div>
+        <div class="drop-zone-subtitle">or click anywhere to browse from device</div>
         <input type="file" id="fileInput" accept="application/pdf" multiple />
       </div>
 
@@ -539,6 +528,25 @@
     let fileQueue = [];
     let processedResults = [];
     let createdPdfBlob = null;
+    let isAudioPlaying = false;
+
+    const soundBtn = document.getElementById('soundBtn');
+    const bgAudio = document.getElementById('bgAudio');
+
+    function toggleAudio() {
+      if (isAudioPlaying) {
+        bgAudio.pause();
+        soundBtn.innerHTML = "🔊 Sound: OFF";
+        soundBtn.style.background = "rgba(0, 0, 0, 0.6)";
+        isAudioPlaying = false;
+      } else {
+        bgAudio.play().then(() => {
+          soundBtn.innerHTML = "🎶 Sound: ON";
+          soundBtn.style.background = "var(--btn-gradient)";
+          isAudioPlaying = true;
+        }).catch(err => console.log("Audio play blocked by browser:", err));
+      }
+    }
 
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
@@ -666,7 +674,7 @@
         fileGroupDiv.innerHTML = `
           <div class="pdf-group-header">
             <span>📄 ${name}</span>
-            <span style="font-size: 0.9rem; color: #00f2fe;">(${pdfDoc.numPages} Pages)</span>
+            <span style="font-size: 0.85rem; color: #00f2fe;">(${pdfDoc.numPages} Pages)</span>
           </div>
           <div class="grid" id="grid-${i}"></div>
         `;
@@ -680,7 +688,7 @@
           const percent = Math.round((globalPageCounter / totalPagesAcrossAll) * 100);
           
           progressFill.style.width = `${percent}%`;
-          updateStatus(`Converting Page ${pageNum}/${pdfDoc.numPages} of "${name}" (${percent}%)`);
+          updateStatus(`Converting Page ${pageNum}/${pdfDoc.numPages} (${percent}%)`);
 
           const page = await pdfDoc.getPage(pageNum);
           const scale = 2.0; 
@@ -732,7 +740,7 @@
       fileGroupDiv.innerHTML = `
         <div class="pdf-group-header">
           <span>🖼️ Images Preview</span>
-          <span style="font-size: 0.9rem; color: #00f2fe;">(${fileQueue.length} Images)</span>
+          <span style="font-size: 0.85rem; color: #00f2fe;">(${fileQueue.length} Images)</span>
         </div>
         <div class="grid" id="imgGrid"></div>
       `;
