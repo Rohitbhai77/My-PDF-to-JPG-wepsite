@@ -357,8 +357,8 @@
     /* Main Floating Container Panel */
     .module-section {
       display: none;
-      width: 80%;
-      max-width: 750px;
+      width: 90%;
+      max-width: 850px;
       animation: panelSlideIn 0.4s ease-out;
     }
 
@@ -467,6 +467,7 @@
       gap: 8px;
       justify-content: center;
       margin-top: 12px;
+      align-items: center;
     }
 
     /* PDF Tool Module Specific */
@@ -538,23 +539,44 @@
     }
     .emoji-card:hover { transform: scale(1.05); background: rgba(0, 242, 254, 0.2); }
 
+    /* Dynamic Grid Memory Game Styles */
     .memory-grid {
-      display: grid; gap: 8px; margin: 15px auto; perspective: 1000px;
+      display: grid; 
+      gap: 6px; 
+      margin: 15px auto; 
+      perspective: 1000px;
+      width: 100%;
+      max-width: 520px;
     }
-    .grid-4x4 { grid-template-columns: repeat(4, 1fr); width: 280px; height: 280px; }
 
     .card {
-      width: 100%; height: 100%; position: relative;
-      transform-style: preserve-3d; transition: transform 0.4s; cursor: pointer;
+      width: 100%; 
+      aspect-ratio: 1/1; 
+      position: relative;
+      transform-style: preserve-3d; 
+      transition: transform 0.4s; 
+      cursor: pointer;
     }
     .card.flipped, .card.matched { transform: rotateY(180deg); }
     .card-face {
       position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; border: 1px solid var(--glass-border);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--glass-border);
     }
     .card-back { background: rgba(30, 41, 59, 0.9); }
     .card-front { background: rgba(10, 10, 10, 0.95); transform: rotateY(180deg); border-color: var(--neon-cyan); }
+
+    .game-select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--neon-cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
 
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -760,7 +782,7 @@
       </div>
     </div>
 
-    <!-- MODULE 4: MEMORY MASTER GAME -->
+    <!-- MODULE 4: MEMORY MASTER GAME (UPDATED WITH 4x4, 6x6, 8x8, 10x10, 12x12) -->
     <div class="module-section" id="moduleMemory">
       <div class="main-card">
         <h1 class="animated-title">🧠 Memory Master</h1>
@@ -772,10 +794,17 @@
           <div><div class="hud-val" id="memMatches">0/8</div><div>MATCHES</div></div>
         </div>
 
-        <div class="memory-grid grid-4x4" id="memoryGrid"></div>
+        <div class="memory-grid" id="memoryGrid"></div>
 
         <div class="controls-row">
-          <button class="btn btn-primary" onclick="startMemoryGame()">▶ Start Game</button>
+          <select id="gridSizeSelect" class="game-select" onchange="startMemoryGame()">
+            <option value="4">Grid: 4x4 (Easy)</option>
+            <option value="6">Grid: 6x6 (Medium)</option>
+            <option value="8">Grid: 8x8 (Hard)</option>
+            <option value="10">Grid: 10x10 (Pro)</option>
+            <option value="12">Grid: 12x12 (Extreme)</option>
+          </select>
+          <button class="btn btn-primary" onclick="startMemoryGame()">▶ Restart Game</button>
         </div>
       </div>
     </div>
@@ -809,7 +838,7 @@
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => {
         document.body.classList.add('idle-mode');
-      }, 15000); // 15 Seconds Idle
+      }, 15000);
     }
 
     ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
@@ -1171,22 +1200,63 @@
     }
 
     /* ==========================================
-       4. MEMORY MASTER LOGIC
+       4. MEMORY MASTER LOGIC (UPDATED WITH 4x4 - 12x12)
        ========================================== */
-    let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0;
+    const masterEmojiPool = [
+      '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯',
+      '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🦆',
+      '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋',
+      '🐌', '🐞', '🐜', '🦟', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎',
+      '🦖', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬',
+      '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘',
+      '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎',
+      '🐖', '🦙', '🐐', '🦌', '🐕', '🐩', '🦩', '🕊️', '🐇', '🦝'
+    ];
+
+    let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0, totalPairs = 8;
+    let memTimeSeconds = 0, memTimerInt = null;
 
     function startMemoryGame() {
-      const icons = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
-      const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+      clearInterval(memTimerInt);
+      memTimeSeconds = 0;
+      document.getElementById('memTimer').innerText = '00:00';
+      memTimerInt = setInterval(() => {
+        memTimeSeconds++;
+        const mins = String(Math.floor(memTimeSeconds / 60)).padStart(2, '0');
+        const secs = String(memTimeSeconds % 60).padStart(2, '0');
+        document.getElementById('memTimer').innerText = `${mins}:${secs}`;
+      }, 1000);
+
+      const gridSize = parseInt(document.getElementById('gridSizeSelect').value) || 4;
+      totalPairs = (gridSize * gridSize) / 2;
+
+      // Select emoji pool for current grid
+      const selectedEmojis = masterEmojiPool.slice(0, totalPairs);
+      const deck = [...selectedEmojis, ...selectedEmojis].sort(() => Math.random() - 0.5);
+
       const grid = document.getElementById('memoryGrid');
-      grid.innerHTML = ''; memFlipped = []; memMatched = 0; memMoves = 0;
+      grid.innerHTML = ''; 
+      grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+      memFlipped = []; 
+      memMatched = 0; 
+      memMoves = 0;
+
       document.getElementById('memMoves').innerText = '0';
-      document.getElementById('memMatches').innerText = '0/8';
+      document.getElementById('memMatches').innerText = `0/${totalPairs}`;
+
+      // Dynamic Font Scaling
+      let fontSz = '1.5rem';
+      if (gridSize >= 8) fontSz = '1rem';
+      if (gridSize >= 10) fontSz = '0.75rem';
+      if (gridSize >= 12) fontSz = '0.6rem';
 
       memCards = deck.map((icon, idx) => {
         const c = document.createElement('div');
         c.className = 'card';
-        c.innerHTML = `<div class="card-face card-back">🧠</div><div class="card-face card-front">${icon}</div>`;
+        c.innerHTML = `
+          <div class="card-face card-back" style="font-size:${fontSz}">🧠</div>
+          <div class="card-face card-front" style="font-size:${fontSz}">${icon}</div>`;
         c.onclick = () => flipMemCard(idx, c, icon);
         grid.appendChild(c);
         return { icon, element: c, matched: false };
@@ -1208,18 +1278,20 @@
           sound.win();
           memCards[i1].matched = memCards[i2].matched = true;
           memMatched++;
-          document.getElementById('memMatches').innerText = `${memMatched}/8`;
+          document.getElementById('memMatches').innerText = `${memMatched}/${totalPairs}`;
           memFlipped = [];
-          if (memMatched === 8) {
-            confetti({ particleCount: 100 });
-            showModal('VICTORY!', `Cleared in ${memMoves} moves!`);
+
+          if (memMatched === totalPairs) {
+            clearInterval(memTimerInt);
+            confetti({ particleCount: 120, spread: 80 });
+            showModal('VICTORY!', `Completed ${totalPairs * 2} Cards Grid in ${memMoves} moves!`);
           }
         } else {
           setTimeout(() => {
             memCards[i1].element.classList.remove('flipped');
             memCards[i2].element.classList.remove('flipped');
             memFlipped = [];
-          }, 800);
+          }, 700);
         }
       }
     }
