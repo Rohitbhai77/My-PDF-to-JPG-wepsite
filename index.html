@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk File Converter - Pro Suite</title>
+  <title>Bulk File Converter - Pro Suite & TypePro Ultra</title>
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080c16'/%3E%3Crect x='10' y='15' width='38' height='50' rx='6' fill='%23ff2a75'/%3E%3Ctext x='29' y='45' font-family='sans-serif' font-weight='900' font-size='14' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3Crect x='52' y='35' width='38' height='50' rx='6' fill='%2300f2fe'/%3E%3Ctext x='71' y='65' font-family='sans-serif' font-weight='900' font-size='14' fill='%23080c16' text-anchor='middle'%3EJPG%3C/text%3E%3Cpath d='M 40 40 L 60 40 L 52 32 M 60 40 L 52 48' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
   
@@ -13,14 +13,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <link rel="manifest" href="manifest.json">
 
+  <!-- Fonts for Typing Engine -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
   </script>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
-
     :root {
       --neon-pink: #ff2a75;
       --neon-cyan: #00f2fe;
@@ -31,6 +35,20 @@
       --glass-border: rgba(255, 255, 255, 0.25);
       --text-main: #ffffff;
       --panel-bg: rgba(10, 15, 28, 0.95);
+
+      /* Typing Engine Variables */
+      --typing-card-bg: rgba(30, 41, 59, 0.95);
+      --typing-border: rgba(255, 255, 255, 0.12);
+      --typing-text-muted: #64748b;
+      --typing-primary: #6366f1;
+      --typing-primary-glow: rgba(99, 102, 241, 0.4);
+      --typing-accent: #38bdf8;
+      --typing-char-correct: #10b981;
+      --typing-char-wrong: #ef4444;
+      --typing-char-wrong-bg: rgba(239, 68, 68, 0.2);
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-hindi: 'Noto Sans Devanagari', sans-serif;
+      --font-main: 'Outfit', sans-serif;
     }
 
     /* Light Mode Overrides */
@@ -185,7 +203,7 @@
       cursor: pointer;
     }
 
-    /* Compact Top-Left Header */
+    /* Header */
     .header {
       text-align: left;
       margin-bottom: 10px;
@@ -441,12 +459,314 @@
       border-radius: 10px;
       backdrop-filter: blur(8px);
     }
+
+    /* ==========================================================================
+       TYPEPRO ULTRA - MODAL OVERLAY STYLES
+       ========================================================================== */
+    .typing-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 7, 18, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .typing-modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .typing-container {
+      width: 100%;
+      max-width: 1050px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--typing-border);
+      border-radius: 24px;
+      padding: 1.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: #ef4444;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .typing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--typing-card-bg);
+      border: 1px solid var(--typing-border);
+      padding: 0.85rem 1.25rem;
+      border-radius: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #fff;
+    }
+
+    .brand-logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--typing-primary), var(--typing-accent));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 15px var(--typing-primary-glow);
+      color: white;
+      font-weight: 900;
+    }
+
+    .user-xp-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--typing-border);
+      font-size: 0.85rem;
+    }
+
+    .xp-level { color: var(--typing-accent); font-weight: 700; }
+
+    .config-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.8rem;
+      background: var(--typing-card-bg);
+      padding: 0.75rem 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--typing-border);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.3rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.25rem;
+      border-radius: 10px;
+    }
+
+    .cfg-btn {
+      background: transparent;
+      border: none;
+      color: var(--typing-text-muted);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cfg-btn.active {
+      background: var(--typing-primary);
+      color: white;
+      box-shadow: 0 0 10px var(--typing-primary-glow);
+    }
+
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+    }
+
+    .hud-card {
+      background: var(--typing-card-bg);
+      border: 1px solid var(--typing-border);
+      border-radius: 14px;
+      padding: 0.85rem;
+      text-align: center;
+    }
+
+    .hud-title { font-size: 0.7rem; text-transform: uppercase; color: var(--typing-text-muted); font-weight: 700; }
+    .hud-val { font-size: 1.6rem; font-family: var(--font-mono); font-weight: 700; margin-top: 0.1rem; color: #fff; }
+
+    .typing-viewport {
+      background: rgba(10, 15, 28, 0.85);
+      border: 1px solid var(--typing-border);
+      border-radius: 18px;
+      padding: 1.25rem;
+      position: relative;
+      cursor: text;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .word-stream {
+      font-family: var(--font-mono);
+      font-size: 1.45rem;
+      line-height: 2.1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55em;
+      color: var(--typing-text-muted);
+      user-select: none;
+      width: 100%;
+    }
+
+    .word-stream.hindi { font-family: var(--font-hindi); font-size: 1.55rem; }
+
+    .word { display: flex; position: relative; }
+    .char { transition: color 0.1s, background 0.1s; }
+    .char.correct { color: var(--typing-char-correct); }
+    .char.wrong { color: var(--typing-char-wrong); background: var(--typing-char-wrong-bg); border-radius: 2px; }
+    .char.active { color: #ffffff; position: relative; }
+    .char.active::before {
+      content: ''; position: absolute; left: 0; bottom: -2px; width: 100%; height: 3px;
+      background: var(--typing-accent); border-radius: 2px; animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .keyboard-panel {
+      background: var(--typing-card-bg);
+      border: 1px solid var(--typing-border);
+      border-radius: 16px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .kb-row { display: flex; gap: 0.3rem; }
+
+    .key {
+      min-width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--typing-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--typing-text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .key.space { min-width: 240px; }
+
+    .key.target-key {
+      border-color: var(--typing-accent);
+      color: var(--typing-accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .key.pressed-correct { background: rgba(16, 185, 129, 0.3) !important; color: white !important; }
+    .key.pressed-wrong { background: rgba(239, 68, 68, 0.4) !important; color: white !important; }
+
+    .finger-guide-text {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--typing-accent);
+      margin-top: 0.2rem;
+      font-weight: 600;
+    }
+
+    .results-dashboard {
+      display: none;
+      background: var(--typing-card-bg);
+      border: 1px solid var(--typing-border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .results-dashboard.active { display: flex; }
+
+    .res-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .ai-review-card {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--typing-primary);
+      border-radius: 14px;
+      padding: 1.1rem;
+    }
+
+    .ai-review-card h3 { color: var(--typing-accent); margin-bottom: 0.4rem; font-size: 1.05rem; }
+
+    .weak-keys-list { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+    .weak-key-tag {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--typing-char-wrong);
+      border: 1px solid var(--typing-char-wrong);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+    }
+
+    .hidden-input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .btn-action {
+      background: var(--typing-primary);
+      color: white; border: none; padding: 0.6rem 1.3rem;
+      font-weight: 700; border-radius: 10px; cursor: pointer;
+      align-self: center; transition: all 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--typing-primary-glow); }
   </style>
 </head>
 <body>
 
   <!-- Top Right Utility Bar -->
   <div class="top-right-controls">
+    <button class="nav-btn" onclick="openTypingModal()">⌨️ Typing Test</button>
     <button class="nav-btn" id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     
@@ -506,9 +826,9 @@
         <button id="downloadPdfBtn" class="btn btn-success" onclick="downloadSinglePdf()" style="display: none;">
           📄 Combined PDF
         </button>
-        <a href="GAME.HTML" class="btn btn-game" id="gameBtn">
-          🎮 Game
-        </a>
+        <button class="btn btn-game" id="gameBtn" onclick="openTypingModal()">
+          ⌨️ Typing Test / Game
+        </button>
       </div>
 
       <div class="progress-bar-container" id="progressContainer">
@@ -523,6 +843,108 @@
 
     <div class="footer" id="footerText">
       Client-Side Fast & Secure Engine • Cyberpunk Edition 🌌
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TYPEPRO ULTRA INTEGRATED MODAL
+       ========================================================================== -->
+  <div class="typing-modal-overlay" id="typingModal">
+    <div class="typing-container">
+      <button class="modal-close-btn" onclick="closeTypingModal()">✕</button>
+
+      <div class="typing-header">
+        <div class="brand">
+          <div class="brand-logo">T</div>
+          <span>TypePro Ultra</span>
+        </div>
+        <div class="user-xp-badge">
+          <span>Level <strong id="userLevel" class="xp-level">1</strong></span>
+          <span style="color: var(--typing-text-muted)">|</span>
+          <span>XP: <strong id="userXP" style="color:#fff">0</strong></span>
+        </div>
+      </div>
+
+      <div class="config-toolbar">
+        <div class="btn-group" id="tLangSelect">
+          <button class="cfg-btn active" data-lang="en">🇬🇧 English</button>
+          <button class="cfg-btn" data-lang="hi">🇮🇳 Hindi</button>
+        </div>
+
+        <div class="btn-group" id="tTopicSelect">
+          <button class="cfg-btn active" data-topic="easy">Easy</button>
+          <button class="cfg-btn" data-topic="medium">Medium</button>
+          <button class="cfg-btn" data-topic="hard">Hard</button>
+          <button class="cfg-btn" data-topic="code">Code</button>
+          <button class="cfg-btn" data-topic="science">Science</button>
+        </div>
+
+        <div class="btn-group" id="tTimeSelect">
+          <button class="cfg-btn active" data-time="30">30s</button>
+          <button class="cfg-btn" data-time="60">1m</button>
+          <button class="cfg-btn" data-time="120">2m</button>
+          <button class="cfg-btn" data-time="300">5m</button>
+        </div>
+      </div>
+
+      <div id="testContainer" style="display:flex; flex-direction:column; gap:1.25rem;">
+        <div class="hud-grid">
+          <div class="hud-card">
+            <div class="hud-title">Timer</div>
+            <div class="hud-val" id="hudTimer">30s</div>
+          </div>
+          <div class="hud-card">
+            <div class="hud-title">Speed</div>
+            <div class="hud-val" id="hudWpm">0 <span style="font-size:0.85rem; color:var(--typing-text-muted)">WPM</span></div>
+          </div>
+          <div class="hud-card">
+            <div class="hud-title">Accuracy</div>
+            <div class="hud-val" id="hudAcc">100%</div>
+          </div>
+          <div class="hud-card">
+            <div class="hud-title">Mistakes</div>
+            <div class="hud-val" id="hudMistakes">0</div>
+          </div>
+        </div>
+
+        <div class="typing-viewport" id="viewport">
+          <div class="word-stream" id="wordStream"></div>
+          <input type="text" class="hidden-input" id="typingInput" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div class="keyboard-panel" id="virtualKeyboard">
+          <div class="kb-row" id="row1"></div>
+          <div class="kb-row" id="row2"></div>
+          <div class="kb-row" id="row3"></div>
+          <div class="kb-row" id="row4"></div>
+          <div class="finger-guide-text" id="fingerGuide">Finger Recommendation: Ready</div>
+        </div>
+
+        <button class="btn-action" id="resetBtn">🔄 Reset Test (Esc)</button>
+      </div>
+
+      <div class="results-dashboard" id="resultContainer">
+        <h2>🏆 Test Completed!</h2>
+        
+        <div class="res-grid">
+          <div class="hud-card"><div class="hud-title">WPM</div><div class="hud-val" id="resWpm">0</div></div>
+          <div class="hud-card"><div class="hud-title">CPM</div><div class="hud-val" id="resCpm">0</div></div>
+          <div class="hud-card"><div class="hud-title">Accuracy</div><div class="hud-val" id="resAcc">0%</div></div>
+          <div class="hud-card"><div class="hud-title">Mistakes</div><div class="hud-val" id="resMistakes">0</div></div>
+          <div class="hud-card"><div class="hud-title">XP Gained</div><div class="hud-val" id="resXp" style="color:var(--typing-accent)">+0</div></div>
+        </div>
+
+        <div class="ai-review-card">
+          <h3>🤖 Diagnostic Feedback</h3>
+          <p id="aiReviewMsg" style="color:#e2e8f0; font-size:0.9rem;">Analyzing performance...</p>
+          <div style="margin-top: 0.8rem;">
+            <span style="font-size:0.8rem; color:var(--typing-text-muted);">Weakest Keys to Practice:</span>
+            <div class="weak-keys-list" id="weakKeysContainer"></div>
+          </div>
+        </div>
+
+        <button class="btn-action" id="tryAgainBtn">🔄 Try Another Test</button>
+      </div>
     </div>
   </div>
 
@@ -542,7 +964,7 @@
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => {
         document.body.classList.add('idle-mode');
-      }, 15000); // 15s Idle Trigger
+      }, 15000);
     }
 
     ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
@@ -559,7 +981,7 @@
         dropImg: "Drag & Drop JPG or PNG Images here",
         dropSub: "or click to browse from device",
         convert: "⚡ Convert Files",
-        game: "🎮 Game",
+        game: "⌨️ Typing Test / Game",
         lblTheme: "Theme Mode",
         lblLang: "Language"
       },
@@ -570,7 +992,7 @@
         dropImg: "JPG या PNG चित्र यहाँ खींचें और छोड़ें",
         dropSub: "या अपने डिवाइस से चुनने के लिए क्लिक करें",
         convert: "⚡ फ़ाइलें बदलें",
-        game: "🎮 गेम खेलें",
+        game: "⌨️ टाइपिंग टेस्ट / गेम",
         lblTheme: "थीम मोड",
         lblLang: "भाषा"
       },
@@ -581,7 +1003,7 @@
         dropImg: "Arrastra y suelta imágenes JPG o PNG aquí",
         dropSub: "o haz clic para buscar desde tu dispositivo",
         convert: "⚡ Convertir Archivos",
-        game: "🎮 Juego",
+        game: "⌨️ Prueba de Mecanografía",
         lblTheme: "Modo de Tema",
         lblLang: "Idioma"
       },
@@ -592,7 +1014,7 @@
         dropImg: "Glissez & déposez des images JPG ou PNG ici",
         dropSub: "ou cliquez pour parcourir l'appareil",
         convert: "⚡ Convertir les Fichiers",
-        game: "🎮 Jeu",
+        game: "⌨️ Test de Dactylographie",
         lblTheme: "Thème",
         lblLang: "Langue"
       }
@@ -857,6 +1279,353 @@
     }
 
     function updateStatus(msg) { statusText.textContent = msg; }
+
+    /* ==========================================================================
+       TYPEPRO ULTRA ENGINE SCRIPT
+       ========================================================================== */
+    const CORPUS = {
+      en: {
+        easy: ["the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line"],
+        medium: ["algorithm", "architecture", "asynchronous", "benchmark", "bandwidth", "compilation", "concurrency", "dataflow", "efficiency", "encapsulation", "framework", "functionality", "inheritance", "interaction", "interface", "iteration", "middleware", "optimization", "parameter", "polymorphism", "precision", "refactoring", "repository", "scalability", "synchronization", "throughput", "validation", "versatility", "vulnerability"],
+        hard: ["extraordinary", "misunderstanding", "unquestionably", "incomprehensible", "counterproductive", "disproportionate", "notwithstanding", "disestablishmentarianism", "characterization", "enthusiastically"],
+        code: ["const", "function", "return", "let", "async", "await", "import", "export", "class", "extends", "constructor", "document.getElementById", "addEventListener", "console.log", "process.env", "Promise.resolve"],
+        science: ["photosynthesis", "thermodynamics", "quantum", "mitochondria", "gravity", "electromagnetism", "astronomy", "neuroscience", "chromosome", "velocity"]
+      },
+      hi: {
+        easy: ["राम", "घर", "जाता", "है", "भारत", "एक", "महान", "देश", "है", "समय", "का", "सही", "उपयोग", "करो", "सच्चाई", "की", "जीत", "होती", "है", "हमें", "रोज़", "अभ्यास", "करना", "चाहिए", "ज्ञान", "ही", "सबसे", "बड़ा", "धन", "है"],
+        medium: ["तकनीक", "और", "विज्ञान", "ने", "मानव", "जीवन", "को", "अत्यंत", "सरल", "और", "सुगम", "बना", "दिया", "है", "निरंतर", "प्रयास", "से", "ही", "सफलता", "प्राप्त", "होती", "है"],
+        hard: ["आत्मनिर्भरता", "सहानुभूति", "उत्तरदायित्व", "प्रौद्योगिकी", "विश्वसनीयता", "सकारात्मकता"]
+      }
+    };
+
+    const KEYBOARD_LAYOUT = [
+      ["q","w","e","r","t","y","u","i","o","p"],
+      ["a","s","d","f","g","h","j","k","l"],
+      ["z","x","c","v","b","n","m"],
+      ["space"]
+    ];
+
+    const FINGER_MAP = {
+      'q':'Left Pinky','a':'Left Pinky','z':'Left Pinky',
+      'w':'Left Ring','s':'Left Ring','x':'Left Ring',
+      'e':'Left Middle','d':'Left Middle','c':'Left Middle',
+      'r':'Left Index','f':'Left Index','v':'Left Index','t':'Left Index','g':'Left Index','b':'Left Index',
+      'y':'Right Index','h':'Right Index','n':'Right Index','u':'Right Index','j':'Right Index','m':'Right Index',
+      'i':'Right Middle','k':'Right Middle',
+      'o':'Right Ring','l':'Right Ring',
+      'p':'Right Pinky','space':'Thumbs'
+    };
+
+    const tState = {
+      lang: 'en',
+      topic: 'easy',
+      timeLimit: 30,
+      timeLeft: 30,
+      generatedWords: [],
+      currentWordIdx: 0,
+      currentCharIdx: 0,
+      correctChars: 0,
+      wrongChars: 0,
+      totalMistakes: 0,
+      wrongKeyMap: {},
+      isStarted: false,
+      timerInterval: null,
+      xp: parseInt(localStorage.getItem('typepro_xp') || '0'),
+      level: parseInt(localStorage.getItem('typepro_level') || '1')
+    };
+
+    const tEls = {
+      typingModal: document.getElementById('typingModal'),
+      wordStream: document.getElementById('wordStream'),
+      typingInput: document.getElementById('typingInput'),
+      viewport: document.getElementById('viewport'),
+      hudTimer: document.getElementById('hudTimer'),
+      hudWpm: document.getElementById('hudWpm'),
+      hudAcc: document.getElementById('hudAcc'),
+      hudMistakes: document.getElementById('hudMistakes'),
+      userXP: document.getElementById('userXP'),
+      userLevel: document.getElementById('userLevel'),
+      fingerGuide: document.getElementById('fingerGuide'),
+      testContainer: document.getElementById('testContainer'),
+      resultContainer: document.getElementById('resultContainer'),
+      resWpm: document.getElementById('resWpm'),
+      resCpm: document.getElementById('resCpm'),
+      resAcc: document.getElementById('resAcc'),
+      resMistakes: document.getElementById('resMistakes'),
+      resXp: document.getElementById('resXp'),
+      aiReviewMsg: document.getElementById('aiReviewMsg'),
+      weakKeysContainer: document.getElementById('weakKeysContainer'),
+      resetBtn: document.getElementById('resetBtn'),
+      tryAgainBtn: document.getElementById('tryAgainBtn')
+    };
+
+    function openTypingModal() {
+      tEls.typingModal.classList.add('active');
+      initTypingEngine();
+    }
+
+    function closeTypingModal() {
+      tEls.typingModal.classList.remove('active');
+      clearInterval(tState.timerInterval);
+      tState.isStarted = false;
+    }
+
+    function initTypingEngine() {
+      buildKeyboard();
+      setupConfigListeners();
+      updateUserStatsUI();
+      resetTest();
+
+      tEls.viewport.onclick = () => tEls.typingInput.focus();
+      tEls.typingInput.oninput = handleTyping;
+      tEls.resetBtn.onclick = resetTest;
+      tEls.tryAgainBtn.onclick = () => {
+        tEls.resultContainer.classList.remove('active');
+        tEls.testContainer.style.display = 'flex';
+        resetTest();
+      };
+
+      document.onkeydown = (e) => {
+        if (e.key === 'Escape' && tEls.typingModal.classList.contains('active')) {
+          resetTest();
+        }
+      };
+    }
+
+    function updateUserStatsUI() {
+      tEls.userXP.textContent = tState.xp;
+      tEls.userLevel.textContent = tState.level;
+    }
+
+    function buildKeyboard() {
+      const rows = [document.getElementById('row1'), document.getElementById('row2'), document.getElementById('row3'), document.getElementById('row4')];
+      rows.forEach(r => r.innerHTML = '');
+
+      KEYBOARD_LAYOUT.forEach((rowKeys, rowIdx) => {
+        rowKeys.forEach(k => {
+          const keyEl = document.createElement('div');
+          keyEl.className = `key ${k === 'space' ? 'space' : ''}`;
+          keyEl.id = `key-${k}`;
+          keyEl.textContent = k === 'space' ? 'Space' : k.toUpperCase();
+          rows[rowIdx].appendChild(keyEl);
+        });
+      });
+    }
+
+    function generateProceduralText() {
+      const targetWords = Math.round((tState.timeLimit / 30) * 60) + 20;
+      const pool = CORPUS[tState.lang][tState.topic] || CORPUS.en.easy;
+      let words = [];
+      for (let i = 0; i < targetWords; i++) {
+        words.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      tState.generatedWords = words;
+    }
+
+    function renderWords() {
+      tEls.wordStream.innerHTML = '';
+      tEls.wordStream.className = `word-stream ${tState.lang === 'hi' ? 'hindi' : ''}`;
+
+      tState.generatedWords.forEach((w, wIdx) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'word';
+        wordSpan.id = `w-${wIdx}`;
+
+        Array.from(w).forEach((c, cIdx) => {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'char';
+          charSpan.id = `c-${wIdx}-${cIdx}`;
+          charSpan.textContent = c;
+          wordSpan.appendChild(charSpan);
+        });
+
+        tEls.wordStream.appendChild(wordSpan);
+      });
+
+      highlightCurrentPosition();
+    }
+
+    function highlightCurrentPosition() {
+      document.querySelectorAll('.char').forEach(c => c.classList.remove('active'));
+      const curChar = document.getElementById(`c-${tState.currentWordIdx}-${tState.currentCharIdx}`);
+      
+      if (curChar) {
+        curChar.classList.add('active');
+        updateFingerGuide(curChar.textContent.toLowerCase());
+      } else {
+        updateFingerGuide('space');
+      }
+    }
+
+    function updateFingerGuide(char) {
+      document.querySelectorAll('.key').forEach(k => k.classList.remove('target-key'));
+      const finger = FINGER_MAP[char] || 'Thumbs';
+      tEls.fingerGuide.textContent = `Finger Recommendation: ${finger}`;
+
+      const targetKey = document.getElementById(`key-${char}`);
+      if (targetKey) targetKey.classList.add('target-key');
+    }
+
+    function handleTyping() {
+      if (!tState.isStarted) startTest();
+
+      const val = tEls.typingInput.value;
+      const currentWord = tState.generatedWords[tState.currentWordIdx];
+
+      if (val.endsWith(' ')) {
+        const typedWord = val.trim();
+        if (typedWord === currentWord) {
+          tState.correctChars += currentWord.length + 1;
+        } else {
+          tState.wrongChars += Math.abs(currentWord.length - typedWord.length);
+          tState.totalMistakes++;
+        }
+
+        tState.currentWordIdx++;
+        tState.currentCharIdx = 0;
+        tEls.typingInput.value = '';
+      } else {
+        tState.currentCharIdx = val.length;
+        const charEl = document.getElementById(`c-${tState.currentWordIdx}-${val.length - 1}`);
+
+        if (charEl) {
+          const targetChar = currentWord[val.length - 1];
+          const typedChar = val[val.length - 1];
+
+          if (typedChar === targetChar) {
+            charEl.className = 'char correct';
+            tState.correctChars++;
+            flashKey(typedChar, true);
+          } else {
+            charEl.className = 'char wrong';
+            tState.wrongChars++;
+            tState.totalMistakes++;
+            tState.wrongKeyMap[targetChar] = (tState.wrongKeyMap[targetChar] || 0) + 1;
+            flashKey(typedChar || targetChar, false);
+          }
+        }
+      }
+
+      updateHUD();
+      highlightCurrentPosition();
+    }
+
+    function flashKey(char, isCorrect) {
+      const kEl = document.getElementById(`key-${char.toLowerCase()}`);
+      if (kEl) {
+        kEl.classList.add(isCorrect ? 'pressed-correct' : 'pressed-wrong');
+        setTimeout(() => kEl.classList.remove('pressed-correct', 'pressed-wrong'), 150);
+      }
+    }
+
+    function updateHUD() {
+      const elapsed = (tState.timeLimit - tState.timeLeft) || 1;
+      const mins = elapsed / 60;
+      const wpm = Math.round((tState.correctChars / 5) / mins);
+      const total = tState.correctChars + tState.wrongChars;
+      const acc = total > 0 ? Math.round((tState.correctChars / total) * 100) : 100;
+
+      tEls.hudWpm.innerHTML = `${wpm} <span style="font-size:0.85rem; color:var(--typing-text-muted)">WPM</span>`;
+      tEls.hudAcc.textContent = `${acc}%`;
+      tEls.hudMistakes.textContent = tState.totalMistakes;
+    }
+
+    function startTest() {
+      tState.isStarted = true;
+      tState.timerInterval = setInterval(() => {
+        tState.timeLeft--;
+        tEls.hudTimer.textContent = `${tState.timeLeft}s`;
+        updateHUD();
+
+        if (tState.timeLeft <= 0) finishTest();
+      }, 1000);
+    }
+
+    function finishTest() {
+      clearInterval(tState.timerInterval);
+      tEls.testContainer.style.display = 'none';
+      tEls.resultContainer.classList.add('active');
+
+      const elapsed = tState.timeLimit / 60;
+      const wpm = Math.round((tState.correctChars / 5) / elapsed);
+      const cpm = Math.round(tState.correctChars / elapsed);
+      const total = tState.correctChars + tState.wrongChars;
+      const acc = total > 0 ? Math.round((tState.correctChars / total) * 100) : 100;
+
+      const gainedXP = Math.round(wpm * (acc / 100) + 20);
+      tState.xp += gainedXP;
+      if (tState.xp >= tState.level * 100) tState.level++;
+
+      localStorage.setItem('typepro_xp', tState.xp);
+      localStorage.setItem('typepro_level', tState.level);
+      updateUserStatsUI();
+
+      tEls.resWpm.textContent = wpm;
+      tEls.resCpm.textContent = cpm;
+      tEls.resAcc.textContent = `${acc}%`;
+      tEls.resMistakes.textContent = tState.totalMistakes;
+      tEls.resXp.textContent = `+${gainedXP} XP`;
+
+      tEls.aiReviewMsg.textContent = acc > 90 ? "Excellent accuracy & rhythm! Keep pushing your speed limits." : "Good attempt! Focus on key accuracy first before increasing speed.";
+
+      tEls.weakKeysContainer.innerHTML = '';
+      const sortedWeakKeys = Object.keys(tState.wrongKeyMap).sort((a,b) => tState.wrongKeyMap[b] - tState.wrongKeyMap[a]).slice(0, 3);
+      
+      if (sortedWeakKeys.length === 0) {
+        tEls.weakKeysContainer.innerHTML = '<span style="color:var(--typing-char-correct)">None! Perfect execution.</span>';
+      } else {
+        sortedWeakKeys.forEach(k => {
+          const tag = document.createElement('span');
+          tag.className = 'weak-key-tag';
+          tag.textContent = `${k.toUpperCase()} (${tState.wrongKeyMap[k]})`;
+          tEls.weakKeysContainer.appendChild(tag);
+        });
+      }
+    }
+
+    function resetTest() {
+      clearInterval(tState.timerInterval);
+      tState.isStarted = false;
+      tState.timeLeft = tState.timeLimit;
+      tState.currentWordIdx = 0;
+      tState.currentCharIdx = 0;
+      tState.correctChars = 0;
+      tState.wrongChars = 0;
+      tState.totalMistakes = 0;
+      tState.wrongKeyMap = {};
+
+      tEls.hudTimer.textContent = `${tState.timeLimit}s`;
+      tEls.hudWpm.innerHTML = `0 <span style="font-size:0.85rem; color:var(--typing-text-muted)">WPM</span>`;
+      tEls.hudAcc.textContent = '100%';
+      tEls.hudMistakes.textContent = '0';
+      tEls.typingInput.value = '';
+
+      generateProceduralText();
+      renderWords();
+      tEls.typingInput.focus();
+    }
+
+    function setupConfigListeners() {
+      const langBtns = document.getElementById('tLangSelect');
+      const topicBtns = document.getElementById('tTopicSelect');
+      const timeBtns = document.getElementById('tTimeSelect');
+
+      [langBtns, topicBtns, timeBtns].forEach(grp => {
+        grp.onclick = (e) => {
+          const btn = e.target.closest('.cfg-btn');
+          if (!btn) return;
+
+          grp.querySelectorAll('.cfg-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          if (btn.dataset.lang) tState.lang = btn.dataset.lang;
+          if (btn.dataset.topic) tState.topic = btn.dataset.topic;
+          if (btn.dataset.time) tState.timeLimit = parseInt(btn.dataset.time);
+
+          resetTest();
+        };
+      });
+    }
   </script>
 </body>
 </html>
