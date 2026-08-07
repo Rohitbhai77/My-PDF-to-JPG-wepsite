@@ -81,7 +81,7 @@
       padding: 80px 20px 40px 20px;
     }
 
-    /* Fullscreen Video Background */
+    /* Fullscreen Video Background - High Visibility Fix */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -96,7 +96,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.7) contrast(1.1);
+      filter: brightness(0.95) contrast(1.05);
       transition: filter 0.8s ease;
     }
 
@@ -106,7 +106,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.4) 0%, rgba(4, 7, 18, 0.85) 100%);
+      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.15) 0%, rgba(4, 7, 18, 0.45) 100%);
       z-index: -1;
       pointer-events: none;
       transition: opacity 0.8s ease;
@@ -135,7 +135,7 @@
       z-index: 100;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
@@ -842,11 +842,12 @@
 </head>
 <body>
 
-  <!-- Top Fixed Utility Bar (Typing Practice safely separated here) -->
+  <!-- Top Fixed Utility Bar (Typing Practice safely separated & Refresh Button Added) -->
   <div class="top-right-controls">
     <button class="nav-btn nav-btn-game" onclick="openTypingModal()">⌨️ Typing Practice</button>
     <button class="nav-btn" id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
+    <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
     
     <div class="settings-panel" id="settingsPanel">
       <div class="setting-item">
