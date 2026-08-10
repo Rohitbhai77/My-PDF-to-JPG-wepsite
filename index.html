@@ -31,11 +31,11 @@
       --btn-gradient: linear-gradient(135deg, #ff007f, #7928ca);
       --btn-success: linear-gradient(135deg, #00b09b, #96c93d);
       --btn-game: linear-gradient(135deg, #f59e0b, #d97706);
-      --glass-bg: rgba(13, 18, 30, 0.65);
-      --glass-border: rgba(255, 255, 255, 0.18);
+      --glass-bg: rgba(13, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
       --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --panel-bg: rgba(10, 15, 28, 0.92);
+      --panel-bg: rgba(10, 15, 28, 0.95);
 
       /* Typing Engine Variables */
       --typing-card-bg: rgba(30, 41, 59, 0.95);
@@ -54,11 +54,11 @@
 
     /* Light Mode Overrides */
     body.light-mode {
-      --glass-bg: rgba(255, 255, 255, 0.82);
-      --glass-border: rgba(0, 0, 0, 0.15);
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(0, 0, 0, 0.12);
       --text-main: #0f172a;
       --text-muted: #475569;
-      --panel-bg: rgba(255, 255, 255, 0.96);
+      --panel-bg: rgba(255, 255, 255, 0.98);
     }
 
     * {
@@ -78,7 +78,7 @@
       overflow-x: hidden;
       position: relative;
       background: #040712;
-      padding: 70px 20px 40px 20px;
+      padding: 30px 20px 40px 20px;
     }
 
     /* Fullscreen Video Background - High Visibility Fix */
@@ -96,7 +96,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.98) contrast(1.05);
+      filter: brightness(1.05) contrast(1.02);
       transition: filter 0.8s ease;
     }
 
@@ -106,7 +106,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.08) 0%, rgba(4, 7, 18, 0.35) 100%);
+      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.05) 0%, rgba(4, 7, 18, 0.25) 100%);
       z-index: -1;
       pointer-events: none;
       transition: opacity 0.8s ease;
@@ -118,80 +118,13 @@
       max-width: 860px;
       margin: 0 auto;
       transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-      position: relative;
     }
 
     body.idle-mode .app-wrapper,
-    body.idle-mode .top-right-controls,
-    body.idle-mode .upper-left-drop-container {
+    body.idle-mode .top-right-controls {
       opacity: 0.15;
       transform: scale(0.98);
       pointer-events: none;
-    }
-
-    /* Floating Upper Left Drop Container */
-    .upper-left-drop-container {
-      position: absolute;
-      top: -45px;
-      left: 0;
-      z-index: 20;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Compact Dropzone Area */
-    .drop-zone {
-      width: 320px;
-      height: 110px;
-      border: 1.5px dashed rgba(0, 242, 254, 0.6);
-      border-radius: 18px;
-      padding: 12px 16px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      background: rgba(10, 15, 28, 0.65);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .drop-zone:hover, .drop-zone.dragover {
-      border-color: var(--neon-pink);
-      background: rgba(255, 42, 117, 0.15);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(255, 42, 117, 0.25);
-    }
-
-    .drop-zone-icon {
-      font-size: 32px;
-      line-height: 1;
-      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
-      flex-shrink: 0;
-    }
-
-    .drop-zone-text-group {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .drop-zone-title {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.2;
-    }
-
-    .drop-zone-subtitle {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    input[type="file"] {
-      display: none;
     }
 
     /* Top Utility Navigation Bar */
@@ -235,8 +168,8 @@
       color: #fbbf24;
       width: 100%;
       justify-content: center;
-      border-radius: 12px;
-      padding: 10px 14px;
+      border-radius: 10px;
+      padding: 9px 12px;
     }
 
     .nav-btn-game:hover {
@@ -250,17 +183,16 @@
       position: absolute;
       top: 50px;
       right: 0;
-      width: 270px;
+      width: 260px;
       background: var(--panel-bg);
       border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 16px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
       display: none;
       flex-direction: column;
       gap: 14px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(16px);
     }
 
     .settings-panel.active {
@@ -295,15 +227,78 @@
       transition: all 0.2s ease;
     }
 
-    .setting-item select:hover, .setting-item button:hover {
+    .setting-item button:hover {
       border-color: var(--neon-cyan);
     }
 
-    /* Header */
+    /* Header Layout & Floating Compact Upload Area */
     .header {
+      position: relative;
       text-align: center;
-      margin-bottom: 18px;
-      margin-top: 50px;
+      margin-bottom: 20px;
+      padding-top: 10px;
+    }
+
+    /* Compact Floating Dropzone Positioning (Upper-Left near moon) */
+    .compact-upload-wrapper {
+      position: absolute;
+      top: -15px;
+      left: 0px;
+      z-index: 10;
+    }
+
+    .drop-zone {
+      width: 300px;
+      height: 110px;
+      border: 2px dashed rgba(0, 242, 254, 0.6);
+      border-radius: 16px;
+      padding: 12px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(10, 15, 28, 0.65);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--neon-pink);
+      background: rgba(255, 42, 117, 0.15);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 20px rgba(255, 42, 117, 0.4);
+    }
+
+    .drop-zone-icon {
+      font-size: 28px;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+      flex-shrink: 0;
+    }
+
+    .drop-zone-text-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .drop-zone-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .drop-zone-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
     }
 
     .animated-title {
@@ -329,7 +324,7 @@
       color: var(--text-muted);
       font-size: 0.92rem;
       font-weight: 600;
-      background: rgba(10, 15, 28, 0.6);
+      background: rgba(10, 15, 28, 0.5);
       display: inline-block;
       padding: 4px 16px;
       border-radius: 20px;
@@ -347,7 +342,7 @@
     .mode-tabs {
       display: flex;
       gap: 8px;
-      background: rgba(10, 15, 28, 0.65);
+      background: rgba(10, 15, 28, 0.55);
       padding: 6px;
       border-radius: 16px;
       border: 1px solid var(--glass-border);
@@ -355,12 +350,12 @@
     }
 
     .tab-btn {
-      padding: 10px 24px;
+      padding: 9px 22px;
       border-radius: 12px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -375,20 +370,21 @@
       box-shadow: 0 4px 20px rgba(255, 0, 127, 0.4);
     }
 
-    /* Main Container Card */
+    /* Main Container Card - Transparent & Non-Obstructive */
     .main-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 20px 28px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      background: transparent;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    input[type="file"] {
+      display: none;
     }
 
     /* Conversion Control Actions */
     .controls {
-      margin-top: 0px;
+      margin-top: 10px;
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -411,6 +407,7 @@
       letter-spacing: 0.5px;
       text-decoration: none;
       min-width: 180px;
+      backdrop-filter: blur(12px);
     }
 
     .btn-primary {
@@ -446,11 +443,16 @@
     .progress-bar-container {
       margin-top: 16px;
       display: none;
+      background: rgba(10, 15, 28, 0.6);
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
     }
 
     .progress-track {
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: rgba(0, 0, 0, 0.6);
       border-radius: 20px;
       position: relative;
@@ -468,8 +470,8 @@
 
     .status-text {
       text-align: center;
-      margin-top: 10px;
-      font-size: 0.88rem;
+      margin-top: 8px;
+      font-size: 0.85rem;
       color: var(--neon-cyan);
       font-weight: 700;
     }
@@ -481,7 +483,7 @@
     }
 
     .pdf-group {
-      background: rgba(10, 15, 28, 0.6);
+      background: rgba(10, 15, 28, 0.7);
       backdrop-filter: blur(12px);
       border: 1px solid var(--glass-border);
       border-radius: 18px;
@@ -558,6 +560,7 @@
       color: var(--text-muted);
       font-size: 0.8rem;
       font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
     /* ==========================================================================
@@ -862,11 +865,23 @@
     .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--typing-primary-glow); }
 
     /* Responsive Breakdown */
+    @media (max-width: 900px) {
+      .compact-upload-wrapper {
+        position: relative;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+      .drop-zone {
+        width: 100%;
+        max-width: 340px;
+      }
+    }
+
     @media (max-width: 768px) {
-      body { padding: 70px 12px 20px 12px; }
-      .upper-left-drop-container { position: relative; top: 0; width: 100%; margin-bottom: 16px; }
-      .drop-zone { width: 100%; height: auto; padding: 14px; justify-content: center; }
-      .header { margin-top: 10px; }
+      body { padding: 60px 12px 20px 12px; }
       .animated-title { font-size: 1.8rem; }
       .controls { flex-direction: column; width: 100%; }
       .btn { width: 100%; min-width: unset; }
@@ -879,7 +894,7 @@
 </head>
 <body>
 
-  <!-- Top Fixed Utility Bar (Settings & Refresh only) -->
+  <!-- Top Fixed Utility Bar (Only Settings & Refresh visible) -->
   <div class="top-right-controls">
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
@@ -899,11 +914,11 @@
         </select>
       </div>
       <div class="setting-item">
-        <label>Practice Tool</label>
-        <button class="nav-btn-game" id="typingPracticeBtn" onclick="openTypingModal()">⌨️ Typing Practice</button>
+        <label id="lblTyping">Typing Engine</label>
+        <button class="nav-btn-game" id="typingPracticeBtn" onclick="openTypingModal(); toggleSettingsModal();">⌨️ Typing Practice</button>
       </div>
       <div class="setting-item">
-        <label>Audio Controls</label>
+        <label id="lblAudio">Audio Control</label>
         <button id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
       </div>
     </div>
@@ -923,19 +938,19 @@
 
   <!-- App Main Wrapper -->
   <div class="app-wrapper">
-    <!-- Compact Upper-Left Floating Dropzone -->
-    <div class="upper-left-drop-container">
-      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <span class="drop-zone-icon">🚀</span>
-        <div class="drop-zone-text-group">
-          <div class="drop-zone-title" id="dropTitle">Drag & Drop PDFs</div>
-          <div class="drop-zone-subtitle" id="dropSub">or click to browse</div>
-        </div>
-        <input type="file" id="fileInput" accept="application/pdf" multiple />
-      </div>
-    </div>
-
     <div class="header">
+      <!-- Floating Compact Upload Box positioned Upper-Left -->
+      <div class="compact-upload-wrapper">
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <span class="drop-zone-icon">🚀</span>
+          <div class="drop-zone-text-group">
+            <div class="drop-zone-title" id="dropTitle">Drag & Drop PDFs</div>
+            <div class="drop-zone-subtitle" id="dropSub">or click to browse</div>
+          </div>
+          <input type="file" id="fileInput" accept="application/pdf" multiple />
+        </div>
+      </div>
+
       <h1 class="animated-title" id="appTitle">⚡ File Converter Pro</h1>
       <p id="appSubTitle">Multi-Format Conversion • Ultra HD Quality</p>
     </div>
@@ -1107,23 +1122,27 @@
         title: "⚡ File Converter Pro",
         sub: "Multi-Format Conversion • Ultra HD Quality",
         dropPdf: "Drag & Drop PDFs",
-        dropImg: "Drag & Drop JPG/PNG",
+        dropImg: "Drag & Drop Images",
         dropSub: "or click to browse",
         convert: "⚡ Convert Files",
         game: "⌨️ Typing Practice",
         lblTheme: "Theme Mode",
-        lblLang: "Language"
+        lblLang: "Language",
+        lblTyping: "Typing Engine",
+        lblAudio: "Audio Control"
       },
       hi: {
         title: "⚡ फ़ाइल कनवर्टर प्रो",
         sub: "मल्टी-फॉर्मेट परिवर्तन • अल्ट्रा एचडी गुणवत्ता",
         dropPdf: "PDF फ़ाइलें खींचें",
-        dropImg: "चित्र फ़ाइलें खींचें",
+        dropImg: "चित्र खींचें और छोड़ें",
         dropSub: "या चुनने के लिए क्लिक करें",
         convert: "⚡ फ़ाइलें बदलें",
         game: "⌨️ टाइपिंग अभ्यास",
         lblTheme: "थीम मोड",
-        lblLang: "भाषा"
+        lblLang: "भाषा",
+        lblTyping: "टाइपिंग इंजन",
+        lblAudio: "ऑडियो नियंत्रण"
       },
       es: {
         title: "⚡ Convertidor Pro",
@@ -1132,20 +1151,24 @@
         dropImg: "Arrastra imágenes JPG/PNG",
         dropSub: "o haz clic para buscar",
         convert: "⚡ Convertir Archivos",
-        game: "⌨️ Práctica Mecanografía",
+        game: "⌨️ Práctica de Mecanografía",
         lblTheme: "Modo de Tema",
-        lblLang: "Idioma"
+        lblLang: "Idioma",
+        lblTyping: "Motor de Mecanografía",
+        lblAudio: "Control de Audio"
       },
       fr: {
         title: "⚡ Convertisseur Pro",
         sub: "Conversion multi-format • Qualité Ultra HD",
-        dropPdf: "Glissez vos PDF ici",
-        dropImg: "Glissez vos images ici",
+        dropPdf: "Glissez vos PDF",
+        dropImg: "Glissez vos images",
         dropSub: "ou cliquez pour parcourir",
         convert: "⚡ Convertir les Fichiers",
-        game: "⌨️ Pratique Dactylographie",
+        game: "⌨️ Dactylographie",
         lblTheme: "Thème",
-        lblLang: "Langue"
+        lblLang: "Langue",
+        lblTyping: "Moteur de Tape",
+        lblAudio: "Contrôle Audio"
       }
     };
 
@@ -1168,6 +1191,9 @@
       document.getElementById('convertBtn').innerText = t.convert;
       document.getElementById('lblTheme').innerText = t.lblTheme;
       document.getElementById('lblLang').innerText = t.lblLang;
+      if (document.getElementById('lblTyping')) document.getElementById('lblTyping').innerText = t.lblTyping;
+      if (document.getElementById('lblAudio')) document.getElementById('lblAudio').innerText = t.lblAudio;
+      if (document.getElementById('typingPracticeBtn')) document.getElementById('typingPracticeBtn').innerText = t.game;
 
       if (currentMode === 'pdf2jpg') {
         document.getElementById('dropTitle').innerText = t.dropPdf;
@@ -1488,8 +1514,6 @@
     };
 
     function openTypingModal() {
-      const panel = document.getElementById('settingsPanel');
-      if(panel) panel.classList.remove('active');
       tEls.typingModal.classList.add('active');
       initTypingEngine();
     }
