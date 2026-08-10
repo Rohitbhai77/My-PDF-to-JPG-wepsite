@@ -97,7 +97,12 @@
       height: 100%;
       object-fit: cover;
       filter: brightness(1.05) contrast(1.02);
-      transition: filter 0.8s ease;
+      transition: opacity 1s ease-in-out, filter 0.8s ease;
+      opacity: 1;
+    }
+
+    .bg-video-container video.fade-out {
+      opacity: 0;
     }
 
     .bg-overlay {
@@ -991,8 +996,8 @@
   </div>
 
   <!-- ==========================================================================
-        TYPEPRO ULTRA INTEGRATED MODAL
-        ========================================================================== -->
+       TYPEPRO ULTRA INTEGRATED MODAL
+       ========================================================================== -->
   <div class="typing-modal-overlay" id="typingModal">
     <div class="typing-container">
       <button class="modal-close-btn" onclick="closeTypingModal()">✕</button>
@@ -1101,6 +1106,31 @@
     let createdPdfBlob = null;
     let isAudioPlaying = false;
     let idleTimer = null;
+
+    // --- Dynamic 30-Second Background Video Changer Logic ---
+    const bgVideoList = [
+      "oggy-bg.mp4",
+      "https://www.image2url.com/r2/default/videos/1786355014073-b8f7d1c1-8ffb-41c3-aed8-3b92496e882f.mp4"
+    ];
+    let currentVideoIndex = 0;
+
+    function rotateBackgroundVideo() {
+      const bgVideo = document.getElementById('bgVideo');
+      if (!bgVideo) return;
+
+      bgVideo.classList.add('fade-out');
+
+      setTimeout(() => {
+        currentVideoIndex = (currentVideoIndex + 1) % bgVideoList.length;
+        bgVideo.src = bgVideoList[currentVideoIndex];
+        bgVideo.load();
+        bgVideo.play().catch(err => console.log("Video Play Error:", err));
+        bgVideo.classList.remove('fade-out');
+      }, 1000); // Smooth 1-second fade transition
+    }
+
+    // Har 30 second me video switch hogi
+    setInterval(rotateBackgroundVideo, 30000);
 
     // --- Idle Detection Logic (15 Seconds) ---
     function resetIdleTimer() {
