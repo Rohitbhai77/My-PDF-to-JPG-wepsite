@@ -31,11 +31,11 @@
       --btn-gradient: linear-gradient(135deg, #ff007f, #7928ca);
       --btn-success: linear-gradient(135deg, #00b09b, #96c93d);
       --btn-game: linear-gradient(135deg, #f59e0b, #d97706);
-      --glass-bg: rgba(13, 18, 30, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-bg: rgba(13, 18, 30, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.18);
       --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --panel-bg: rgba(10, 15, 28, 0.95);
+      --panel-bg: rgba(10, 15, 28, 0.92);
 
       /* Typing Engine Variables */
       --typing-card-bg: rgba(30, 41, 59, 0.95);
@@ -54,11 +54,11 @@
 
     /* Light Mode Overrides */
     body.light-mode {
-      --glass-bg: rgba(255, 255, 255, 0.85);
-      --glass-border: rgba(0, 0, 0, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.82);
+      --glass-border: rgba(0, 0, 0, 0.15);
       --text-main: #0f172a;
       --text-muted: #475569;
-      --panel-bg: rgba(255, 255, 255, 0.98);
+      --panel-bg: rgba(255, 255, 255, 0.96);
     }
 
     * {
@@ -78,7 +78,7 @@
       overflow-x: hidden;
       position: relative;
       background: #040712;
-      padding: 80px 20px 40px 20px;
+      padding: 70px 20px 40px 20px;
     }
 
     /* Fullscreen Video Background - High Visibility Fix */
@@ -96,7 +96,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.95) contrast(1.05);
+      filter: brightness(0.98) contrast(1.05);
       transition: filter 0.8s ease;
     }
 
@@ -106,7 +106,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.15) 0%, rgba(4, 7, 18, 0.45) 100%);
+      background: radial-gradient(circle at center, rgba(4, 7, 18, 0.08) 0%, rgba(4, 7, 18, 0.35) 100%);
       z-index: -1;
       pointer-events: none;
       transition: opacity 0.8s ease;
@@ -118,13 +118,80 @@
       max-width: 860px;
       margin: 0 auto;
       transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+      position: relative;
     }
 
     body.idle-mode .app-wrapper,
-    body.idle-mode .top-right-controls {
+    body.idle-mode .top-right-controls,
+    body.idle-mode .upper-left-drop-container {
       opacity: 0.15;
       transform: scale(0.98);
       pointer-events: none;
+    }
+
+    /* Floating Upper Left Drop Container */
+    .upper-left-drop-container {
+      position: absolute;
+      top: -45px;
+      left: 0;
+      z-index: 20;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Compact Dropzone Area */
+    .drop-zone {
+      width: 320px;
+      height: 110px;
+      border: 1.5px dashed rgba(0, 242, 254, 0.6);
+      border-radius: 18px;
+      padding: 12px 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(10, 15, 28, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--neon-pink);
+      background: rgba(255, 42, 117, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255, 42, 117, 0.25);
+    }
+
+    .drop-zone-icon {
+      font-size: 32px;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+      flex-shrink: 0;
+    }
+
+    .drop-zone-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .drop-zone-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .drop-zone-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    input[type="file"] {
+      display: none;
     }
 
     /* Top Utility Navigation Bar */
@@ -166,6 +233,10 @@
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.3));
       border: 1px solid #f59e0b;
       color: #fbbf24;
+      width: 100%;
+      justify-content: center;
+      border-radius: 12px;
+      padding: 10px 14px;
     }
 
     .nav-btn-game:hover {
@@ -179,16 +250,17 @@
       position: absolute;
       top: 50px;
       right: 0;
-      width: 240px;
+      width: 270px;
       background: var(--panel-bg);
       border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 18px;
+      padding: 18px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
       display: none;
       flex-direction: column;
       gap: 14px;
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .settings-panel.active {
@@ -220,12 +292,18 @@
       font-size: 0.85rem;
       cursor: pointer;
       width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .setting-item select:hover, .setting-item button:hover {
+      border-color: var(--neon-cyan);
     }
 
     /* Header */
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
+      margin-top: 50px;
     }
 
     .animated-title {
@@ -263,7 +341,7 @@
     .mode-tabs-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .mode-tabs {
@@ -304,57 +382,13 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-    }
-
-    /* Dropzone Area */
-    .drop-zone {
-      border: 2px dashed rgba(0, 242, 254, 0.5);
-      border-radius: 18px;
-      padding: 36px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      background: rgba(4, 7, 18, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .drop-zone:hover, .drop-zone.dragover {
-      border-color: var(--neon-pink);
-      background: rgba(255, 42, 117, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .drop-zone-icon {
-      font-size: 42px;
-      line-height: 1;
-      filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
-    }
-
-    .drop-zone-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .drop-zone-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    input[type="file"] {
-      display: none;
+      padding: 20px 28px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     }
 
     /* Conversion Control Actions */
     .controls {
-      margin-top: 20px;
+      margin-top: 0px;
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -410,7 +444,7 @@
 
     /* Progress Bar */
     .progress-bar-container {
-      margin-top: 20px;
+      margin-top: 16px;
       display: none;
     }
 
@@ -830,6 +864,9 @@
     /* Responsive Breakdown */
     @media (max-width: 768px) {
       body { padding: 70px 12px 20px 12px; }
+      .upper-left-drop-container { position: relative; top: 0; width: 100%; margin-bottom: 16px; }
+      .drop-zone { width: 100%; height: auto; padding: 14px; justify-content: center; }
+      .header { margin-top: 10px; }
       .animated-title { font-size: 1.8rem; }
       .controls { flex-direction: column; width: 100%; }
       .btn { width: 100%; min-width: unset; }
@@ -842,10 +879,8 @@
 </head>
 <body>
 
-  <!-- Top Fixed Utility Bar (Typing Practice safely separated & Refresh Button Added) -->
+  <!-- Top Fixed Utility Bar (Settings & Refresh only) -->
   <div class="top-right-controls">
-    <button class="nav-btn nav-btn-game" onclick="openTypingModal()">⌨️ Typing Practice</button>
-    <button class="nav-btn" id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
     
@@ -862,6 +897,14 @@
           <option value="es">Español</option>
           <option value="fr">Français</option>
         </select>
+      </div>
+      <div class="setting-item">
+        <label>Practice Tool</label>
+        <button class="nav-btn-game" id="typingPracticeBtn" onclick="openTypingModal()">⌨️ Typing Practice</button>
+      </div>
+      <div class="setting-item">
+        <label>Audio Controls</label>
+        <button id="soundBtn" onclick="toggleAudio()">🔊 Sound: OFF</button>
       </div>
     </div>
   </div>
@@ -880,6 +923,18 @@
 
   <!-- App Main Wrapper -->
   <div class="app-wrapper">
+    <!-- Compact Upper-Left Floating Dropzone -->
+    <div class="upper-left-drop-container">
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <span class="drop-zone-icon">🚀</span>
+        <div class="drop-zone-text-group">
+          <div class="drop-zone-title" id="dropTitle">Drag & Drop PDFs</div>
+          <div class="drop-zone-subtitle" id="dropSub">or click to browse</div>
+        </div>
+        <input type="file" id="fileInput" accept="application/pdf" multiple />
+      </div>
+    </div>
+
     <div class="header">
       <h1 class="animated-title" id="appTitle">⚡ File Converter Pro</h1>
       <p id="appSubTitle">Multi-Format Conversion • Ultra HD Quality</p>
@@ -893,13 +948,6 @@
     </div>
 
     <div class="main-card">
-      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <span class="drop-zone-icon">🚀</span>
-        <div class="drop-zone-title" id="dropTitle">Drag & Drop your PDFs here</div>
-        <div class="drop-zone-subtitle" id="dropSub">or click to browse from device</div>
-        <input type="file" id="fileInput" accept="application/pdf" multiple />
-      </div>
-
       <div class="controls">
         <button id="convertBtn" class="btn btn-primary" onclick="startConversion()" disabled>
           ⚡ Convert Files
@@ -928,8 +976,8 @@
   </div>
 
   <!-- ==========================================================================
-       TYPEPRO ULTRA INTEGRATED MODAL
-       ========================================================================== -->
+        TYPEPRO ULTRA INTEGRATED MODAL
+        ========================================================================== -->
   <div class="typing-modal-overlay" id="typingModal">
     <div class="typing-container">
       <button class="modal-close-btn" onclick="closeTypingModal()">✕</button>
@@ -1058,9 +1106,9 @@
       en: {
         title: "⚡ File Converter Pro",
         sub: "Multi-Format Conversion • Ultra HD Quality",
-        dropPdf: "Drag & Drop your PDFs here",
-        dropImg: "Drag & Drop JPG or PNG Images here",
-        dropSub: "or click to browse from device",
+        dropPdf: "Drag & Drop PDFs",
+        dropImg: "Drag & Drop JPG/PNG",
+        dropSub: "or click to browse",
         convert: "⚡ Convert Files",
         game: "⌨️ Typing Practice",
         lblTheme: "Theme Mode",
@@ -1069,9 +1117,9 @@
       hi: {
         title: "⚡ फ़ाइल कनवर्टर प्रो",
         sub: "मल्टी-फॉर्मेट परिवर्तन • अल्ट्रा एचडी गुणवत्ता",
-        dropPdf: "अपनी PDF फ़ाइलें यहाँ खींचें और छोड़ें",
-        dropImg: "JPG या PNG चित्र यहाँ खींचें और छोड़ें",
-        dropSub: "या अपने डिवाइस से चुनने के लिए क्लिक करें",
+        dropPdf: "PDF फ़ाइलें खींचें",
+        dropImg: "चित्र फ़ाइलें खींचें",
+        dropSub: "या चुनने के लिए क्लिक करें",
         convert: "⚡ फ़ाइलें बदलें",
         game: "⌨️ टाइपिंग अभ्यास",
         lblTheme: "थीम मोड",
@@ -1080,22 +1128,22 @@
       es: {
         title: "⚡ Convertidor Pro",
         sub: "Conversión multiformato • Calidad Ultra HD",
-        dropPdf: "Arrastra y suelta tus archivos PDF aquí",
-        dropImg: "Arrastra y suelta imágenes JPG o PNG aquí",
-        dropSub: "o haz clic para buscar desde tu dispositivo",
+        dropPdf: "Arrastra archivos PDF",
+        dropImg: "Arrastra imágenes JPG/PNG",
+        dropSub: "o haz clic para buscar",
         convert: "⚡ Convertir Archivos",
-        game: "⌨️ Práctica de Mecanografía",
+        game: "⌨️ Práctica Mecanografía",
         lblTheme: "Modo de Tema",
         lblLang: "Idioma"
       },
       fr: {
         title: "⚡ Convertisseur Pro",
         sub: "Conversion multi-format • Qualité Ultra HD",
-        dropPdf: "Glissez & déposez vos PDF ici",
-        dropImg: "Glissez & déposez des images JPG ou PNG ici",
-        dropSub: "ou cliquez pour parcourir l'appareil",
+        dropPdf: "Glissez vos PDF ici",
+        dropImg: "Glissez vos images ici",
+        dropSub: "ou cliquez pour parcourir",
         convert: "⚡ Convertir les Fichiers",
-        game: "⌨️ Pratique de Dactylographie",
+        game: "⌨️ Pratique Dactylographie",
         lblTheme: "Thème",
         lblLang: "Langue"
       }
@@ -1440,6 +1488,8 @@
     };
 
     function openTypingModal() {
+      const panel = document.getElementById('settingsPanel');
+      if(panel) panel.classList.remove('active');
       tEls.typingModal.classList.add('active');
       initTypingEngine();
     }
