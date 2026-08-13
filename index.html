@@ -253,24 +253,21 @@
     }
 
     .drop-zone {
-      width: 300px;
-      height: 110px;
-      border: 2px dashed rgba(0, 242, 254, 0.6);
-      border-radius: 16px;
-      padding: 12px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      background: rgba(10, 15, 28, 0.65);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
+    display: flex;
+    gap: 8px;
+    background: rgba(10, 15, 28, 0.55);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
 
+    /* Right side positioning */
+    position: absolute;
+    top: 135px;
+    LEFT: 50px;
+    WIDTH: 200PX;
+    HEIGHT: 50PX; 	
+}
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--neon-pink);
       background: rgba(255, 42, 117, 0.15);
@@ -561,7 +558,7 @@
 
     .footer {
       text-align: center;
-      margin-top: 24px;
+      margin-top: 300px;
       color: var(--text-muted);
       font-size: 0.8rem;
       font-weight: 600;
@@ -949,7 +946,7 @@
         <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
           <span class="drop-zone-icon">🚀</span>
           <div class="drop-zone-text-group">
-            <div class="drop-zone-title" id="dropTitle">Drag & Drop PDFs</div>
+            <div class="drop-zone-title" id="dropTitle"></div>
             <div class="drop-zone-subtitle" id="dropSub">or click to browse</div>
           </div>
           <input type="file" id="fileInput" accept="application/pdf" multiple />
