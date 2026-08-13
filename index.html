@@ -273,6 +273,7 @@
       background: rgba(255, 42, 117, 0.15);
       transform: translateY(-3px) scale(1.02);
       box-shadow: 0 0 20px rgba(255, 42, 117, 0.4);
+      BORDER: 2PX DASHED CYAN;
     }
 
     .drop-zone-icon {
@@ -1381,42 +1382,51 @@
     }
 
     async function processImgToPdf() {
-      if (!fileQueue.length) return;
-      outputSection.innerHTML = '';
-      convertBtn.disabled = true;
-      progressContainer.style.display = 'block';
+  if (!fileQueue.length) return;
+  outputSection.innerHTML = '';
+  convertBtn.disabled = true;
+  progressContainer.style.display = 'block';
 
-      const { jsPDF } = window.jspdf;
-      let pdf = null;
+  const { jsPDF } = window.jspdf;
+  let pdf = null;
+  const margin = 50; // Margin in pixels (Top, Bottom, Left, Right)
 
-      const groupDiv = document.createElement('div');
-      groupDiv.className = 'pdf-group';
-      groupDiv.innerHTML = `<div class="grid" id="imgGrid"></div>`;
-      outputSection.appendChild(groupDiv);
-      const grid = document.getElementById('imgGrid');
+  const groupDiv = document.createElement('div');
+  groupDiv.className = 'pdf-group';
+  groupDiv.innerHTML = `<div class="grid" id="imgGrid"></div>`;
+  outputSection.appendChild(groupDiv);
+  const grid = document.getElementById('imgGrid');
 
-      for (let i = 0; i < fileQueue.length; i++) {
-        const file = fileQueue[i];
-        const percent = Math.round(((i + 1) / fileQueue.length) * 100);
-        progressFill.style.width = `${percent}%`;
-        updateStatus(`Adding Image ${i + 1}/${fileQueue.length}`);
+  for (let i = 0; i < fileQueue.length; i++) {
+    const file = fileQueue[i];
+    const percent = Math.round(((i + 1) / fileQueue.length) * 100);
+    progressFill.style.width = `${percent}%`;
+    updateStatus(`Adding Image ${i + 1}/${fileQueue.length}`);
 
-        const dataUrl = await readFileDataUrl(file);
-        const imgProps = await getImageProps(dataUrl);
-        const orientation = imgProps.width > imgProps.height ? 'l' : 'p';
+    const dataUrl = await readFileDataUrl(file);
+    const imgProps = await getImageProps(dataUrl);
 
-        if (i === 0) pdf = new jsPDF({ orientation, unit: 'px', format: [imgProps.width, imgProps.height] });
-        else pdf.addPage([imgProps.width, imgProps.height], orientation);
+    // Margins calculate kar ke page ka kul size fix kiya gaya hai
+    const pageWidth = imgProps.width + (margin * 2);
+    const pageHeight = imgProps.height + (margin * 2);
+    const orientation = imgProps.width > imgProps.height ? 'l' : 'p';
 
-        pdf.addImage(dataUrl, 'JPEG', 0, 0, imgProps.width, imgProps.height);
-        renderCard(grid, dataUrl, i + 1, file.name);
-      }
-
-      createdPdfBlob = pdf.output('blob');
-      updateStatus("✨ PDF Created!");
-      convertBtn.disabled = false;
-      downloadPdfBtn.style.display = 'inline-flex';
+    if (i === 0) {
+      pdf = new jsPDF({ orientation, unit: 'px', format: [pageWidth, pageHeight] });
+    } else {
+      pdf.addPage([pageWidth, pageHeight], orientation);
     }
+
+    // Image ko margin offsets (X=margin, Y=margin) par add kiya gaya hai
+    pdf.addImage(dataUrl, 'JPEG', margin, margin, imgProps.width, imgProps.height);
+    renderCard(grid, dataUrl, i + 1, file.name);
+  }
+
+  createdPdfBlob = pdf.output('blob');
+  updateStatus("✨ PDF Created with Margins!");
+  convertBtn.disabled = false;
+  downloadPdfBtn.style.display = 'inline-flex';
+}
 
     function readFileDataUrl(file) {
       return new Promise((res) => {
