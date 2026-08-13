@@ -78,10 +78,10 @@
       overflow-x: hidden;
       position: relative;
       background: #040712;
-      padding: 30px 20px 40px 20px;
+      padding: 80px 16px 40px 16px;
     }
 
-    /* Fullscreen Video Background - High Visibility Fix */
+    /* Fullscreen Video Background */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -120,7 +120,7 @@
     /* Idle Mode Controls */
     .app-wrapper {
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
       transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
     }
@@ -136,7 +136,7 @@
     .top-right-controls {
       position: fixed;
       top: 16px;
-      right: 24px;
+      right: 16px;
       z-index: 100;
       display: flex;
       align-items: center;
@@ -159,6 +159,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .nav-btn:hover {
@@ -236,44 +237,44 @@
       border-color: var(--neon-cyan);
     }
 
-    /* Header Layout & Floating Compact Upload Area */
+    /* Header Layout & Responsive Dropzone Positioning */
     .header {
       position: relative;
       text-align: center;
-      margin-bottom: 20px;
-      padding-top: 10px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* Compact Floating Dropzone Positioning (Upper-Left near moon) */
     .compact-upload-wrapper {
-      position: absolute;
-      top: -15px;
-      left: 0px;
-      z-index: 10;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
     }
 
     .drop-zone {
-    display: flex;
-    gap: 8px;
-    background: rgba(10, 15, 28, 0.55);
-    padding: 6px;
-    border-radius: 16px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(10, 15, 28, 0.65);
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 1px dashed var(--neon-cyan);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      width: 100%;
+      max-width: 320px;
+      transition: all 0.3s ease;
+    }
 
-    /* Right side positioning */
-    position: absolute;
-    top: 135px;
-    LEFT: 50px;
-    WIDTH: 200PX;
-    HEIGHT: 50PX; 	
-}
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--neon-pink);
       background: rgba(255, 42, 117, 0.15);
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 20px rgba(255, 42, 117, 0.4);
-      BORDER: 2PX DASHED CYAN;
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 0 20px rgba(255, 42, 117, 0.3);
     }
 
     .drop-zone-icon {
@@ -305,7 +306,7 @@
     }
 
     .animated-title {
-      font-size: 2.5rem;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
       font-weight: 900;
       letter-spacing: -0.5px;
       background: linear-gradient(90deg, #ffffff, #00f2fe, #ff2a75);
@@ -314,7 +315,7 @@
       -webkit-text-fill-color: transparent;
       animation: rainbowGlow 6s ease infinite;
       filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.4));
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     @keyframes rainbowGlow {
@@ -325,11 +326,11 @@
 
     .header p {
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: clamp(0.78rem, 2.5vw, 0.92rem);
       font-weight: 600;
       background: rgba(10, 15, 28, 0.5);
       display: inline-block;
-      padding: 4px 16px;
+      padding: 6px 16px;
       border-radius: 20px;
       backdrop-filter: blur(8px);
       border: 1px solid var(--glass-border);
@@ -339,7 +340,8 @@
     .mode-tabs-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      width: 100%;
     }
 
     .mode-tabs {
@@ -350,21 +352,26 @@
       border-radius: 16px;
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(12px);
+      width: 100%;
+      max-width: 480px;
     }
 
     .tab-btn {
-      padding: 9px 22px;
+      flex: 1;
+      padding: 10px 14px;
       border-radius: 12px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.88rem;
+      font-size: clamp(0.75rem, 2.2vw, 0.88rem);
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -373,12 +380,13 @@
       box-shadow: 0 4px 20px rgba(255, 0, 127, 0.4);
     }
 
-    /* Main Container Card - Transparent & Non-Obstructive */
+    /* Main Container Card */
     .main-card {
       background: transparent;
       border: none;
       padding: 0;
       box-shadow: none;
+      width: 100%;
     }
 
     input[type="file"] {
@@ -392,6 +400,7 @@
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
+      width: 100%;
     }
 
     .btn {
@@ -409,7 +418,8 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       text-decoration: none;
-      min-width: 180px;
+      flex: 1;
+      min-width: 200px;
       backdrop-filter: blur(12px);
     }
 
@@ -451,6 +461,7 @@
       border-radius: 14px;
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(12px);
+      width: 100%;
     }
 
     .progress-track {
@@ -496,7 +507,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 14px;
     }
 
@@ -559,11 +570,12 @@
 
     .footer {
       text-align: center;
-      margin-top: 480px;
+      margin-top: 60px;
       color: var(--text-muted);
       font-size: 0.8rem;
       font-weight: 600;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      width: 100%;
     }
 
     /* ==========================================================================
@@ -581,7 +593,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 1rem;
       overflow-y: auto;
     }
 
@@ -597,35 +609,37 @@
 
     .typing-container {
       width: 100%;
-      max-width: 1050px;
+      max-width: 1000px;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
       background: rgba(15, 23, 42, 0.96);
       border: 1px solid var(--typing-border);
       border-radius: 24px;
-      padding: 2rem;
+      padding: 1.5rem;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
       position: relative;
+      margin: auto;
     }
 
     .modal-close-btn {
       position: absolute;
-      top: 20px;
-      right: 22px;
+      top: 16px;
+      right: 16px;
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid #ef4444;
       color: #ef4444;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       font-weight: 900;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
+      z-index: 10;
     }
 
     .modal-close-btn:hover {
@@ -642,6 +656,8 @@
       border: 1px solid var(--typing-border);
       padding: 0.85rem 1.25rem;
       border-radius: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .brand {
@@ -649,12 +665,12 @@
       align-items: center;
       gap: 0.75rem;
       font-weight: 800;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #fff;
     }
 
     .brand-logo {
-      width: 36px; height: 36px;
+      width: 32px; height: 32px;
       background: linear-gradient(135deg, var(--typing-primary), var(--typing-accent));
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
@@ -693,14 +709,15 @@
       background: rgba(0, 0, 0, 0.3);
       padding: 0.25rem;
       border-radius: 10px;
+      flex-wrap: wrap;
     }
 
     .cfg-btn {
       background: transparent;
       border: none;
       color: var(--typing-text-muted);
-      padding: 0.35rem 0.75rem;
-      font-size: 0.82rem;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
@@ -723,12 +740,12 @@
       background: var(--typing-card-bg);
       border: 1px solid var(--typing-border);
       border-radius: 14px;
-      padding: 0.85rem;
+      padding: 0.75rem;
       text-align: center;
     }
 
-    .hud-title { font-size: 0.7rem; text-transform: uppercase; color: var(--typing-text-muted); font-weight: 700; }
-    .hud-val { font-size: 1.6rem; font-family: var(--font-mono); font-weight: 700; margin-top: 0.1rem; color: #fff; }
+    .hud-title { font-size: 0.68rem; text-transform: uppercase; color: var(--typing-text-muted); font-weight: 700; }
+    .hud-val { font-size: clamp(1.2rem, 3vw, 1.6rem); font-family: var(--font-mono); font-weight: 700; margin-top: 0.1rem; color: #fff; }
 
     .typing-viewport {
       background: rgba(10, 15, 28, 0.85);
@@ -737,7 +754,7 @@
       padding: 1.25rem;
       position: relative;
       cursor: text;
-      min-height: 140px;
+      min-height: 130px;
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -745,17 +762,17 @@
 
     .word-stream {
       font-family: var(--font-mono);
-      font-size: 1.45rem;
-      line-height: 2.1rem;
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      line-height: 1.8;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.55em;
+      gap: 0.45em;
       color: var(--typing-text-muted);
       user-select: none;
       width: 100%;
     }
 
-    .word-stream.hindi { font-family: var(--font-hindi); font-size: 1.55rem; }
+    .word-stream.hindi { font-family: var(--font-hindi); font-size: clamp(1.2rem, 3.5vw, 1.55rem); }
 
     .word { display: flex; position: relative; }
     .char { transition: color 0.1s, background 0.1s; }
@@ -773,32 +790,36 @@
       background: var(--typing-card-bg);
       border: 1px solid var(--typing-border);
       border-radius: 16px;
-      padding: 0.85rem;
+      padding: 0.85rem 0.5rem;
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
       align-items: center;
+      width: 100%;
+      overflow-x: auto;
     }
 
-    .kb-row { display: flex; gap: 0.3rem; }
+    .kb-row { display: flex; gap: 0.25rem; justify-content: center; width: 100%; }
 
     .key {
-      min-width: 36px;
+      min-width: 32px;
       height: 36px;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--typing-border);
-      border-radius: 8px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--typing-text-muted);
       transition: all 0.15s ease;
+      flex: 1;
+      max-width: 45px;
     }
 
-    .key.space { min-width: 240px; }
+    .key.space { min-width: 140px; max-width: 280px; }
 
     .key.target-key {
       border-color: var(--typing-accent);
@@ -812,7 +833,7 @@
 
     .finger-guide-text {
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--typing-accent);
       margin-top: 0.2rem;
       font-weight: 600;
@@ -823,7 +844,7 @@
       background: var(--typing-card-bg);
       border: 1px solid var(--typing-border);
       border-radius: 18px;
-      padding: 1.5rem;
+      padding: 1.25rem;
       flex-direction: column;
       gap: 1.25rem;
     }
@@ -832,7 +853,7 @@
 
     .res-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
       gap: 0.85rem;
     }
 
@@ -843,9 +864,9 @@
       padding: 1.1rem;
     }
 
-    .ai-review-card h3 { color: var(--typing-accent); margin-bottom: 0.4rem; font-size: 1.05rem; }
+    .ai-review-card h3 { color: var(--typing-accent); margin-bottom: 0.4rem; font-size: 1rem; }
 
-    .weak-keys-list { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+    .weak-keys-list { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
     .weak-key-tag {
       background: rgba(239, 68, 68, 0.2);
       color: var(--typing-char-wrong);
@@ -867,37 +888,76 @@
     }
     .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--typing-primary-glow); }
 
-    /* Responsive Breakdown */
-    @media (max-width: 900px) {
+    /* ==========================================================================
+       MEDIA QUERIES FOR PERFECT RESPONSIVENESS ACROSS DEVICES
+       ========================================================================== */
+
+    /* Desktop Screens & Wide Displays */
+    @media (min-width: 992px) {
       .compact-upload-wrapper {
-        position: relative;
-        top: 0;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        margin-bottom: 15px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: auto;
+        margin-bottom: 0;
       }
       .drop-zone {
-        width: 100%;
-        max-width: 340px;
+        width: 210px;
+        padding: 8px 12px;
+      }
+      .header {
+        padding-top: 10px;
       }
     }
 
+    /* Tablets and Small Laptops */
+    @media (max-width: 991px) {
+      body { padding-top: 75px; }
+      .app-wrapper { max-width: 100%; }
+      .config-toolbar { justify-content: center; }
+    }
+
+    /* Mobile Devices */
     @media (max-width: 768px) {
-      body { padding: 60px 12px 20px 12px; }
-      .animated-title { font-size: 1.8rem; }
-      .controls { flex-direction: column; width: 100%; }
-      .btn { width: 100%; min-width: unset; }
+      body { padding: 70px 12px 30px 12px; }
       .top-right-controls { top: 12px; right: 12px; gap: 6px; }
       .nav-btn { padding: 7px 12px; font-size: 0.78rem; }
-      .hud-grid { grid-template-columns: repeat(2, 1fr); }
-      .key.space { min-width: 140px; }
+      .settings-panel { width: 220px; right: 0; }
+      
+      .controls { flex-direction: column; width: 100%; }
+      .btn { width: 100%; min-width: unset; }
+
+      .hud-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .hud-card { padding: 0.5rem; }
+      
+      .typing-container { padding: 1rem; border-radius: 16px; gap: 0.85rem; }
+      .config-toolbar { padding: 0.5rem; gap: 0.5rem; }
+      .btn-group { width: 100%; justify-content: center; }
+      .cfg-btn { flex: 1; text-align: center; padding: 0.3rem 0.2rem; }
+
+      .key { min-width: 22px; height: 32px; font-size: 0.65rem; border-radius: 4px; }
+      .key.space { min-width: 100px; }
+      .keyboard-panel { padding: 0.5rem 0.2rem; }
+      
+      .grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+    }
+
+    /* Very Small Screens (e.g., iPhone SE / Fold) */
+    @media (max-width: 480px) {
+      .drop-zone { padding: 8px 12px; }
+      .drop-zone-title { font-size: 0.85rem; }
+      .drop-zone-subtitle { font-size: 0.7rem; }
+      .mode-tabs { flex-direction: column; }
+      .tab-btn { width: 100%; }
+      
+      .key { min-width: 18px; height: 28px; font-size: 0.6rem; }
+      .key.space { min-width: 80px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Fixed Utility Bar (Only Settings & Refresh visible) -->
+  <!-- Top Fixed Utility Bar -->
   <div class="top-right-controls">
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
@@ -936,18 +996,18 @@
   </div>
   <div class="bg-overlay"></div>
 
-  <!-- Hidden dummy element to preserve JS compatibility if accessed -->
+  <!-- Hidden dummy element for JS compatibility -->
   <button id="gameBtn" style="display:none;" onclick="openTypingModal()"></button>
 
   <!-- App Main Wrapper -->
   <div class="app-wrapper">
     <div class="header">
-      <!-- Floating Compact Upload Box positioned Upper-Left -->
+      <!-- Responsive Floating Upload Box -->
       <div class="compact-upload-wrapper">
         <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
           <span class="drop-zone-icon">🚀</span>
           <div class="drop-zone-text-group">
-            <div class="drop-zone-title" id="dropTitle"></div>
+            <div class="drop-zone-title" id="dropTitle">Drag & Drop PDFs</div>
             <div class="drop-zone-subtitle" id="dropSub">or click to browse</div>
           </div>
           <input type="file" id="fileInput" accept="application/pdf" multiple />
@@ -993,9 +1053,7 @@
     </div>
   </div>
 
-  <!-- ==========================================================================
-       TYPEPRO ULTRA INTEGRATED MODAL
-       ========================================================================== -->
+  <!-- TYPEPRO ULTRA INTEGRATED MODAL -->
   <div class="typing-modal-overlay" id="typingModal">
     <div class="typing-container">
       <button class="modal-close-btn" onclick="closeTypingModal()">✕</button>
@@ -1105,7 +1163,7 @@
     let isAudioPlaying = false;
     let idleTimer = null;
 
-    // --- Dynamic 30-Second Background Video Changer Logic ---
+    // Background Video Changer Logic
     const bgVideoList = [
       "oggy-bg.mp4",
       "https://www.image2url.com/r2/default/videos/1786355014073-b8f7d1c1-8ffb-41c3-aed8-3b92496e882f.mp4"
@@ -1124,13 +1182,12 @@
         bgVideo.load();
         bgVideo.play().catch(err => console.log("Video Play Error:", err));
         bgVideo.classList.remove('fade-out');
-      }, 1000); // Smooth 1-second fade transition
+      }, 1000);
     }
 
-    // Har 30 second me video switch hogi
     setInterval(rotateBackgroundVideo, 30000);
 
-    // --- Idle Detection Logic (15 Seconds) ---
+    // Idle Detection Logic
     function resetIdleTimer() {
       document.body.classList.remove('idle-mode');
       clearTimeout(idleTimer);
@@ -1144,7 +1201,7 @@
     });
     resetIdleTimer();
 
-    // --- Settings & UI Language Translations ---
+    // Settings & Translations
     const translations = {
       en: {
         title: "⚡ File Converter Pro",
@@ -1247,7 +1304,7 @@
       }
     }
 
-    // --- Main Converter Logic ---
+    // Converter Engine
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
     const dropTitle = document.getElementById('dropTitle');
@@ -1382,51 +1439,49 @@
     }
 
     async function processImgToPdf() {
-  if (!fileQueue.length) return;
-  outputSection.innerHTML = '';
-  convertBtn.disabled = true;
-  progressContainer.style.display = 'block';
+      if (!fileQueue.length) return;
+      outputSection.innerHTML = '';
+      convertBtn.disabled = true;
+      progressContainer.style.display = 'block';
 
-  const { jsPDF } = window.jspdf;
-  let pdf = null;
-  const margin = 50; // Margin in pixels (Top, Bottom, Left, Right)
+      const { jsPDF } = window.jspdf;
+      let pdf = null;
+      const margin = 50;
 
-  const groupDiv = document.createElement('div');
-  groupDiv.className = 'pdf-group';
-  groupDiv.innerHTML = `<div class="grid" id="imgGrid"></div>`;
-  outputSection.appendChild(groupDiv);
-  const grid = document.getElementById('imgGrid');
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'pdf-group';
+      groupDiv.innerHTML = `<div class="grid" id="imgGrid"></div>`;
+      outputSection.appendChild(groupDiv);
+      const grid = document.getElementById('imgGrid');
 
-  for (let i = 0; i < fileQueue.length; i++) {
-    const file = fileQueue[i];
-    const percent = Math.round(((i + 1) / fileQueue.length) * 100);
-    progressFill.style.width = `${percent}%`;
-    updateStatus(`Adding Image ${i + 1}/${fileQueue.length}`);
+      for (let i = 0; i < fileQueue.length; i++) {
+        const file = fileQueue[i];
+        const percent = Math.round(((i + 1) / fileQueue.length) * 100);
+        progressFill.style.width = `${percent}%`;
+        updateStatus(`Adding Image ${i + 1}/${fileQueue.length}`);
 
-    const dataUrl = await readFileDataUrl(file);
-    const imgProps = await getImageProps(dataUrl);
+        const dataUrl = await readFileDataUrl(file);
+        const imgProps = await getImageProps(dataUrl);
 
-    // Margins calculate kar ke page ka kul size fix kiya gaya hai
-    const pageWidth = imgProps.width + (margin * 2);
-    const pageHeight = imgProps.height + (margin * 2);
-    const orientation = imgProps.width > imgProps.height ? 'l' : 'p';
+        const pageWidth = imgProps.width + (margin * 2);
+        const pageHeight = imgProps.height + (margin * 2);
+        const orientation = imgProps.width > imgProps.height ? 'l' : 'p';
 
-    if (i === 0) {
-      pdf = new jsPDF({ orientation, unit: 'px', format: [pageWidth, pageHeight] });
-    } else {
-      pdf.addPage([pageWidth, pageHeight], orientation);
+        if (i === 0) {
+          pdf = new jsPDF({ orientation, unit: 'px', format: [pageWidth, pageHeight] });
+        } else {
+          pdf.addPage([pageWidth, pageHeight], orientation);
+        }
+
+        pdf.addImage(dataUrl, 'JPEG', margin, margin, imgProps.width, imgProps.height);
+        renderCard(grid, dataUrl, i + 1, file.name);
+      }
+
+      createdPdfBlob = pdf.output('blob');
+      updateStatus("✨ PDF Created with Margins!");
+      convertBtn.disabled = false;
+      downloadPdfBtn.style.display = 'inline-flex';
     }
-
-    // Image ko margin offsets (X=margin, Y=margin) par add kiya gaya hai
-    pdf.addImage(dataUrl, 'JPEG', margin, margin, imgProps.width, imgProps.height);
-    renderCard(grid, dataUrl, i + 1, file.name);
-  }
-
-  createdPdfBlob = pdf.output('blob');
-  updateStatus("✨ PDF Created with Margins!");
-  convertBtn.disabled = false;
-  downloadPdfBtn.style.display = 'inline-flex';
-}
 
     function readFileDataUrl(file) {
       return new Promise((res) => {
@@ -1471,9 +1526,7 @@
 
     function updateStatus(msg) { statusText.textContent = msg; }
 
-    /* ==========================================================================
-       TYPEPRO ULTRA ENGINE SCRIPT
-       ========================================================================== */
+    /* TYPEPRO ULTRA ENGINE SCRIPT */
     const CORPUS = {
       en: {
         easy: ["the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line"],
