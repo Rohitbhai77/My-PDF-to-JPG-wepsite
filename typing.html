@@ -9,31 +9,68 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
+      /* ===== BACKGROUND ===== */
+      --bg-color: #0b1120;
+      --card-bg: rgba(17, 24, 39, 0.78);
+      --card-bg-solid: #111827;
+      --surface-2: #1e293b;
+      --surface-3: #273449;
+
+      /* ===== BORDERS ===== */
       --card-border: rgba(255, 255, 255, 0.08);
-      
+      --border-hover: rgba(255, 255, 255, 0.16);
+
+      /* ===== TEXT ===== */
       --text-main: #f8fafc;
-      --text-muted: #64748b;
-      --text-dim: #334155;
-      
+      --text-muted: #94a3b8;
+      --text-dim: #475569;
+
+      /* ===== BRAND ===== */
       --primary: #6366f1;
-      --primary-glow: rgba(99, 102, 241, 0.4);
+      --primary-hover: #818cf8;
+      --primary-glow: rgba(99, 102, 241, 0.35);
       --accent: #38bdf8;
-      
-      --char-correct: #10b981;
+      --accent-glow: rgba(56, 189, 248, 0.3);
+
+      /* ===== STATUS ===== */
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.18);
+      --warning: #f59e0b;
+
+      /* ===== TYPING ===== */
+      --char-correct: #22c55e;
       --char-wrong: #ef4444;
       --char-wrong-bg: rgba(239, 68, 68, 0.2);
-      
+      --char-active: #ffffff;
+
+      /* ===== FONTS ===== */
       --font-mono: 'JetBrains Mono', monospace;
       --font-hindi: 'Noto Sans Devanagari', sans-serif;
       --font-main: 'Outfit', sans-serif;
+
+      /* ===== RADIUS ===== */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+
+      /* ===== SHADOWS ===== */
+      --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.20);
+      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.30);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    html { scroll-behavior: smooth; }
     body {
-      background: var(--bg-color);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.12), transparent 30%),
+        radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.08), transparent 30%),
+        var(--bg-color);
       color: var(--text-main);
       font-family: var(--font-main);
       min-height: 100vh;
@@ -41,11 +78,15 @@
       flex-direction: column;
       align-items: center;
       padding: 1.5rem;
+      overflow-x: hidden;
     }
+
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
 
     .container {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
@@ -58,9 +99,19 @@
       align-items: center;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      padding: 1rem 1.5rem;
-      border-radius: 16px;
-      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 0.9rem 1.25rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 1rem;
+      z-index: 100;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    header:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
     }
 
     .brand {
@@ -68,29 +119,54 @@
       align-items: center;
       gap: 0.75rem;
       font-weight: 800;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
     }
 
     .brand-logo {
-      width: 38px; height: 38px;
+      width: 42px;
+      height: 42px;
       background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 15px var(--primary-glow);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 0 20px var(--primary-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-logo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+      transform: translateX(-100%);
+      animation: logoShine 4s infinite;
+    }
+    @keyframes logoShine {
+      0% { transform: translateX(-100%); }
+      35%, 100% { transform: translateX(100%); }
     }
 
     .user-xp-badge {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
       border: 1px solid var(--card-border);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
     }
-
-    .xp-level { color: var(--accent); font-weight: 700; }
+    .user-xp-badge:hover {
+      border-color: var(--border-hover);
+      background: rgba(255,255,255,.04);
+    }
+    .xp-level { color: var(--accent); font-weight: 800; }
 
     /* Control Bar */
     .config-toolbar {
@@ -100,34 +176,40 @@
       gap: 1rem;
       background: var(--card-bg);
       padding: 0.8rem 1.2rem;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
     }
 
     .btn-group {
       display: flex;
-      gap: 0.3rem;
-      background: rgba(0, 0, 0, 0.25);
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.28);
       padding: 0.25rem;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
     }
 
     .cfg-btn {
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
-      padding: 0.4rem 0.8rem;
+      padding: 0.45rem 0.85rem;
       font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
     }
-
+    .cfg-btn:hover {
+      color: var(--text-main);
+      background: rgba(255,255,255,.06);
+    }
+    .cfg-btn:active { transform: scale(.96); }
     .cfg-btn.active {
       background: var(--primary);
       color: white;
-      box-shadow: 0 0 10px var(--primary-glow);
+      box-shadow: 0 0 12px var(--primary-glow);
     }
 
     /* Live HUD Bar */
@@ -140,74 +222,94 @@
     .hud-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: var(--radius-md);
       padding: 1rem;
       text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .hud-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .hud-val {
+      font-size: 1.75rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      margin-top: 0.25rem;
     }
 
-    .hud-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-    .hud-val { font-size: 1.75rem; font-family: var(--font-mono); font-weight: 700; margin-top: 0.2rem; }
-
-    /* Monkeytype 3-Line Typing Window */
+    /* Typing Window with Auto-Scroll Support */
     .typing-viewport {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.85);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1.5rem;
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
       position: relative;
       cursor: text;
-      min-height: 150px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
+      height: 170px;
+      overflow-y: hidden;
+      display: block;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
     }
 
     .word-stream {
       font-family: var(--font-mono);
       font-size: 1.5rem;
-      line-height: 2.2rem;
+      line-height: 2.6rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6em;
+      gap: 0.7em;
       color: var(--text-muted);
       user-select: none;
       width: 100%;
+      transition: transform 0.2s ease-out;
     }
 
     .word-stream.hindi { font-family: var(--font-hindi); font-size: 1.6rem; }
-
     .word { display: flex; position: relative; }
-    .char { transition: color 0.1s, background 0.1s; }
+    .char { transition: color 0.08s, background-color 0.08s; border-radius: 3px; }
     .char.correct { color: var(--char-correct); }
-    .char.wrong { color: var(--char-wrong); background: var(--char-wrong-bg); border-radius: 2px; }
-    .char.active { color: var(--text-main); position: relative; }
-    .char.active::before {
-      content: ''; position: absolute; left: 0; bottom: -2px; width: 100%; height: 3px;
-      background: var(--accent); border-radius: 2px; animation: blink 1s infinite;
+    .char.wrong { color: var(--char-wrong); background: var(--char-wrong-bg); }
+    .char.active {
+      color: var(--text-main);
+      position: relative;
     }
-
+    .char.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 2px;
+      width: 100%;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: blink 1s infinite;
+    }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* Visual On-Screen Keyboard */
+    /* Virtual Keyboard */
     .keyboard-panel {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1rem;
+      border-radius: var(--radius-lg);
+      padding: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
       align-items: center;
+      box-shadow: var(--shadow-sm);
     }
 
-    .kb-row { display: flex; gap: 0.35rem; }
-
+    .kb-row { display: flex; gap: 0.4rem; }
     .key {
-      min-width: 38px;
-      height: 38px;
-      background: rgba(0, 0, 0, 0.3);
+      min-width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--card-border);
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -215,87 +317,131 @@
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-muted);
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
     }
-
-    .key.wide-1 { min-width: 55px; }
-    .key.wide-2 { min-width: 75px; }
-    .key.space { min-width: 250px; }
-
+    .key.space { min-width: 260px; }
     .key.target-key {
       border-color: var(--accent);
       color: var(--accent);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
       transform: translateY(-2px);
     }
-
-    .key.pressed-correct { background: rgba(16, 185, 129, 0.3) !important; color: white !important; }
-    .key.pressed-wrong { background: rgba(239, 68, 68, 0.4) !important; color: white !important; }
+    .key.pressed-correct { background: rgba(34, 197, 94, 0.35) !important; color: #fff !important; transform: translateY(1px); }
+    .key.pressed-wrong { background: rgba(239, 68, 68, 0.45) !important; color: #fff !important; transform: translateY(1px); }
 
     .finger-guide-text {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--accent);
-      margin-top: 0.3rem;
+      margin-top: 0.4rem;
       font-weight: 600;
     }
 
-    /* Result Dashboard View */
+    /* Results Dashboard View */
     .results-dashboard {
       display: none;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1.75rem;
+      border-radius: var(--radius-xl);
+      padding: 2rem;
       flex-direction: column;
       gap: 1.5rem;
+      box-shadow: var(--shadow-lg);
     }
-
     .results-dashboard.active { display: flex; }
 
     .res-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
     }
 
+    /* Interactive Graph Canvas */
+    .graph-card {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .graph-header {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .graph-svg {
+      width: 100%;
+      height: 120px;
+      overflow: visible;
+    }
+
     .ai-review-card {
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(99, 102, 241, 0.08);
       border: 1px solid var(--primary);
-      border-radius: 14px;
+      border-radius: var(--radius-md);
       padding: 1.25rem;
     }
+    .ai-review-card h3 { color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem; }
 
-    .ai-review-card h3 { color: var(--accent); margin-bottom: 0.5rem; }
-
-    .weak-keys-list {
-      display: flex; gap: 0.5rem; margin-top: 0.5rem;
-    }
+    .weak-keys-list { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
     .weak-key-tag {
       background: rgba(239, 68, 68, 0.2);
       color: var(--char-wrong);
       border: 1px solid var(--char-wrong);
-      padding: 0.2rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 6px;
       font-weight: 700;
       font-family: var(--font-mono);
+      font-size: 0.85rem;
     }
 
     .hidden-input { position: absolute; opacity: 0; pointer-events: none; }
 
     .btn-action {
       background: var(--primary);
-      color: white; border: none; padding: 0.65rem 1.4rem;
-      font-weight: 700; border-radius: 10px; cursor: pointer;
-      align-self: center; transition: all 0.2s;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      align-self: center;
+      transition: all 0.2s;
     }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--primary-glow); }
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 18px var(--primary-glow);
+      background: var(--primary-hover);
+    }
+
+    /* Mobile Adaptations */
+    @media (max-width: 700px) {
+      body { padding: 0.75rem; }
+      .container { gap: 0.75rem; }
+      header { padding: 0.75rem; border-radius: 14px; }
+      .brand { font-size: 1.05rem; gap: 0.5rem; }
+      .brand-logo { width: 36px; height: 36px; }
+      .user-xp-badge { font-size: 0.75rem; padding: 0.35rem 0.6rem; }
+      .config-toolbar { flex-direction: column; align-items: stretch; }
+      .btn-group { width: 100%; overflow-x: auto; }
+      .cfg-btn { flex: 1; white-space: nowrap; }
+      .hud-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+      .hud-card { padding: 0.75rem; }
+      .hud-val { font-size: 1.35rem; }
+      .typing-viewport { height: 150px; padding: 1rem; }
+      .word-stream { font-size: 1.1rem; line-height: 2.1rem; }
+      .keyboard-panel { padding: 0.6rem; overflow-x: auto; }
+      .key { min-width: 30px; height: 34px; font-size: 0.7rem; }
+      .key.space { min-width: 160px; }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Header -->
   <header>
     <div class="brand">
       <div class="brand-logo">T</div>
@@ -303,12 +449,11 @@
     </div>
     <div class="user-xp-badge">
       <span>Level <strong id="userLevel" class="xp-level">1</strong></span>
-      <span style="color: var(--text-muted)">|</span>
+      <span style="color: var(--text-dim)">|</span>
       <span>XP: <strong id="userXP" style="color:var(--text-main)">0</strong></span>
     </div>
   </header>
 
-  <!-- Controls -->
   <section class="config-toolbar">
     <div class="btn-group" id="langSelect">
       <button class="cfg-btn active" data-lang="en">🇬🇧 English</button>
@@ -331,7 +476,6 @@
     </div>
   </section>
 
-  <!-- Main Test View -->
   <main id="testContainer" style="display:flex; flex-direction:column; gap:1.25rem;">
     <div class="hud-grid">
       <div class="hud-card">
@@ -339,8 +483,8 @@
         <div class="hud-val" id="hudTimer">30s</div>
       </div>
       <div class="hud-card">
-        <div class="hud-title">Speed</div>
-        <div class="hud-val" id="hudWpm">0 <span style="font-size:0.9rem; color:var(--text-muted)">WPM</span></div>
+        <div class="hud-title">Net Speed</div>
+        <div class="hud-val" id="hudWpm">0 <span style="font-size:0.85rem; color:var(--text-muted)">WPM</span></div>
       </div>
       <div class="hud-card">
         <div class="hud-title">Accuracy</div>
@@ -357,7 +501,6 @@
       <input type="text" class="hidden-input" id="typingInput" autocomplete="off" spellcheck="false" />
     </div>
 
-    <!-- Onscreen Interactive Keyboard -->
     <div class="keyboard-panel" id="virtualKeyboard">
       <div class="kb-row" id="row1"></div>
       <div class="kb-row" id="row2"></div>
@@ -369,16 +512,21 @@
     <button class="btn-action" id="resetBtn">🔄 Reset Test (Esc)</button>
   </main>
 
-  <!-- Results View -->
   <section class="results-dashboard" id="resultContainer">
-    <h2>🏆 Test Completed!</h2>
+    <h2>🏆 Performance Summary</h2>
     
     <div class="res-grid">
-      <div class="hud-card"><div class="hud-title">WPM</div><div class="hud-val" id="resWpm">0</div></div>
-      <div class="hud-card"><div class="hud-title">CPM</div><div class="hud-val" id="resCpm">0</div></div>
+      <div class="hud-card"><div class="hud-title">Net WPM</div><div class="hud-val" id="resWpm">0</div></div>
+      <div class="hud-card"><div class="hud-title">Raw WPM</div><div class="hud-val" id="resRawWpm">0</div></div>
       <div class="hud-card"><div class="hud-title">Accuracy</div><div class="hud-val" id="resAcc">0%</div></div>
       <div class="hud-card"><div class="hud-title">Mistakes</div><div class="hud-val" id="resMistakes">0</div></div>
+      <div class="hud-card"><div class="hud-title">Consistency</div><div class="hud-val" id="resConsistency">0%</div></div>
       <div class="hud-card"><div class="hud-title">XP Gained</div><div class="hud-val" id="resXp" style="color:var(--accent)">+0</div></div>
+    </div>
+
+    <div class="graph-card">
+      <div class="graph-header">Speed Profile (WPM Timeline)</div>
+      <svg class="graph-svg" id="wpmGraphSvg" viewBox="0 0 500 120"></svg>
     </div>
 
     <div class="ai-review-card">
@@ -396,20 +544,56 @@
 
 <script>
 /* ==========================================================================
-   MEGA WORD CORPUS & PROCEDURAL TEXT ALGORITHM
+   SENTENCE / PHRASE CORPUS SYSTEM
    ========================================================================== */
 const CORPUS = {
   en: {
-    easy: ["the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line"],
-    medium: ["algorithm", "architecture", "asynchronous", "benchmark", "bandwidth", "compilation", "concurrency", "dataflow", "efficiency", "encapsulation", "framework", "functionality", "inheritance", "interaction", "interface", "iteration", "middleware", "optimization", "parameter", "polymorphism", "precision", "refactoring", "repository", "scalability", "synchronization", "throughput", "validation", "versatility", "vulnerability"],
-    hard: ["extraordinary", "misunderstanding", "unquestionably", "incomprehensible", "counterproductive", "disproportionate", "notwithstanding", "disestablishmentarianism", "characterization", "enthusiastically"],
-    code: ["const", "function", "return", "let", "async", "await", "import", "export", "class", "extends", "constructor", "document.getElementById", "addEventListener", "console.log", "process.env", "Promise.resolve"],
-    science: ["photosynthesis", "thermodynamics", "quantum", "mitochondria", "gravity", "electromagnetism", "astronomy", "neuroscience", "chromosome", "velocity"]
+    easy: [
+      "the quick brown fox jumps over the lazy dog",
+      "typing is a skill that improves every day with regular practice",
+      "focus on precision first and your speed will steadily increase",
+      "clear your mind keep your posture straight and rest your fingers lightly",
+      "small habits repeated daily bring massive improvements over time"
+    ],
+    medium: [
+      "asynchronous execution allows web applications to process complex network requests",
+      "modern web frameworks optimize rendering cycles through reactive virtual trees",
+      "efficient memory management prevents unexpected bottlenecks during continuous execution",
+      "functional encapsulation ensures dependable modular architecture across services"
+    ],
+    hard: [
+      "extraordinary misunderstandings disproportionately hinder architectural collaboration",
+      "unquestionably characterization demands meticulous precision and synchronization",
+      "disproportionate vulnerabilities counterproductively compromise cryptographic benchmarks"
+    ],
+    code: [
+      "const result = await fetch('/api/stats').then(res => res.json());",
+      "document.querySelectorAll('.key').forEach(el => el.classList.remove('active'));",
+      "return items.reduce((acc, curr) => acc + curr.totalPoints, 0);",
+      "export default function initEngine({ timeLimit, debug = false }) {"
+    ],
+    science: [
+      "cellular respiration converts biochemical energy from nutrients into adenosine triphosphate",
+      "gravitational redshift occurs as photons escape from strong gravitational wells",
+      "quantum entanglement demonstrates instantaneous state correlation across macroscopic distances"
+    ]
   },
   hi: {
-    easy: ["राम", "घर", "जाता", "है", "भारत", "एक", "महान", "देश", "है", "समय", "का", "सही", "उपयोग", "करो", "सच्चाई", "की", "जीत", "होती", "है", "हमें", "रोज़", "अभ्यास", "करना", "चाहिए", "ज्ञान", "ही", "सबसे", "बड़ा", "धन", "है"],
-    medium: ["तकनीक", "और", "विज्ञान", "ने", "मानव", "जीवन", "को", "अत्यंत", "सरल", "और", "सुगम", "बना", "दिया", "है", "निरंतर", "प्रयास", "से", "ही", "सफलता", "प्राप्त", "होती", "है"],
-    hard: ["आत्मनिर्भरता", "सहानुभूति", "उत्तरदायित्व", "प्रौद्योगिकी", "विश्वसनीयता", "सकारात्मकता"]
+    easy: [
+      "समय का सही उपयोग ही मनुष्य को सफल बनाता है",
+      "सच्चाई और ईमानदारी से किया गया कार्य कभी व्यर्थ नहीं जाता",
+      "हमें प्रतिदिन अभ्यास करके अपने ज्ञान को समृद्ध करना चाहिए",
+      "कठिन परिश्रम और धैर्य ही वास्तविक विजय का मार्ग प्रशस्त करते हैं"
+    ],
+    medium: [
+      "तकनीक और विज्ञान ने मानव जीवन को सरल एवं उत्पादक बना दिया है",
+      "सकारात्मक दृष्टिकोण से किसी भी जटिल समस्या का समाधान संभव है",
+      "आधुनिक सूचना क्रांति ने भौगोलिक दूरियों को पूरी तरह समाप्त कर दिया है"
+    ],
+    hard: [
+      "आत्मनिर्भरता और अटूट उत्तरदायित्व से ही मानवीय प्रगति सुनिश्चित होती है",
+      "प्रौद्योगिकी का संतुलित सदुपयोग ही सामाजिक संरचना को संबल प्रदान करता है"
+    ]
   }
 };
 
@@ -439,26 +623,25 @@ const state = {
   topic: 'easy',
   timeLimit: 30,
   timeLeft: 30,
-  
-  generatedWords: [],
+
+  words: [],
   currentWordIdx: 0,
-  currentCharIdx: 0,
-  
+  currentTypedWord: "",
+
+  totalKeystrokes: 0,
   correctChars: 0,
   wrongChars: 0,
-  totalMistakes: 0,
+  totalErrorsCommitted: 0,
   wrongKeyMap: {},
-  
+
+  wpmTimeline: [],
   isStarted: false,
   timerInterval: null,
-  
+
   xp: parseInt(localStorage.getItem('typepro_xp') || '0'),
   level: parseInt(localStorage.getItem('typepro_level') || '1')
 };
 
-/* ==========================================================================
-   DOM ELEMENTS
-   ========================================================================== */
 const els = {
   wordStream: document.getElementById('wordStream'),
   typingInput: document.getElementById('typingInput'),
@@ -473,10 +656,12 @@ const els = {
   testContainer: document.getElementById('testContainer'),
   resultContainer: document.getElementById('resultContainer'),
   resWpm: document.getElementById('resWpm'),
-  resCpm: document.getElementById('resCpm'),
+  resRawWpm: document.getElementById('resRawWpm'),
   resAcc: document.getElementById('resAcc'),
   resMistakes: document.getElementById('resMistakes'),
+  resConsistency: document.getElementById('resConsistency'),
   resXp: document.getElementById('resXp'),
+  wpmGraphSvg: document.getElementById('wpmGraphSvg'),
   aiReviewMsg: document.getElementById('aiReviewMsg'),
   weakKeysContainer: document.getElementById('weakKeysContainer'),
   resetBtn: document.getElementById('resetBtn'),
@@ -493,7 +678,7 @@ function init() {
   resetTest();
 
   els.viewport.addEventListener('click', () => els.typingInput.focus());
-  els.typingInput.addEventListener('input', handleTyping);
+  els.typingInput.addEventListener('keydown', handleKeyDown);
   els.resetBtn.addEventListener('click', resetTest);
   els.tryAgainBtn.addEventListener('click', () => {
     els.resultContainer.classList.remove('active');
@@ -511,9 +696,7 @@ function updateUserStatsUI() {
   els.userLevel.textContent = state.level;
 }
 
-/* Build Virtual Keyboard UI */
 function buildKeyboard() {
-  const kb = document.getElementById('virtualKeyboard');
   const rows = [document.getElementById('row1'), document.getElementById('row2'), document.getElementById('row3'), document.getElementById('row4')];
   rows.forEach(r => r.innerHTML = '');
 
@@ -528,29 +711,34 @@ function buildKeyboard() {
   });
 }
 
-/* Algorithmic Paragraph Builder */
 function generateProceduralText() {
-  const targetWords = Math.round((state.timeLimit / 30) * 60) + 20; // 30s=80w, 60s=140w etc.
   const pool = CORPUS[state.lang][state.topic] || CORPUS.en.easy;
-  
-  let words = [];
-  for (let i = 0; i < targetWords; i++) {
-    words.push(pool[Math.floor(Math.random() * pool.length)]);
+  let text = "";
+  while (text.split(' ').length < 150) {
+    const randomSentence = pool[Math.floor(Math.random() * pool.length)];
+    text += (text ? " " : "") + randomSentence;
   }
-  state.generatedWords = words;
+
+  state.words = text.split(' ').map(rawWord => {
+    const chars = Array.from(rawWord);
+    return {
+      text: rawWord,
+      chars: chars,
+      typed: ""
+    };
+  });
 }
 
-/* Render Stream */
 function renderWords() {
   els.wordStream.innerHTML = '';
   els.wordStream.className = `word-stream ${state.lang === 'hi' ? 'hindi' : ''}`;
 
-  state.generatedWords.forEach((w, wIdx) => {
+  state.words.forEach((wObj, wIdx) => {
     const wordSpan = document.createElement('span');
     wordSpan.className = 'word';
     wordSpan.id = `w-${wIdx}`;
 
-    Array.from(w).forEach((c, cIdx) => {
+    wObj.chars.forEach((c, cIdx) => {
       const charSpan = document.createElement('span');
       charSpan.className = 'char';
       charSpan.id = `c-${wIdx}-${cIdx}`;
@@ -561,97 +749,153 @@ function renderWords() {
     els.wordStream.appendChild(wordSpan);
   });
 
-  highlightCurrentPosition();
+  updatePositionAndGuides();
 }
 
-function highlightCurrentPosition() {
+function updatePositionAndGuides() {
   document.querySelectorAll('.char').forEach(c => c.classList.remove('active'));
-  const curChar = document.getElementById(`c-${state.currentWordIdx}-${state.currentCharIdx}`);
-  
-  if (curChar) {
-    curChar.classList.add('active');
-    updateFingerGuide(curChar.textContent.toLowerCase());
+  const currentWord = state.words[state.currentWordIdx];
+  if (!currentWord) return;
+
+  const charIdx = currentWord.typed.length;
+  if (charIdx < currentWord.chars.length) {
+    const curCharEl = document.getElementById(`c-${state.currentWordIdx}-${charIdx}`);
+    if (curCharEl) curCharEl.classList.add('active');
+    updateFingerGuide(currentWord.chars[charIdx].toLowerCase());
   } else {
-    // End of word (space required)
     updateFingerGuide('space');
+  }
+
+  // Smooth Auto-Scroll
+  const wordEl = document.getElementById(`w-${state.currentWordIdx}`);
+  if (wordEl) {
+    const viewportTop = els.viewport.getBoundingClientRect().top;
+    const wordTop = wordEl.getBoundingClientRect().top;
+    const offset = wordTop - viewportTop;
+    if (offset > 70) {
+      els.viewport.scrollTop += (offset - 40);
+    }
   }
 }
 
 function updateFingerGuide(char) {
   document.querySelectorAll('.key').forEach(k => k.classList.remove('target-key'));
   const finger = FINGER_MAP[char] || 'Thumbs';
-  els.fingerGuide.textContent = `Finger Recommendation: ${finger}`;
+  els.fingerGuide.textContent = `Next Key: [ ${char === 'space' ? 'SPACE' : char.toUpperCase()} ] • ${finger}`;
 
   const targetKey = document.getElementById(`key-${char}`);
   if (targetKey) targetKey.classList.add('target-key');
 }
 
 /* ==========================================================================
-   TYPING LOGIC ENGINE
+   UPGRADED TYPING ENGINE WITH FULL BACKSPACE SUPPORT
    ========================================================================== */
-function handleTyping(e) {
+function handleKeyDown(e) {
+  if (e.key === 'Escape') return;
   if (!state.isStarted) startTest();
 
-  const val = els.typingInput.value;
-  const currentWord = state.generatedWords[state.currentWordIdx];
+  const currentWord = state.words[state.currentWordIdx];
+  if (!currentWord) return;
 
-  if (val.endsWith(' ')) {
-    // Word submit
-    const typedWord = val.trim();
-    if (typedWord === currentWord) {
-      state.correctChars += currentWord.length + 1;
+  // Handle Backspace
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (currentWord.typed.length > 0) {
+      const removeIdx = currentWord.typed.length - 1;
+      currentWord.typed = currentWord.typed.slice(0, -1);
+      const charEl = document.getElementById(`c-${state.currentWordIdx}-${removeIdx}`);
+      if (charEl) charEl.className = 'char';
+      updatePositionAndGuides();
+    } else if (state.currentWordIdx > 0) {
+      // Step back to previous word
+      state.currentWordIdx--;
+      const prevWord = state.words[state.currentWordIdx];
+      updatePositionAndGuides();
+    }
+    return;
+  }
+
+  // Handle Space (Word Submission)
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (currentWord.typed.length === 0) return;
+
+    state.totalKeystrokes++;
+    flashKey('space', true);
+
+    // Evaluate whole word
+    let wordAccurate = true;
+    currentWord.chars.forEach((c, idx) => {
+      if (currentWord.typed[idx] === c) {
+        state.correctChars++;
+      } else {
+        wordAccurate = false;
+        state.wrongChars++;
+      }
+    });
+
+    if (currentWord.typed.length === currentWord.chars.length && wordAccurate) {
+      state.correctChars++; // Space counted as correct char
     } else {
-      state.wrongChars += Math.abs(currentWord.length - typedWord.length);
-      state.totalMistakes++;
+      state.totalErrorsCommitted++;
     }
 
     state.currentWordIdx++;
-    state.currentCharIdx = 0;
     els.typingInput.value = '';
-  } else {
-    state.currentCharIdx = val.length;
-    const charEl = document.getElementById(`c-${state.currentWordIdx}-${val.length - 1}`);
+    updateHUD();
+    updatePositionAndGuides();
+    return;
+  }
+
+  // Handle standard printable characters
+  if (e.key.length === 1) {
+    e.preventDefault();
+    const typedChar = e.key;
+    const charIndex = currentWord.typed.length;
+    currentWord.typed += typedChar;
+    state.totalKeystrokes++;
+
+    const expectedChar = currentWord.chars[charIndex];
+    const charEl = document.getElementById(`c-${state.currentWordIdx}-${charIndex}`);
 
     if (charEl) {
-      const targetChar = currentWord[val.length - 1];
-      const typedChar = val[val.length - 1];
-
-      if (typedChar === targetChar) {
+      if (typedChar === expectedChar) {
         charEl.className = 'char correct';
-        state.correctChars++;
         flashKey(typedChar, true);
       } else {
         charEl.className = 'char wrong';
-        state.wrongChars++;
-        state.totalMistakes++;
-        state.wrongKeyMap[targetChar] = (state.wrongKeyMap[targetChar] || 0) + 1;
-        flashKey(typedChar || targetChar, false);
+        state.totalErrorsCommitted++;
+        state.wrongKeyMap[expectedChar || typedChar] = (state.wrongKeyMap[expectedChar || typedChar] || 0) + 1;
+        flashKey(typedChar, false);
       }
     }
-  }
 
-  updateHUD();
-  highlightCurrentPosition();
+    updateHUD();
+    updatePositionAndGuides();
+  }
 }
 
 function flashKey(char, isCorrect) {
   const kEl = document.getElementById(`key-${char.toLowerCase()}`);
   if (kEl) {
     kEl.classList.add(isCorrect ? 'pressed-correct' : 'pressed-wrong');
-    setTimeout(() => kEl.classList.remove('pressed-correct', 'pressed-wrong'), 150);
+    setTimeout(() => kEl.classList.remove('pressed-correct', 'pressed-wrong'), 130);
   }
 }
 
 function updateHUD() {
-  const elapsed = (state.timeLimit - state.timeLeft) || 1;
-  const mins = elapsed / 60;
-  const wpm = Math.round((state.correctChars / 5) / mins);
-  const total = state.correctChars + state.wrongChars;
-  const acc = total > 0 ? Math.round((state.correctChars / total) * 100) : 100;
+  const elapsed = Math.max(1, state.timeLimit - state.timeLeft);
+  const minutes = elapsed / 60;
+  
+  // Standard Net WPM formula: (Correct Characters / 5) / Minutes
+  const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
+  const accuracy = state.totalKeystrokes > 0 
+    ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrorsCommitted) / state.totalKeystrokes) * 100))
+    : 100;
 
-  els.hudWpm.innerHTML = `${wpm} <span style="font-size:0.9rem; color:var(--text-muted)">WPM</span>`;
-  els.hudAcc.textContent = `${acc}%`;
-  els.hudMistakes.textContent = state.totalMistakes;
+  els.hudWpm.innerHTML = `${netWpm} <span style="font-size:0.85rem; color:var(--text-muted)">WPM</span>`;
+  els.hudAcc.textContent = `${accuracy}%`;
+  els.hudMistakes.textContent = state.totalErrorsCommitted;
 }
 
 function startTest() {
@@ -659,6 +903,12 @@ function startTest() {
   state.timerInterval = setInterval(() => {
     state.timeLeft--;
     els.hudTimer.textContent = `${state.timeLeft}s`;
+
+    // Record instantaneous WPM for graph
+    const elapsed = state.timeLimit - state.timeLeft;
+    const currentWpm = Math.round((state.correctChars / 5) / (elapsed / 60));
+    state.wpmTimeline.push({ time: elapsed, wpm: currentWpm });
+
     updateHUD();
 
     if (state.timeLeft <= 0) finishTest();
@@ -670,44 +920,78 @@ function finishTest() {
   els.testContainer.style.display = 'none';
   els.resultContainer.classList.add('active');
 
-  const elapsed = state.timeLimit / 60;
-  const wpm = Math.round((state.correctChars / 5) / elapsed);
-  const cpm = Math.round(state.correctChars / elapsed);
-  const total = state.correctChars + state.wrongChars;
-  const acc = total > 0 ? Math.round((state.correctChars / total) * 100) : 100;
+  const minutes = state.timeLimit / 60;
+  const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
+  const rawWpm = Math.max(0, Math.round((state.totalKeystrokes / 5) / minutes));
+  const accuracy = state.totalKeystrokes > 0 
+    ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrorsCommitted) / state.totalKeystrokes) * 100))
+    : 100;
 
-  // XP calculation
-  const gainedXP = Math.round(wpm * (acc / 100) + 20);
+  // Consistency calculation (standard deviation variance from timeline)
+  const wpms = state.wpmTimeline.map(t => t.wpm);
+  const avgWpm = wpms.reduce((a, b) => a + b, 0) / (wpms.length || 1);
+  const variance = wpms.reduce((a, b) => a + Math.pow(b - avgWpm, 2), 0) / (wpms.length || 1);
+  const consistency = Math.max(50, Math.min(100, Math.round(100 - Math.sqrt(variance))));
+
+  // Multi-level safe XP evaluation
+  const gainedXP = Math.round(netWpm * (accuracy / 100) + 25);
   state.xp += gainedXP;
-  if (state.xp >= state.level * 100) state.level++;
+  while (state.xp >= state.level * 120) {
+    state.xp -= (state.level * 120);
+    state.level++;
+  }
 
   localStorage.setItem('typepro_xp', state.xp);
   localStorage.setItem('typepro_level', state.level);
   updateUserStatsUI();
 
-  els.resWpm.textContent = wpm;
-  els.resCpm.textContent = cpm;
-  els.resAcc.textContent = `${acc}%`;
-  els.resMistakes.textContent = state.totalMistakes;
+  els.resWpm.textContent = netWpm;
+  els.resRawWpm.textContent = rawWpm;
+  els.resAcc.textContent = `${accuracy}%`;
+  els.resMistakes.textContent = state.totalErrorsCommitted;
+  els.resConsistency.textContent = `${consistency}%`;
   els.resXp.textContent = `+${gainedXP} XP`;
 
-  // Diagnostic feedback
-  els.aiReviewMsg.textContent = acc > 90 ? "Excellent accuracy & rhythm! Keep pushing your speed limits." : "Good attempt! Focus on key accuracy first before increasing speed.";
+  // Draw Performance SVG Graph
+  renderSpeedGraph(state.wpmTimeline);
 
-  // Render weak keys
+  // Diagnostic feedback
+  if (accuracy >= 97) {
+    els.aiReviewMsg.textContent = "Flawless rhythm! Your keystroke precision is exceptional. You can now push for higher raw speed.";
+  } else if (accuracy >= 90) {
+    els.aiReviewMsg.textContent = "Solid performance! Maintain your tempo and minimize sudden bursts on unfamiliar key sequences.";
+  } else {
+    els.aiReviewMsg.textContent = "Pace yourself. Slow down slightly to build muscle memory before prioritizing typing speed.";
+  }
+
+  // Weak keys display
   els.weakKeysContainer.innerHTML = '';
   const sortedWeakKeys = Object.keys(state.wrongKeyMap).sort((a,b) => state.wrongKeyMap[b] - state.wrongKeyMap[a]).slice(0, 3);
-  
   if (sortedWeakKeys.length === 0) {
-    els.weakKeysContainer.innerHTML = '<span style="color:var(--char-correct)">None! Perfect execution.</span>';
+    els.weakKeysContainer.innerHTML = '<span style="color:var(--char-correct); font-size:0.9rem;">Clean run! Zero weak keys detected.</span>';
   } else {
     sortedWeakKeys.forEach(k => {
       const tag = document.createElement('span');
       tag.className = 'weak-key-tag';
-      tag.textContent = `${k.toUpperCase()} (${state.wrongKeyMap[k]})`;
+      tag.textContent = `${k === ' ' ? 'SPACE' : k.toUpperCase()} (${state.wrongKeyMap[k]})`;
       els.weakKeysContainer.appendChild(tag);
     });
   }
+}
+
+function renderSpeedGraph(data) {
+  if (!data.length) return;
+  const maxWpm = Math.max(...data.map(d => d.wpm), 60);
+  const points = data.map((d, i) => {
+    const x = (i / (data.length - 1 || 1)) * 480 + 10;
+    const y = 110 - ((d.wpm / maxWpm) * 95);
+    return `${x},${y}`;
+  }).join(' ');
+
+  els.wpmGraphSvg.innerHTML = `
+    <polyline fill="none" stroke="rgba(99, 102, 241, 0.3)" stroke-width="2" points="${points}" />
+    <polyline fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" points="${points}" />
+  `;
 }
 
 function resetTest() {
@@ -715,17 +999,19 @@ function resetTest() {
   state.isStarted = false;
   state.timeLeft = state.timeLimit;
   state.currentWordIdx = 0;
-  state.currentCharIdx = 0;
+  state.totalKeystrokes = 0;
   state.correctChars = 0;
   state.wrongChars = 0;
-  state.totalMistakes = 0;
+  state.totalErrorsCommitted = 0;
   state.wrongKeyMap = {};
+  state.wpmTimeline = [];
 
   els.hudTimer.textContent = `${state.timeLimit}s`;
-  els.hudWpm.innerHTML = `0 <span style="font-size:0.9rem; color:var(--text-muted)">WPM</span>`;
+  els.hudWpm.innerHTML = `0 <span style="font-size:0.85rem; color:var(--text-muted)">WPM</span>`;
   els.hudAcc.textContent = '100%';
   els.hudMistakes.textContent = '0';
   els.typingInput.value = '';
+  els.viewport.scrollTop = 0;
 
   generateProceduralText();
   renderWords();
