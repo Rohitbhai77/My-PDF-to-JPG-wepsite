@@ -81,7 +81,7 @@
       overflow-x: hidden;
     }
 
-    button, input { font: inherit; }
+    button, input, textarea { font: inherit; }
     button { -webkit-tap-highlight-color: transparent; }
 
     .container {
@@ -241,7 +241,7 @@
       margin-top: 0.25rem;
     }
 
-    /* Typing Window with Auto-Scroll Support */
+    /* Typing Window */
     .typing-viewport {
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid var(--card-border);
@@ -417,6 +417,79 @@
       background: var(--primary-hover);
     }
 
+    /* ==========================================================================
+       CUSTOM TEXT MODAL
+       ========================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.active { display: flex; }
+
+    .custom-modal {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .custom-modal h3 {
+      font-size: 1.25rem;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .custom-modal textarea {
+      width: 100%;
+      height: 160px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+    .custom-modal textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { color: var(--text-main); border-color: var(--border-hover); }
+
     /* Mobile Adaptations */
     @media (max-width: 700px) {
       body { padding: 0.75rem; }
@@ -466,6 +539,7 @@
       <button class="cfg-btn" data-topic="hard">Hard</button>
       <button class="cfg-btn" data-topic="code">Code</button>
       <button class="cfg-btn" data-topic="science">Science</button>
+      <button class="cfg-btn" data-topic="custom" id="customTopicBtn">✏️ Custom</button>
     </div>
 
     <div class="btn-group" id="timeSelect">
@@ -540,6 +614,19 @@
 
     <button class="btn-action" id="tryAgainBtn">🔄 Try Another Test</button>
   </section>
+</div>
+
+<!-- Custom Text Input Modal -->
+<div class="modal-backdrop" id="customModal">
+  <div class="custom-modal">
+    <h3>Custom Practice Text</h3>
+    <p style="font-size: 0.85rem; color: var(--text-muted);">Paste or type your own paragraph, code snippet, or article below:</p>
+    <textarea id="customTextInput" placeholder="Paste your text here..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="cancelCustomBtn">Cancel</button>
+      <button class="btn-action" id="applyCustomBtn" style="padding:0.6rem 1.4rem;">Apply Text</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -626,7 +713,7 @@ const state = {
 
   words: [],
   currentWordIdx: 0,
-  currentTypedWord: "",
+  customText: localStorage.getItem('typepro_custom_text') || "",
 
   totalKeystrokes: 0,
   correctChars: 0,
@@ -665,7 +752,12 @@ const els = {
   aiReviewMsg: document.getElementById('aiReviewMsg'),
   weakKeysContainer: document.getElementById('weakKeysContainer'),
   resetBtn: document.getElementById('resetBtn'),
-  tryAgainBtn: document.getElementById('tryAgainBtn')
+  tryAgainBtn: document.getElementById('tryAgainBtn'),
+  customModal: document.getElementById('customModal'),
+  customTextInput: document.getElementById('customTextInput'),
+  applyCustomBtn: document.getElementById('applyCustomBtn'),
+  cancelCustomBtn: document.getElementById('cancelCustomBtn'),
+  customTopicBtn: document.getElementById('customTopicBtn')
 };
 
 /* ==========================================================================
@@ -674,6 +766,7 @@ const els = {
 function init() {
   buildKeyboard();
   setupConfigListeners();
+  setupCustomModal();
   updateUserStatsUI();
   resetTest();
 
@@ -687,7 +780,9 @@ function init() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') resetTest();
+    if (e.key === 'Escape' && !els.customModal.classList.contains('active')) {
+      resetTest();
+    }
   });
 }
 
@@ -712,18 +807,28 @@ function buildKeyboard() {
 }
 
 function generateProceduralText() {
-  const pool = CORPUS[state.lang][state.topic] || CORPUS.en.easy;
+  if (state.topic === 'custom' && state.customText.trim()) {
+    parseWordsFromString(state.customText.trim());
+    return;
+  }
+
+  const pool = (CORPUS[state.lang] && CORPUS[state.lang][state.topic]) || CORPUS.en.easy;
   let text = "";
   while (text.split(' ').length < 150) {
     const randomSentence = pool[Math.floor(Math.random() * pool.length)];
     text += (text ? " " : "") + randomSentence;
   }
 
-  state.words = text.split(' ').map(rawWord => {
-    const chars = Array.from(rawWord);
+  parseWordsFromString(text);
+}
+
+function parseWordsFromString(rawText) {
+  // Normalize whitespaces and line breaks into standard spaces
+  const cleanText = rawText.replace(/\s+/g, ' ').trim();
+  state.words = cleanText.split(' ').map(rawWord => {
     return {
       text: rawWord,
-      chars: chars,
+      chars: Array.from(rawWord),
       typed: ""
     };
   });
@@ -788,7 +893,7 @@ function updateFingerGuide(char) {
 }
 
 /* ==========================================================================
-   UPGRADED TYPING ENGINE WITH FULL BACKSPACE SUPPORT
+   UPGRADED TYPING ENGINE WITH BACKSPACE
    ========================================================================== */
 function handleKeyDown(e) {
   if (e.key === 'Escape') return;
@@ -807,9 +912,7 @@ function handleKeyDown(e) {
       if (charEl) charEl.className = 'char';
       updatePositionAndGuides();
     } else if (state.currentWordIdx > 0) {
-      // Step back to previous word
       state.currentWordIdx--;
-      const prevWord = state.words[state.currentWordIdx];
       updatePositionAndGuides();
     }
     return;
@@ -823,7 +926,6 @@ function handleKeyDown(e) {
     state.totalKeystrokes++;
     flashKey('space', true);
 
-    // Evaluate whole word
     let wordAccurate = true;
     currentWord.chars.forEach((c, idx) => {
       if (currentWord.typed[idx] === c) {
@@ -835,13 +937,20 @@ function handleKeyDown(e) {
     });
 
     if (currentWord.typed.length === currentWord.chars.length && wordAccurate) {
-      state.correctChars++; // Space counted as correct char
+      state.correctChars++;
     } else {
       state.totalErrorsCommitted++;
     }
 
     state.currentWordIdx++;
     els.typingInput.value = '';
+
+    // If reached the end of a custom text paragraph
+    if (state.currentWordIdx >= state.words.length) {
+      finishTest();
+      return;
+    }
+
     updateHUD();
     updatePositionAndGuides();
     return;
@@ -887,7 +996,6 @@ function updateHUD() {
   const elapsed = Math.max(1, state.timeLimit - state.timeLeft);
   const minutes = elapsed / 60;
   
-  // Standard Net WPM formula: (Correct Characters / 5) / Minutes
   const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
   const accuracy = state.totalKeystrokes > 0 
     ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrorsCommitted) / state.totalKeystrokes) * 100))
@@ -904,7 +1012,6 @@ function startTest() {
     state.timeLeft--;
     els.hudTimer.textContent = `${state.timeLeft}s`;
 
-    // Record instantaneous WPM for graph
     const elapsed = state.timeLimit - state.timeLeft;
     const currentWpm = Math.round((state.correctChars / 5) / (elapsed / 60));
     state.wpmTimeline.push({ time: elapsed, wpm: currentWpm });
@@ -920,20 +1027,19 @@ function finishTest() {
   els.testContainer.style.display = 'none';
   els.resultContainer.classList.add('active');
 
-  const minutes = state.timeLimit / 60;
+  const elapsed = Math.max(1, state.timeLimit - state.timeLeft);
+  const minutes = elapsed / 60;
   const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
   const rawWpm = Math.max(0, Math.round((state.totalKeystrokes / 5) / minutes));
   const accuracy = state.totalKeystrokes > 0 
     ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrorsCommitted) / state.totalKeystrokes) * 100))
     : 100;
 
-  // Consistency calculation (standard deviation variance from timeline)
   const wpms = state.wpmTimeline.map(t => t.wpm);
   const avgWpm = wpms.reduce((a, b) => a + b, 0) / (wpms.length || 1);
   const variance = wpms.reduce((a, b) => a + Math.pow(b - avgWpm, 2), 0) / (wpms.length || 1);
   const consistency = Math.max(50, Math.min(100, Math.round(100 - Math.sqrt(variance))));
 
-  // Multi-level safe XP evaluation
   const gainedXP = Math.round(netWpm * (accuracy / 100) + 25);
   state.xp += gainedXP;
   while (state.xp >= state.level * 120) {
@@ -952,10 +1058,8 @@ function finishTest() {
   els.resConsistency.textContent = `${consistency}%`;
   els.resXp.textContent = `+${gainedXP} XP`;
 
-  // Draw Performance SVG Graph
   renderSpeedGraph(state.wpmTimeline);
 
-  // Diagnostic feedback
   if (accuracy >= 97) {
     els.aiReviewMsg.textContent = "Flawless rhythm! Your keystroke precision is exceptional. You can now push for higher raw speed.";
   } else if (accuracy >= 90) {
@@ -964,7 +1068,6 @@ function finishTest() {
     els.aiReviewMsg.textContent = "Pace yourself. Slow down slightly to build muscle memory before prioritizing typing speed.";
   }
 
-  // Weak keys display
   els.weakKeysContainer.innerHTML = '';
   const sortedWeakKeys = Object.keys(state.wrongKeyMap).sort((a,b) => state.wrongKeyMap[b] - state.wrongKeyMap[a]).slice(0, 3);
   if (sortedWeakKeys.length === 0) {
@@ -1024,6 +1127,11 @@ function setupConfigListeners() {
       const btn = e.target.closest('.cfg-btn');
       if (!btn) return;
 
+      if (btn.dataset.topic === 'custom') {
+        openCustomModal();
+        return;
+      }
+
       grp.querySelectorAll('.cfg-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
@@ -1034,6 +1142,41 @@ function setupConfigListeners() {
       resetTest();
     });
   });
+}
+
+/* ==========================================================================
+   CUSTOM TEXT MODAL LOGIC
+   ========================================================================== */
+function setupCustomModal() {
+  els.cancelCustomBtn.addEventListener('click', () => {
+    els.customModal.classList.remove('active');
+    els.typingInput.focus();
+  });
+
+  els.applyCustomBtn.addEventListener('click', () => {
+    const text = els.customTextInput.value.trim();
+    if (!text) {
+      alert("Please paste or type some text first!");
+      return;
+    }
+
+    state.customText = text;
+    localStorage.setItem('typepro_custom_text', text);
+    state.topic = 'custom';
+
+    // Activate the custom button UI
+    document.querySelectorAll('#topicSelect .cfg-btn').forEach(b => b.classList.remove('active'));
+    els.customTopicBtn.classList.add('active');
+
+    els.customModal.classList.remove('active');
+    resetTest();
+  });
+}
+
+function openCustomModal() {
+  els.customTextInput.value = state.customText;
+  els.customModal.classList.add('active');
+  els.customTextInput.focus();
 }
 
 document.addEventListener('DOMContentLoaded', init);
