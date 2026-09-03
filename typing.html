@@ -6,142 +6,202 @@
   <title>TypePro Ultra — Precision Speed Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Rozha+One&family=Noto+Sans+Devanagari:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* ===== MODERN CYBER-AMBER THEME ===== */
-      --bg-base: #0f141c;
-      --bg-surface: #151c27;
-      --bg-card: rgba(22, 30, 44, 0.75);
-      --bg-card-solid: #161e2c;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-bright: rgba(234, 179, 8, 0.4);
+      /* ===== DARK PROFESSIONAL DESIGN SYSTEM ===== */
+      --bg-color: #0b1120;
+      --card-bg: rgba(17, 24, 39, 0.78);
+      --card-bg-solid: #111827;
+      --surface-2: #1f2937;
+      --surface-3: #374151;
 
-      /* Typography colors */
-      --text-main: #f1f5f9;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
       --text-muted: #64748b;
-      --text-inactive: #475569;
 
-      /* Accents */
-      --accent: #eab308;
-      --accent-hover: #facc15;
-      --accent-glow: rgba(234, 179, 8, 0.25);
-      --primary: #38bdf8;
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --primary-glow: rgba(99, 102, 241, 0.28);
+      --accent: #22d3ee;
+      --accent-glow: rgba(34, 211, 238, 0.2);
+
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
 
       /* Typing States */
-      --char-correct: #e2e8f0;
-      --char-wrong: #f43f5e;
-      --char-wrong-bg: rgba(244, 63, 94, 0.22);
-      --caret-color: #eab308;
+      --typing-correct: #22c55e;
+      --typing-wrong: #ef4444;
+      --typing-wrong-bg: rgba(239, 68, 68, 0.18);
+      --typing-current: #f8fafc;
+      --caret-color: #22d3ee;
 
       /* Typography */
       --font-mono: 'Fira Code', monospace;
       --font-ui: 'Plus Jakarta Sans', sans-serif;
       --font-devanagari: 'Noto Sans Devanagari', sans-serif;
 
+      /* Scaffolding */
       --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --radius-xl: 28px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
     body {
-      background-color: var(--bg-base);
+      background-color: var(--bg-color);
       background-image: 
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(234, 179, 8, 0.08), transparent 70%),
-        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.04), transparent 50%);
-      color: var(--text-main);
+        radial-gradient(ellipse 70% 40% at 50% -10%, rgba(99, 102, 241, 0.12), transparent 70%),
+        radial-gradient(ellipse 60% 30% at 85% 95%, rgba(34, 211, 238, 0.05), transparent 60%);
+      color: var(--text-primary);
       font-family: var(--font-ui);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: clamp(0.75rem, 3vw, 2rem);
+      padding: clamp(0.75rem, 2.5vw, 2rem);
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    button, input, textarea { font-family: inherit; }
+    button, input, textarea {
+      font-family: inherit;
+      outline: none;
+    }
 
     .app-shell {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.4rem;
     }
 
-    /* Modern Minimalist Header */
+    /* ===== HEADER ===== */
     header {
+      position: sticky;
+      top: 0.75rem;
+      z-index: 50;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 0.9rem 1.4rem;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      padding: 0.75rem 1.4rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition-smooth);
+    }
+
+    header:hover {
+      border-color: var(--border-hover);
     }
 
     .brand-group {
       display: flex;
       align-items: center;
       gap: 0.85rem;
+      user-select: none;
     }
 
     .logo-badge {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--accent), #f97316);
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
       font-weight: 800;
-      color: #000;
-      font-size: 1.25rem;
-      box-shadow: 0 0 16px var(--accent-glow);
+      color: #0b1120;
+      font-size: 1.3rem;
+      box-shadow: 0 0 16px var(--primary-glow);
+      transition: transform 0.25s ease;
+    }
+
+    .brand-group:hover .logo-badge {
+      transform: rotate(5deg) scale(1.05);
     }
 
     .brand-title {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 800;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.4px;
+      background: linear-gradient(to right, #f8fafc, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .stats-pill {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-subtle);
-      padding: 0.4rem 0.9rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      padding: 0.45rem 1rem;
       border-radius: 999px;
       font-size: 0.85rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* Configuration Panel */
+    .xp-progress-bar {
+      width: 50px;
+      height: 6px;
+      background: var(--surface-3);
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+      margin-left: 2px;
+    }
+
+    .xp-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* ===== CONFIG PANEL ===== */
     .config-strip {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 0.75rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      align-items: center;
+      gap: 0.8rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 0.6rem 0.9rem;
+      padding: 0.65rem 0.9rem;
+      backdrop-filter: blur(16px);
     }
 
     .btn-cluster {
       display: inline-flex;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       padding: 0.25rem;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-color);
       overflow-x: auto;
       max-width: 100%;
     }
@@ -150,24 +210,31 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 0.4rem 0.85rem;
+      padding: 0.42rem 0.85rem;
       font-size: 0.82rem;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: var(--transition-smooth);
       white-space: nowrap;
     }
 
-    .btn-item:hover { color: var(--text-main); }
-    .btn-item.active {
-      background: var(--accent);
-      color: #0b1120;
-      font-weight: 700;
-      box-shadow: 0 0 12px var(--accent-glow);
+    .btn-item:hover {
+      color: var(--text-primary);
     }
 
-    /* HUD Metrics Display */
+    .btn-item.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 0 14px var(--primary-glow);
+    }
+
+    .btn-item:focus-visible {
+      outline: 2px solid var(--accent);
+    }
+
+    /* ===== HUD STATS ===== */
     .hud-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -175,17 +242,23 @@
     }
 
     .stat-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 1.1rem;
+      padding: 1rem;
       text-align: center;
       position: relative;
+      box-shadow: var(--shadow-subtle);
+      transition: border-color 0.2s;
+    }
+
+    .stat-box:hover {
+      border-color: var(--border-hover);
     }
 
     .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
       text-transform: uppercase;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -193,152 +266,190 @@
 
     .stat-number {
       font-family: var(--font-mono);
-      font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+      font-size: clamp(1.6rem, 3.2vw, 2.3rem);
       font-weight: 700;
       margin-top: 0.2rem;
-      color: var(--text-main);
+      color: var(--text-primary);
     }
 
-    /* Enhanced Typing Viewport with Larger Font */
+    /* ===== TYPING VIEWPORT ===== */
     .typing-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-xl);
-      padding: clamp(1.4rem, 4vw, 2.5rem);
+      padding: clamp(1.4rem, 3.5vw, 2.4rem);
       position: relative;
       cursor: text;
-      height: 200px;
+      height: 195px;
       overflow-y: hidden;
-      box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.4);
+      box-shadow: inset 0 2px 16px rgba(0, 0, 0, 0.55);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .typing-box.focused {
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: inset 0 2px 16px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.15);
     }
 
     .text-stream {
       font-family: var(--font-mono);
-      font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+      font-size: clamp(1.45rem, 2.4vw, 1.85rem);
       line-height: 2.7rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75em;
-      color: var(--text-inactive);
+      gap: 0.65em;
+      color: var(--text-muted);
       user-select: none;
-      transition: transform 0.2s ease-out;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .text-stream.devanagari {
       font-family: var(--font-devanagari);
-      font-size: clamp(1.6rem, 2.8vw, 2rem);
+      font-size: clamp(1.55rem, 2.7vw, 2rem);
       line-height: 3rem;
     }
 
-    .word { display: inline-flex; position: relative; }
-    .char {
-      transition: color 0.06s;
+    .word {
+      display: inline-flex;
+      position: relative;
       border-radius: 4px;
     }
 
-    .char.correct { color: var(--char-correct); }
-    .char.wrong {
-      color: var(--char-wrong);
-      background: var(--char-wrong-bg);
-      text-decoration: underline;
-    }
-
-    .char.active {
-      color: #fff;
+    .char {
+      transition: color 0.05s ease, background-color 0.05s ease;
+      border-radius: 2px;
       position: relative;
     }
 
-    .char.active::before {
+    .char.correct {
+      color: var(--typing-correct);
+    }
+
+    .char.wrong {
+      color: var(--typing-wrong);
+      background: var(--typing-wrong-bg);
+      border-bottom: 2px solid var(--typing-wrong);
+    }
+
+    .char.active {
+      color: var(--typing-current);
+    }
+
+    .char.active::after {
       content: '';
       position: absolute;
       left: 0;
       bottom: -1px;
       width: 100%;
-      height: 3.5px;
+      height: 3px;
       background: var(--caret-color);
       border-radius: 2px;
-      animation: pulseCaret 1.1s ease-in-out infinite;
       box-shadow: 0 0 10px var(--accent-glow);
+      animation: blinkCaret 1s ease-in-out infinite;
     }
 
-    @keyframes pulseCaret {
+    @keyframes blinkCaret {
       0%, 100% { opacity: 1; transform: scaleY(1); }
-      50% { opacity: 0.2; transform: scaleY(0.7); }
+      50% { opacity: 0.15; transform: scaleY(0.7); }
     }
 
-    /* Virtual Keyboard Visualizer */
+    .typing-hint {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--text-secondary);
+      font-size: 1rem;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    /* ===== KEYBOARD DISPLAY ===== */
     .keyboard-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1rem;
+      padding: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
       align-items: center;
       overflow-x: auto;
+      box-shadow: var(--shadow-subtle);
     }
 
     .keyboard-row {
       display: flex;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
 
     .key-cap {
       min-width: 44px;
       height: 42px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--text-muted);
-      transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.12s ease;
+      user-select: none;
     }
 
-    .key-cap.space-bar { min-width: clamp(160px, 30vw, 280px); }
-    
+    .key-cap.space-bar {
+      min-width: clamp(180px, 32vw, 300px);
+    }
+
     .key-cap.target {
       border-color: var(--accent);
       color: var(--accent);
+      background: rgba(34, 211, 238, 0.1);
       box-shadow: 0 0 12px var(--accent-glow);
       transform: translateY(-2px);
     }
 
     .key-cap.hit-ok {
-      background: rgba(234, 179, 8, 0.25) !important;
-      border-color: var(--accent) !important;
+      background: rgba(34, 197, 94, 0.3) !important;
+      border-color: var(--success) !important;
       color: #fff !important;
       transform: translateY(2px);
     }
 
     .key-cap.hit-err {
-      background: rgba(244, 63, 94, 0.4) !important;
-      border-color: var(--char-wrong) !important;
+      background: rgba(239, 68, 68, 0.4) !important;
+      border-color: var(--danger) !important;
       color: #fff !important;
       transform: translateY(2px);
     }
 
     .finger-indicator {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--accent);
       font-weight: 600;
-      margin-top: 0.35rem;
+      margin-top: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
     .hidden-input {
       position: absolute;
       opacity: 0;
       pointer-events: none;
+      left: -9999px;
     }
 
     .btn-action {
-      background: var(--accent);
-      color: #0b1120;
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      color: #ffffff;
       border: none;
       padding: 0.75rem 1.8rem;
       font-weight: 700;
@@ -348,104 +459,215 @@
       align-self: center;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: transform 0.15s, box-shadow 0.15s;
+      gap: 0.6rem;
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 14px var(--primary-glow);
     }
 
     .btn-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--accent-glow);
-      background: var(--accent-hover);
+      box-shadow: 0 6px 22px var(--primary-glow);
+      background: linear-gradient(135deg, var(--primary-hover), var(--primary));
     }
 
-    /* Result Dashboard */
+    .btn-action:active {
+      transform: translateY(0);
+    }
+
+    /* ===== RESULTS DASHBOARD ===== */
     .summary-view {
       display: none;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-xl);
-      padding: clamp(1.2rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3.5vw, 2.5rem);
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.6rem;
+      box-shadow: var(--shadow-subtle);
     }
-    .summary-view.active { display: flex; }
+
+    .summary-view.active {
+      display: flex;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
 
     .result-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
     }
 
     .chart-panel {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 1.25rem;
+      position: relative;
     }
 
     .chart-panel svg {
       width: 100%;
-      height: 120px;
+      height: 140px;
+      overflow: visible;
     }
 
-    /* Custom Text Modal */
+    .insights-panel {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1rem;
+    }
+
+    .feedback-box, .weak-keys-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+    }
+
+    .weak-key-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .weak-key-tag {
+      background: var(--surface-2);
+      border: 1px solid var(--border-color);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .weak-key-tag span {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    /* ===== MODAL ===== */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5, 8, 14, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(5, 8, 14, 0.85);
+      backdrop-filter: blur(12px);
       z-index: 999;
       align-items: center;
       justify-content: center;
       padding: 1.25rem;
     }
-    .modal-overlay.active { display: flex; }
+
+    .modal-overlay.active {
+      display: flex;
+    }
 
     .modal-card {
-      background: var(--bg-card-solid);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg-solid);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.75rem;
+      padding: 1.8rem;
       width: 100%;
-      max-width: 600px;
+      max-width: 620px;
       display: flex;
       flex-direction: column;
       gap: 1.1rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
     }
 
     .modal-card textarea {
       width: 100%;
-      height: 150px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-subtle);
+      height: 160px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       color: #fff;
-      padding: 0.9rem;
-      font-size: 1rem;
+      padding: 1rem;
+      font-size: 0.95rem;
       font-family: var(--font-mono);
       outline: none;
       resize: vertical;
+      line-height: 1.5;
     }
 
     .modal-card textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 10px var(--accent-glow);
+      border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
     }
 
-    /* Fully Responsive Layout Rules */
-    @media (max-width: 800px) {
-      .hud-row { grid-template-columns: repeat(2, 1fr); }
-      .config-strip { flex-direction: column; }
-      .btn-cluster { width: 100%; }
-      .btn-item { flex: 1; text-align: center; }
-      .key-cap { min-width: 32px; height: 36px; font-size: 0.75rem; }
-      .typing-box { height: 180px; }
+    /* ===== RESPONSIVENESS ===== */
+    @media (max-width: 840px) {
+      .insights-panel {
+        grid-template-columns: 1fr;
+      }
+      .hud-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 0.6rem;
+      }
+      .app-shell {
+        gap: 1rem;
+      }
+      header {
+        padding: 0.6rem 0.9rem;
+      }
+      .brand-title {
+        font-size: 1.05rem;
+      }
+      .logo-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+      }
+      .config-strip {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-cluster {
+        width: 100%;
+      }
+      .btn-item {
+        flex: 1;
+        text-align: center;
+      }
+      .key-cap {
+        min-width: 30px;
+        height: 34px;
+        font-size: 0.72rem;
+      }
+      .key-cap.space-bar {
+        min-width: 130px;
+      }
+      .typing-box {
+        height: 170px;
+        padding: 1.2rem;
+      }
+      .text-stream {
+        font-size: 1.3rem;
+        line-height: 2.3rem;
+      }
     }
 
     @media (max-width: 480px) {
-      .keyboard-container { display: none; } /* Focus mode on smaller phones */
-      .brand-title { font-size: 1.05rem; }
+      .keyboard-container {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -457,20 +679,23 @@
       <div class="logo-badge">⚡</div>
       <div class="brand-title">TypePro Ultra</div>
     </div>
-    <div class="stats-pill">
-      <span>Rank Lvl <strong id="userLevel" style="color:var(--accent)">1</strong></span>
+    <div class="stats-pill" aria-label="Level and Experience">
+      <span>Lvl <strong id="userLevel" style="color:var(--accent)">1</strong></span>
       <span style="opacity:0.3">•</span>
-      <span>XP: <strong id="userXP">0</strong></span>
+      <span>XP <strong id="userXP">0</strong></span>
+      <div class="xp-progress-bar" title="Level Progress">
+        <div class="xp-progress-fill" id="xpProgressBar"></div>
+      </div>
     </div>
   </header>
 
-  <nav class="config-strip">
-    <div class="btn-cluster" id="langSelect">
+  <nav class="config-strip" aria-label="Engine Settings">
+    <div class="btn-cluster" id="langSelect" role="group" aria-label="Language selection">
       <button class="btn-item active" data-lang="en">English</button>
       <button class="btn-item" data-lang="hi">हिंदी (Devanagari)</button>
     </div>
 
-    <div class="btn-cluster" id="topicSelect">
+    <div class="btn-cluster" id="topicSelect" role="group" aria-label="Practice topic">
       <button class="btn-item active" data-topic="easy">Easy</button>
       <button class="btn-item" data-topic="medium">Medium</button>
       <button class="btn-item" data-topic="hard">Hard</button>
@@ -479,7 +704,7 @@
       <button class="btn-item" data-topic="custom" id="customTopicBtn">Custom ✏️</button>
     </div>
 
-    <div class="btn-cluster" id="timeSelect">
+    <div class="btn-cluster" id="timeSelect" role="group" aria-label="Timer duration">
       <button class="btn-item active" data-time="30">30s</button>
       <button class="btn-item" data-time="60">60s</button>
       <button class="btn-item" data-time="120">2m</button>
@@ -493,7 +718,7 @@
         <div class="stat-number" id="hudTimer">30s</div>
       </div>
       <div class="stat-box">
-        <div class="stat-label">Real-Time WPM</div>
+        <div class="stat-label">Net WPM</div>
         <div class="stat-number" id="hudWpm">0</div>
       </div>
       <div class="stat-box">
@@ -506,12 +731,13 @@
       </div>
     </div>
 
-    <div class="typing-box" id="viewport">
+    <div class="typing-box" id="viewport" tabindex="0" role="region" aria-label="Typing test stream">
       <div class="text-stream" id="wordStream"></div>
-      <input type="text" class="hidden-input" id="typingInput" autocomplete="off" spellcheck="false" />
+      <div class="typing-hint" id="typingHint">Press any key to start typing...</div>
+      <input type="text" class="hidden-input" id="typingInput" autocomplete="off" spellcheck="false" autocapitalize="off" aria-hidden="true" />
     </div>
 
-    <div class="keyboard-container" id="virtualKeyboard">
+    <div class="keyboard-container" id="virtualKeyboard" aria-label="Virtual keyboard preview">
       <div class="keyboard-row" id="row1"></div>
       <div class="keyboard-row" id="row2"></div>
       <div class="keyboard-row" id="row3"></div>
@@ -519,87 +745,126 @@
       <div class="finger-indicator" id="fingerGuide">Finger Recommendation: Ready</div>
     </div>
 
-    <button class="btn-action" id="resetBtn">↻ Restart Session (Esc)</button>
+    <button class="btn-action" id="resetBtn" aria-label="Restart Session">↻ Restart Session (Esc)</button>
   </section>
 
   <!-- Summary Window -->
-  <section class="summary-view" id="resultContainer">
-    <h2 style="font-size:1.4rem;">🏁 Session Statistics</h2>
+  <section class="summary-view" id="resultContainer" aria-label="Typing test results">
+    <div class="results-header">
+      <h2 style="font-size:1.35rem; font-weight:800; display:flex; align-items:center; gap:0.5rem;">
+        🏁 Session Summary
+      </h2>
+      <div style="font-size:0.85rem; color:var(--text-secondary);" id="testMetaDetails">
+        Standard Test
+      </div>
+    </div>
     
     <div class="result-grid">
-      <div class="stat-box"><div class="stat-label">Net WPM</div><div class="stat-number" id="resWpm">0</div></div>
+      <div class="stat-box"><div class="stat-label">Net WPM</div><div class="stat-number" id="resWpm" style="color:var(--accent);">0</div></div>
       <div class="stat-box"><div class="stat-label">Raw WPM</div><div class="stat-number" id="resRawWpm">0</div></div>
       <div class="stat-box"><div class="stat-label">Accuracy</div><div class="stat-number" id="resAcc">0%</div></div>
-      <div class="stat-box"><div class="stat-label">Mistakes</div><div class="stat-number" id="resMistakes">0</div></div>
+      <div class="stat-box"><div class="stat-label">Mistakes</div><div class="stat-number" id="resMistakes" style="color:var(--danger);">0</div></div>
       <div class="stat-box"><div class="stat-label">Consistency</div><div class="stat-number" id="resConsistency">0%</div></div>
-      <div class="stat-box"><div class="stat-label">XP Acquired</div><div class="stat-number" id="resXp" style="color:var(--accent)">+0</div></div>
+      <div class="stat-box"><div class="stat-label">XP Acquired</div><div class="stat-number" id="resXp" style="color:var(--warning)">+0</div></div>
     </div>
 
     <div class="chart-panel">
-      <div class="stat-label" style="margin-bottom:0.75rem;">WPM Performance Curve</div>
-      <svg id="wpmGraphSvg" viewBox="0 0 500 120"></svg>
+      <div class="stat-label" style="margin-bottom:0.75rem;">Speed Progression (WPM / Time)</div>
+      <svg id="wpmGraphSvg" viewBox="0 0 500 130" preserveAspectRatio="none"></svg>
     </div>
 
-    <button class="btn-action" id="tryAgainBtn">Try Again</button>
+    <div class="insights-panel">
+      <div class="feedback-box">
+        <div class="stat-label" style="margin-bottom:0.5rem;">Engine AI Feedback</div>
+        <p id="aiFeedbackText" style="font-size:0.92rem; line-height:1.5; color:var(--text-secondary);">
+          Keep practicing to generate precision analytics.
+        </p>
+      </div>
+      <div class="weak-keys-box">
+        <div class="stat-label" style="margin-bottom:0.5rem;">Key Accuracy Bottlenecks</div>
+        <div class="weak-key-tags" id="weakKeysContainer">
+          <span style="font-size:0.85rem; color:var(--text-muted);">None detected! Clean run.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-action" id="tryAgainBtn" style="align-self:center; margin-top:0.5rem;">Next Test (Enter)</button>
   </section>
 </div>
 
 <!-- Custom Text Modal -->
-<div class="modal-overlay" id="customModal">
+<div class="modal-overlay" id="customModal" role="dialog" aria-modal="true" aria-labelledby="customModalHeading">
   <div class="modal-card">
-    <h3>Custom Practice Text</h3>
-    <p style="font-size: 0.85rem; color: var(--text-muted);">Paste your text or code block below:</p>
-    <textarea id="customTextInput" placeholder="Type or paste custom paragraph here..."></textarea>
+    <h3 id="customModalHeading" style="font-size:1.2rem; font-weight:700;">Custom Practice Corpus</h3>
+    <p style="font-size: 0.85rem; color: var(--text-secondary);">Paste custom sentences, paragraphs, or snippets below:</p>
+    <textarea id="customTextInput" placeholder="Paste or write your custom practice text here..."></textarea>
     <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
-      <button class="btn-item" id="cancelCustomBtn" style="padding:0.6rem 1.2rem; background: rgba(255,255,255,0.06);">Cancel</button>
+      <button class="btn-item" id="cancelCustomBtn" style="padding:0.6rem 1.2rem; background: var(--surface-2);">Cancel</button>
       <button class="btn-action" id="applyCustomBtn" style="padding:0.6rem 1.4rem;">Save & Apply</button>
     </div>
   </div>
 </div>
 
 <script>
+/**
+ * TypePro Ultra — Professional Precision Speed Engine
+ */
 const CORPUS = {
   en: {
     easy: [
       "the quick brown fox jumps over the lazy dog",
-      "typing is a fundamental skill that sharpens with focused practice",
-      "keep your hands relaxed and maintain a consistent natural flow",
-      "accuracy always comes before raw speed in professional typing"
+      "typing is a fundamental skill that sharpens with focused daily practice",
+      "keep your hands relaxed and maintain a consistent natural flow across the keys",
+      "accuracy always comes before raw speed in professional typing workflows",
+      "develop a calm rhythm and let muscle memory guide your fingers"
     ],
     medium: [
-      "efficient algorithms minimize compute overhead across distributed clusters",
-      "modern web frameworks deliver exceptional responsive rendering performance",
-      "asynchronous architectures decouple complex processes without blocking the main event loop"
+      "efficient algorithms minimize compute overhead across high-throughput distributed clusters",
+      "modern web platforms deliver exceptional responsive rendering performance across mobile screens",
+      "asynchronous architectures decouple complex processes without blocking the browser event loop",
+      "software engineers write modular abstractions to optimize maintainability and reliability",
+      "data pipelines stream real-time metrics through decentralized processing networks"
     ],
     hard: [
-      "unquestionably characterization demands meticulous precision and synchronization",
-      "disproportionate vulnerabilities counterproductively compromise cryptographic benchmarks",
-      "extraordinary misunderstandings disproportionately hinder architectural collaboration"
+      "unquestionably characterization demands meticulous precision and synchronization across threads",
+      "disproportionate vulnerabilities counterproductively compromise cryptographic verification benchmarks",
+      "extraordinary misunderstandings disproportionately hinder architectural collaboration across organizations",
+      "heterogeneous synchronization protocols mitigate latency discrepancies across geo-replicated clusters",
+      "juxtaposing asynchronous operations requires profound comprehension of call-stack constraints"
     ],
     code: [
       "const data = await fetch('/api/metrics').then(res => res.json());",
-      "export default function calculateVelocity({ words, minutes }) {",
-      "return list.filter(item => item.isActive).map(item => item.val);"
+      "export default function calculateVelocity({ words, minutes }) { return words / minutes; }",
+      "return list.filter(item => item.isActive).map(item => item.val);",
+      "document.addEventListener('keydown', (e) => { if (e.key === 'Escape') reset(); });",
+      "const buffer = Buffer.alloc(1024); const bytes = crypto.randomFillSync(buffer);"
     ],
     science: [
-      "cellular respiration converts biochemical energy from nutrients into adenosine triphosphate",
-      "gravitational redshift occurs as photons escape from massive relativistic bodies",
-      "quantum entanglement demonstrates instantaneous correlation between paired physical states"
+      "cellular respiration converts biochemical energy from organic nutrients into adenosine triphosphate",
+      "gravitational redshift occurs as photons escape from massive relativistic astronomical bodies",
+      "quantum entanglement demonstrates instantaneous state correlation regardless of spatial separation",
+      "photosynthetic organisms harness photons to synthesize carbohydrates from atmospheric carbon dioxide",
+      "mitochondrial DNA exhibits maternal inheritance patterns across diverse phylogenetic lineages"
     ]
   },
   hi: {
     easy: [
       "समय का सही सदुपयोग ही मनुष्य को सफलता के शिखर पर ले जाता है",
-      "नियमित अभ्यास करने से किसी भी कार्य में दक्षता प्राप्त हो सकती है",
-      "सकारात्मक सोच और एकाग्रता हमारे आत्मविश्वास को निरंतर बढ़ाती है"
+      "नियमित अभ्यास करने से किसी भी कार्य में दक्षता और आत्मविश्वास प्राप्त हो सकता है",
+      "सकारात्मक सोच और एकाग्रता हमारे मानसिक सामर्थ्य को निरंतर बढ़ाती है",
+      "सच्चा ज्ञान वही है जो व्यक्ति को विनम्र और विचारशील बनाता है"
     ],
     medium: [
       "आधुनिक सूचना प्रौद्योगिकी ने संवाद और शिक्षा के आयाम पूरी तरह बदल दिए हैं",
-      "वैज्ञानिक अनुसंधानों ने हमारे दैनिक जीवन को अधिक सहज एवं गतिशील बना दिया है"
+      "वैज्ञानिक अनुसंधानों ने हमारे दैनिक जीवन को अधिक सहज एवं गतिशील बना दिया है",
+      "संस्कृति और सभ्यता का संरक्षण किसी भी राष्ट्र की सच्ची पहचान का मूल आधार होता है",
+      "प्राकृतिक संसाधनों का संतुलित उपयोग ही आने वाली पीढ़ियों के कल्याण की कुंजी है"
     ],
     hard: [
       "प्रौद्योगिकी का संतुलित उपयोग ही सामाजिक और नैतिक संतुलन को सुदृढ़ आधार प्रदान करता है",
-      "दृढ़ संकल्प और निरंतर उत्तरदायित्व से ही किसी राष्ट्र की सामूहिक प्रगति संभव होती है"
+      "दृढ़ संकल्प और निरंतर उत्तरदायित्व से ही किसी राष्ट्र की सामूहिक प्रगति संभव होती है",
+      "वैश्वीकरण के युग में सांस्कृतिक अस्मिता और आर्थिक स्वावलंबन का समन्वय अपरिहार्य है",
+      "आत्म-अनुशासन और निष्पक्ष दृष्टिकोण से जटिल समस्याओं का समाधान सुगमता से संभव है"
     ]
   }
 };
@@ -622,34 +887,53 @@ const FINGER_MAP = {
   'p':'Right Pinky','space':'Thumbs'
 };
 
+// Safe LocalStorage Handlers
+function safeGetStorage(key, fallback) {
+  try {
+    const val = localStorage.getItem(key);
+    return val !== null ? val : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function safeSetStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {}
+}
+
 const state = {
   lang: 'en',
   topic: 'easy',
   timeLimit: 30,
   timeLeft: 30,
-  words: [],
+  words: [], // Array of { chars: string[], typedChars: string[] }
   currentWordIdx: 0,
-  customText: localStorage.getItem('typepro_custom_text') || "",
+  customText: safeGetStorage('typepro_custom_text', ""),
   totalKeystrokes: 0,
-  correctChars: 0,
+  rawKeystrokes: 0,
   totalErrors: 0,
+  keyMistakeCounts: {},
   wpmTimeline: [],
   isStarted: false,
   timerInterval: null,
-  xp: parseInt(localStorage.getItem('typepro_xp') || '0'),
-  level: parseInt(localStorage.getItem('typepro_level') || '1')
+  xp: parseInt(safeGetStorage('typepro_xp', '0'), 10) || 0,
+  level: parseInt(safeGetStorage('typepro_level', '1'), 10) || 1
 };
 
 const els = {
   wordStream: document.getElementById('wordStream'),
   typingInput: document.getElementById('typingInput'),
   viewport: document.getElementById('viewport'),
+  typingHint: document.getElementById('typingHint'),
   hudTimer: document.getElementById('hudTimer'),
   hudWpm: document.getElementById('hudWpm'),
   hudAcc: document.getElementById('hudAcc'),
   hudMistakes: document.getElementById('hudMistakes'),
   userXP: document.getElementById('userXP'),
   userLevel: document.getElementById('userLevel'),
+  xpProgressBar: document.getElementById('xpProgressBar'),
   fingerGuide: document.getElementById('fingerGuide'),
   typingArena: document.getElementById('typingArena'),
   resultContainer: document.getElementById('resultContainer'),
@@ -660,6 +944,9 @@ const els = {
   resConsistency: document.getElementById('resConsistency'),
   resXp: document.getElementById('resXp'),
   wpmGraphSvg: document.getElementById('wpmGraphSvg'),
+  aiFeedbackText: document.getElementById('aiFeedbackText'),
+  weakKeysContainer: document.getElementById('weakKeysContainer'),
+  testMetaDetails: document.getElementById('testMetaDetails'),
   resetBtn: document.getElementById('resetBtn'),
   tryAgainBtn: document.getElementById('tryAgainBtn'),
   customModal: document.getElementById('customModal'),
@@ -669,6 +956,15 @@ const els = {
   customTopicBtn: document.getElementById('customTopicBtn')
 };
 
+// Grapheme Splitter Supporting Hindi & Complex Glyphs
+function splitGraphemes(text) {
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+    const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+    return Array.from(segmenter.segment(text), s => s.segment);
+  }
+  return Array.from(text);
+}
+
 function init() {
   buildKeyboard();
   bindConfigOptions();
@@ -676,9 +972,17 @@ function init() {
   updateUserStatsUI();
   resetTest();
 
-  els.viewport.addEventListener('click', () => els.typingInput.focus());
+  els.viewport.addEventListener('click', () => {
+    els.typingInput.focus();
+    els.viewport.classList.add('focused');
+  });
+
+  els.typingInput.addEventListener('focus', () => els.viewport.classList.add('focused'));
+  els.typingInput.addEventListener('blur', () => els.viewport.classList.remove('focused'));
+
   els.typingInput.addEventListener('keydown', handleKeyDown);
   els.resetBtn.addEventListener('click', resetTest);
+  
   els.tryAgainBtn.addEventListener('click', () => {
     els.resultContainer.classList.remove('active');
     els.typingArena.style.display = 'flex';
@@ -686,20 +990,33 @@ function init() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !els.customModal.classList.contains('active')) resetTest();
+    if (e.key === 'Escape' && !els.customModal.classList.contains('active')) {
+      resetTest();
+    } else if (e.key === 'Enter' && els.resultContainer.classList.contains('active')) {
+      els.tryAgainBtn.click();
+    }
   });
 }
 
 function updateUserStatsUI() {
   els.userXP.textContent = state.xp;
   els.userLevel.textContent = state.level;
+  const currentLevelBaseXP = state.level * 150;
+  const progressPercent = Math.min(100, Math.round((state.xp / currentLevelBaseXP) * 100));
+  els.xpProgressBar.style.width = `${progressPercent}%`;
 }
 
 function buildKeyboard() {
-  const rows = [document.getElementById('row1'), document.getElementById('row2'), document.getElementById('row3'), document.getElementById('row4')];
-  rows.forEach(r => r.innerHTML = '');
+  const rows = [
+    document.getElementById('row1'),
+    document.getElementById('row2'),
+    document.getElementById('row3'),
+    document.getElementById('row4')
+  ];
+  rows.forEach(r => { if(r) r.innerHTML = ''; });
 
   KEYBOARD_LAYOUT.forEach((rowKeys, rowIdx) => {
+    if (!rows[rowIdx]) return;
     rowKeys.forEach(k => {
       const keyEl = document.createElement('div');
       keyEl.className = `key-cap ${k === 'space' ? 'space-bar' : ''}`;
@@ -716,20 +1033,27 @@ function generateProceduralText() {
     return;
   }
 
-  const pool = (CORPUS[state.lang] && CORPUS[state.lang][state.topic]) || CORPUS.en.easy;
+  const pool = (CORPUS[state.lang] && CORPUS[state.lang][state.topic]) 
+    || (CORPUS[state.lang] && CORPUS[state.lang].easy) 
+    || CORPUS.en.easy;
+
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
   let text = "";
-  while (text.split(' ').length < 120) {
-    const pick = pool[Math.floor(Math.random() * pool.length)];
+  let i = 0;
+  while (text.split(/\s+/).length < 100) {
+    const pick = shuffled[i % shuffled.length];
     text += (text ? " " : "") + pick;
+    i++;
   }
   parseWords(text);
 }
 
 function parseWords(raw) {
   const clean = raw.replace(/\s+/g, ' ').trim();
-  state.words = clean.split(' ').map(w => ({
-    chars: Array.from(w),
-    typed: ""
+  const rawWordTokens = clean.split(' ');
+  state.words = rawWordTokens.map(w => ({
+    chars: splitGraphemes(w),
+    typedChars: []
   }));
 }
 
@@ -757,79 +1081,138 @@ function renderWords() {
 }
 
 function updateCaret() {
-  document.querySelectorAll('.char').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
   const currentWord = state.words[state.currentWordIdx];
   if (!currentWord) return;
 
-  const charIdx = currentWord.typed.length;
+  const charIdx = currentWord.typedChars.length;
   if (charIdx < currentWord.chars.length) {
     const curCharEl = document.getElementById(`c-${state.currentWordIdx}-${charIdx}`);
     if (curCharEl) curCharEl.classList.add('active');
-    updateFingerGuide(currentWord.chars[charIdx].toLowerCase());
+    
+    const targetChar = currentWord.chars[charIdx].toLowerCase();
+    updateFingerGuide(targetChar);
   } else {
     updateFingerGuide('space');
   }
 
-  // Smooth scroll
+  // Smooth Auto-Scroll Viewport
   const wordEl = document.getElementById(`w-${state.currentWordIdx}`);
   if (wordEl) {
-    const viewportTop = els.viewport.getBoundingClientRect().top;
-    const wordTop = wordEl.getBoundingClientRect().top;
-    const offset = wordTop - viewportTop;
-    if (offset > 80) els.viewport.scrollTop += (offset - 50);
+    const viewportBox = els.viewport.getBoundingClientRect();
+    const wordBox = wordEl.getBoundingClientRect();
+    const offset = wordBox.top - viewportBox.top;
+    if (offset > 95 || offset < 10) {
+      els.viewport.scrollTop += (offset - 45);
+    }
   }
 }
 
 function updateFingerGuide(char) {
-  document.querySelectorAll('.key-cap').forEach(k => k.classList.remove('target'));
+  document.querySelectorAll('.key-cap.target').forEach(k => k.classList.remove('target'));
   const finger = FINGER_MAP[char] || 'Thumbs';
-  els.fingerGuide.textContent = `Next Key: [ ${char === 'space' ? 'SPACE' : char.toUpperCase()} ] • ${finger}`;
+  const label = char === 'space' ? 'SPACE' : char.toUpperCase();
+  els.fingerGuide.innerHTML = `<span>Target:</span> <strong>[ ${label} ]</strong> <span style="opacity:0.4">•</span> <span>Finger: ${finger}</span>`;
 
   const targetKey = document.getElementById(`key-${char}`);
   if (targetKey) targetKey.classList.add('target');
 }
 
+function calculateEngineStats() {
+  const elapsedSeconds = Math.max(1, state.timeLimit - state.timeLeft);
+  const elapsedMinutes = elapsedSeconds / 60;
+
+  let totalCorrectChars = 0;
+  let totalErrors = 0;
+
+  for (let w = 0; w < state.words.length; w++) {
+    const word = state.words[w];
+    const len = word.typedChars.length;
+    if (len === 0) continue;
+
+    for (let c = 0; c < len; c++) {
+      if (word.typedChars[c] === word.chars[c]) {
+        totalCorrectChars++;
+      } else {
+        totalErrors++;
+      }
+    }
+
+    // Space counted as correct keystroke between successfully typed words
+    if (w < state.currentWordIdx) {
+      totalCorrectChars++;
+    }
+  }
+
+  const rawWpm = Math.max(0, Math.round((state.rawKeystrokes / 5) / elapsedMinutes));
+  const netWpm = Math.max(0, Math.round((totalCorrectChars / 5) / elapsedMinutes));
+  const accuracy = state.rawKeystrokes > 0
+    ? Math.max(0, Math.min(100, Math.round(((state.rawKeystrokes - state.totalErrors) / state.rawKeystrokes) * 100)))
+    : 100;
+
+  return { netWpm, rawWpm, accuracy, totalCorrectChars, elapsedSeconds };
+}
+
+function updateHUD() {
+  const stats = calculateEngineStats();
+  els.hudWpm.textContent = stats.netWpm;
+  els.hudAcc.textContent = `${stats.accuracy}%`;
+  els.hudMistakes.textContent = state.totalErrors;
+}
+
 function handleKeyDown(e) {
-  if (e.key === 'Escape') return;
-  if (!state.isStarted) startTest();
+  if (e.key === 'Escape' || e.key === 'Tab') return;
+
+  // First keystroke initiates test
+  if (!state.isStarted && e.key.length === 1) {
+    startTest();
+  }
 
   const currentWord = state.words[state.currentWordIdx];
   if (!currentWord) return;
 
+  // Handle Backspace
   if (e.key === 'Backspace') {
     e.preventDefault();
-    if (currentWord.typed.length > 0) {
-      const removeIdx = currentWord.typed.length - 1;
-      currentWord.typed = currentWord.typed.slice(0, -1);
-      const charEl = document.getElementById(`c-${state.currentWordIdx}-${removeIdx}`);
-      if (charEl) charEl.className = 'char';
+    if (currentWord.typedChars.length > 0) {
+      const removedIdx = currentWord.typedChars.length - 1;
+      currentWord.typedChars.pop();
+      const charEl = document.getElementById(`c-${state.currentWordIdx}-${removedIdx}`);
+      if (charEl) {
+        charEl.className = 'char';
+      }
       updateCaret();
+      updateHUD();
     } else if (state.currentWordIdx > 0) {
-      state.currentWordIdx--;
-      updateCaret();
+      // Revert to previous word if not completed
+      const prevWord = state.words[state.currentWordIdx - 1];
+      if (prevWord.typedChars.length < prevWord.chars.length) {
+        state.currentWordIdx--;
+        updateCaret();
+        updateHUD();
+      }
     }
     return;
   }
 
-  if (e.key === ' ') {
+  // Handle Space (Word Completion)
+  if (e.key === ' ' || e.key === 'Spacebar') {
     e.preventDefault();
-    if (currentWord.typed.length === 0) return;
+    if (currentWord.typedChars.length === 0) return;
 
-    state.totalKeystrokes++;
+    state.rawKeystrokes++;
     flashKey('space', true);
 
-    let wordCorrect = true;
-    currentWord.chars.forEach((c, idx) => {
-      if (currentWord.typed[idx] === c) {
-        state.correctChars++;
-      } else {
-        wordCorrect = false;
+    // Check errors in currently committed word
+    let wordHasError = false;
+    currentWord.chars.forEach((ch, idx) => {
+      if (currentWord.typedChars[idx] !== ch) {
+        wordHasError = true;
       }
     });
 
-    if (currentWord.typed.length === currentWord.chars.length && wordCorrect) {
-      state.correctChars++;
-    } else {
+    if (currentWord.typedChars.length < currentWord.chars.length) {
+      wordHasError = true;
       state.totalErrors++;
     }
 
@@ -846,25 +1229,31 @@ function handleKeyDown(e) {
     return;
   }
 
+  // Handle Printable Characters
   if (e.key.length === 1) {
     e.preventDefault();
     const typedChar = e.key;
-    const charIndex = currentWord.typed.length;
-    currentWord.typed += typedChar;
-    state.totalKeystrokes++;
+    const charIndex = currentWord.typedChars.length;
+
+    // Do not permit overflowing beyond target word boundary
+    if (charIndex >= currentWord.chars.length) {
+      return;
+    }
+
+    currentWord.typedChars.push(typedChar);
+    state.rawKeystrokes++;
 
     const expectedChar = currentWord.chars[charIndex];
     const charEl = document.getElementById(`c-${state.currentWordIdx}-${charIndex}`);
 
-    if (charEl) {
-      if (typedChar === expectedChar) {
-        charEl.className = 'char correct';
-        flashKey(typedChar, true);
-      } else {
-        charEl.className = 'char wrong';
-        state.totalErrors++;
-        flashKey(typedChar, false);
-      }
+    if (typedChar === expectedChar) {
+      if (charEl) charEl.className = 'char correct';
+      flashKey(typedChar.toLowerCase(), true);
+    } else {
+      if (charEl) charEl.className = 'char wrong';
+      state.totalErrors++;
+      state.keyMistakeCounts[expectedChar.toLowerCase()] = (state.keyMistakeCounts[expectedChar.toLowerCase()] || 0) + 1;
+      flashKey(typedChar.toLowerCase(), false);
     }
 
     updateHUD();
@@ -876,36 +1265,60 @@ function flashKey(char, isCorrect) {
   const el = document.getElementById(`key-${char.toLowerCase()}`);
   if (el) {
     el.classList.add(isCorrect ? 'hit-ok' : 'hit-err');
-    setTimeout(() => el.classList.remove('hit-ok', 'hit-err'), 140);
+    setTimeout(() => el.classList.remove('hit-ok', 'hit-err'), 130);
   }
-}
-
-function updateHUD() {
-  const elapsed = Math.max(1, state.timeLimit - state.timeLeft);
-  const minutes = elapsed / 60;
-  const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
-  const accuracy = state.totalKeystrokes > 0 
-    ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrors) / state.totalKeystrokes) * 100))
-    : 100;
-
-  els.hudWpm.textContent = netWpm;
-  els.hudAcc.textContent = `${accuracy}%`;
-  els.hudMistakes.textContent = state.totalErrors;
 }
 
 function startTest() {
   state.isStarted = true;
+  if (els.typingHint) els.typingHint.style.display = 'none';
+
   state.timerInterval = setInterval(() => {
     state.timeLeft--;
     els.hudTimer.textContent = `${state.timeLeft}s`;
 
-    const elapsed = state.timeLimit - state.timeLeft;
-    const currentWpm = Math.round((state.correctChars / 5) / (elapsed / 60));
-    state.wpmTimeline.push({ time: elapsed, wpm: currentWpm });
+    const currentStats = calculateEngineStats();
+    state.wpmTimeline.push({
+      time: currentStats.elapsedSeconds,
+      wpm: currentStats.netWpm
+    });
 
     updateHUD();
-    if (state.timeLeft <= 0) finishTest();
+
+    if (state.timeLeft <= 0) {
+      finishTest();
+    }
   }, 1000);
+}
+
+function calculateConsistency(samples) {
+  if (samples.length < 2) return 100;
+  const values = samples.map(s => s.wpm);
+  const mean = values.reduce((acc, v) => acc + v, 0) / values.length;
+  if (mean === 0) return 100;
+
+  const variance = values.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / values.length;
+  const stdDev = Math.sqrt(variance);
+  const coefficientOfVariation = (stdDev / mean) * 100;
+  return Math.max(30, Math.min(100, Math.round(100 - coefficientOfVariation)));
+}
+
+function generateAIFeedback(netWpm, accuracy, consistency, weakKeys) {
+  let feedback = "";
+  if (accuracy >= 98 && netWpm >= 70) {
+    feedback = "Exceptional run. High throughput with master-tier accuracy. Your muscle memory and finger positioning are dialed in.";
+  } else if (accuracy >= 95 && netWpm >= 50) {
+    feedback = "Solid velocity and rhythm. Maintaining an accuracy above 95% proves your pacing is sustainable for long development workflows.";
+  } else if (accuracy < 90) {
+    feedback = "Focus on accuracy over raw speed. Rushing keystrokes causes cascades of errors that degrade net WPM.";
+  } else {
+    feedback = "Good baseline performance. Regular sessions focusing on deliberate keystrokes will stabilize your velocity.";
+  }
+
+  if (weakKeys.length > 0) {
+    feedback += ` Pay close attention to '${weakKeys.join("', '")}' to eliminate bottlenecks.`;
+  }
+  return feedback;
 }
 
 function finishTest() {
@@ -913,52 +1326,87 @@ function finishTest() {
   els.typingArena.style.display = 'none';
   els.resultContainer.classList.add('active');
 
-  const elapsed = Math.max(1, state.timeLimit - state.timeLeft);
-  const minutes = elapsed / 60;
-  const netWpm = Math.max(0, Math.round((state.correctChars / 5) / minutes));
-  const rawWpm = Math.max(0, Math.round((state.totalKeystrokes / 5) / minutes));
-  const accuracy = state.totalKeystrokes > 0 
-    ? Math.max(0, Math.round(((state.totalKeystrokes - state.totalErrors) / state.totalKeystrokes) * 100))
-    : 100;
+  const stats = calculateEngineStats();
+  const consistency = calculateConsistency(state.wpmTimeline);
 
-  const wpms = state.wpmTimeline.map(t => t.wpm);
-  const avgWpm = wpms.reduce((a, b) => a + b, 0) / (wpms.length || 1);
-  const variance = wpms.reduce((a, b) => a + Math.pow(b - avgWpm, 2), 0) / (wpms.length || 1);
-  const consistency = Math.max(50, Math.min(100, Math.round(100 - Math.sqrt(variance))));
-
-  const gainedXP = Math.round(netWpm * (accuracy / 100) + 25);
+  // Experience & Progression calculation
+  const gainedXP = Math.max(15, Math.round(stats.netWpm * (stats.accuracy / 100) * 1.5 + (state.timeLimit / 2)));
   state.xp += gainedXP;
-  while (state.xp >= state.level * 120) {
-    state.xp -= (state.level * 120);
+
+  const levelUpTarget = state.level * 150;
+  if (state.xp >= levelUpTarget) {
+    state.xp -= levelUpTarget;
     state.level++;
   }
 
-  localStorage.setItem('typepro_xp', state.xp);
-  localStorage.setItem('typepro_level', state.level);
+  safeSetStorage('typepro_xp', state.xp.toString());
+  safeSetStorage('typepro_level', state.level.toString());
   updateUserStatsUI();
 
-  els.resWpm.textContent = netWpm;
-  els.resRawWpm.textContent = rawWpm;
-  els.resAcc.textContent = `${accuracy}%`;
+  // Populate UI
+  els.resWpm.textContent = stats.netWpm;
+  els.resRawWpm.textContent = stats.rawWpm;
+  els.resAcc.textContent = `${stats.accuracy}%`;
   els.resMistakes.textContent = state.totalErrors;
   els.resConsistency.textContent = `${consistency}%`;
   els.resXp.textContent = `+${gainedXP} XP`;
+  els.testMetaDetails.textContent = `${state.lang.toUpperCase()} • ${state.topic.toUpperCase()} • ${state.timeLimit}s`;
+
+  // Weak Keys Analysis
+  const sortedWeakKeys = Object.entries(state.keyMistakeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4);
+
+  els.weakKeysContainer.innerHTML = '';
+  if (sortedWeakKeys.length === 0) {
+    els.weakKeysContainer.innerHTML = '<span style="font-size:0.85rem; color:var(--text-muted);">Zero incorrect keystrokes recorded!</span>';
+  } else {
+    sortedWeakKeys.forEach(([k, count]) => {
+      const tag = document.createElement('div');
+      tag.className = 'weak-key-tag';
+      tag.innerHTML = `Key <strong>${k.toUpperCase()}</strong> <span>(${count} err)</span>`;
+      els.weakKeysContainer.appendChild(tag);
+    });
+  }
+
+  // AI Feedback Engine
+  const weakKeyList = sortedWeakKeys.map(item => item[0].toUpperCase());
+  els.aiFeedbackText.textContent = generateAIFeedback(stats.netWpm, stats.accuracy, consistency, weakKeyList);
 
   renderChart(state.wpmTimeline);
 }
 
-function renderChart(data) {
-  if (!data.length) return;
-  const maxWpm = Math.max(...data.map(d => d.wpm), 60);
-  const points = data.map((d, i) => {
-    const x = (i / (data.length - 1 || 1)) * 480 + 10;
-    const y = 110 - ((d.wpm / maxWpm) * 95);
-    return `${x},${y}`;
-  }).join(' ');
+function renderChart(timeline) {
+  if (!timeline || timeline.length === 0) {
+    els.wpmGraphSvg.innerHTML = '';
+    return;
+  }
+
+  const maxWpm = Math.max(...timeline.map(d => d.wpm), 50);
+  const width = 500;
+  const height = 130;
+  const paddingX = 20;
+  const paddingY = 20;
+
+  const points = timeline.map((d, idx) => {
+    const x = paddingX + (idx / Math.max(1, timeline.length - 1)) * (width - paddingX * 2);
+    const y = (height - paddingY) - ((d.wpm / maxWpm) * (height - paddingY * 2));
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+
+  const polylineStr = points.join(' ');
+  const areaStr = `${paddingX},${height - paddingY} ${polylineStr} ${points[points.length - 1].split(',')[0]},${height - paddingY}`;
 
   els.wpmGraphSvg.innerHTML = `
-    <polyline fill="none" stroke="rgba(234, 179, 8, 0.2)" stroke-width="4" points="${points}" />
-    <polyline fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" points="${points}" />
+    <defs>
+      <linearGradient id="wpmGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"/>
+      </linearGradient>
+    </defs>
+    <line x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+    <polygon fill="url(#wpmGradient)" points="${areaStr}" />
+    <polyline fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylineStr}" />
   `;
 }
 
@@ -968,8 +1416,9 @@ function resetTest() {
   state.timeLeft = state.timeLimit;
   state.currentWordIdx = 0;
   state.totalKeystrokes = 0;
-  state.correctChars = 0;
+  state.rawKeystrokes = 0;
   state.totalErrors = 0;
+  state.keyMistakeCounts = {};
   state.wpmTimeline = [];
 
   els.hudTimer.textContent = `${state.timeLimit}s`;
@@ -978,6 +1427,7 @@ function resetTest() {
   els.hudMistakes.textContent = '0';
   els.typingInput.value = '';
   els.viewport.scrollTop = 0;
+  if (els.typingHint) els.typingHint.style.display = 'flex';
 
   generateProceduralText();
   renderWords();
@@ -1002,7 +1452,10 @@ function bindConfigOptions() {
 
       if (btn.dataset.lang) state.lang = btn.dataset.lang;
       if (btn.dataset.topic) state.topic = btn.dataset.topic;
-      if (btn.dataset.time) state.timeLimit = parseInt(btn.dataset.time);
+      if (btn.dataset.time) {
+        state.timeLimit = parseInt(btn.dataset.time, 10);
+        state.timeLeft = state.timeLimit;
+      }
 
       resetTest();
     });
@@ -1020,7 +1473,7 @@ function bindCustomModal() {
     if (!text) return;
 
     state.customText = text;
-    localStorage.setItem('typepro_custom_text', text);
+    safeSetStorage('typepro_custom_text', text);
     state.topic = 'custom';
 
     document.querySelectorAll('#topicSelect .btn-item').forEach(b => b.classList.remove('active'));
