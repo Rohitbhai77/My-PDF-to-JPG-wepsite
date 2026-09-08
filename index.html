@@ -201,6 +201,26 @@
       color: #ffffff;
     }
 
+
+    .nav-btn-memory {
+      background: linear-gradient(135deg, rgba(124, 92, 255, 0.38), rgba(34, 211, 238, 0.28));
+      border-color: #8b7cff;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(124, 92, 255, 0.35);
+      animation: memoryGamePulse 2.8s infinite ease-in-out;
+    }
+
+    .nav-btn-memory:hover {
+      background: linear-gradient(135deg, #7c5cff, #22d3ee);
+      border-color: #ffffff;
+      box-shadow: 0 0 24px rgba(124, 92, 255, 0.8);
+    }
+
+    @keyframes memoryGamePulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(124, 92, 255, 0.28); }
+      50% { box-shadow: 0 0 22px rgba(34, 211, 238, 0.55); }
+    }
+
     .nav-btn-game {
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.4));
       border: 1px solid rgba(245, 158, 11, 0.8);
@@ -990,6 +1010,7 @@
 
   <!-- Top Fixed Utility Bar -->
   <div class="top-right-controls">
+    <button class="nav-btn nav-btn-memory" onclick="openMemoryMaster()" title="Open Memory Master Game">🎮 Memory Game</button>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
     
@@ -1006,6 +1027,10 @@
           <option value="es">Español</option>
           <option value="fr">Français</option>
         </select>
+      </div>
+      <div class="setting-item">
+        <label>Memory Game</label>
+        <button class="nav-btn-game" id="memoryGameBtn" onclick="openMemoryMaster(); toggleSettingsModal();">🎮 Memory Master</button>
       </div>
       <div class="setting-item">
         <label id="lblTyping">Typing Engine</label>
@@ -1334,6 +1359,15 @@
           soundBtn.innerHTML = "🎶 Sound: ON";
           isAudioPlaying = true;
         }).catch(err => console.log(err));
+      }
+    }
+
+    // --- Memory Master Game ---
+    function openMemoryMaster() {
+      const gameUrl = 'Memory_Master_Pro.html';
+      const gameWindow = window.open(gameUrl, '_blank');
+      if (!gameWindow) {
+        alert('Please allow pop-ups for this site to open Memory Master.');
       }
     }
 
