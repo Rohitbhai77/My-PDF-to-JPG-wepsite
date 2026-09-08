@@ -725,6 +725,7 @@
       justify-content: center;
       transition: all 0.2s ease;
       box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+      z-index: 10;
     }
 
     .modal-close-btn:hover {
@@ -742,6 +743,7 @@
       border: 1px solid var(--typing-border);
       padding: 0.85rem 1.25rem;
       border-radius: 16px;
+      padding-right: 50px;
     }
 
     .brand {
@@ -761,6 +763,36 @@
       box-shadow: 0 0 15px var(--typing-primary-glow);
       color: white;
       font-weight: 900;
+    }
+
+    .header-right-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-home-btn {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(99, 102, 241, 0.3));
+      border: 1.5px solid var(--neon-cyan);
+      color: #ffffff;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    }
+
+    .modal-home-btn:hover {
+      background: var(--neon-cyan);
+      color: #040712;
+      box-shadow: 0 0 18px var(--neon-cyan);
+      transform: translateY(-1px);
     }
 
     .user-xp-badge {
@@ -992,6 +1024,7 @@
       .hud-grid { grid-template-columns: repeat(2, 1fr); }
       .key.space { min-width: 140px; }
       .drop-zone { max-width: 100%; }
+      .modal-home-btn span { display: none; }
     }
   </style>
 </head>
@@ -999,7 +1032,6 @@
 
   <!-- Top Fixed Utility Bar -->
   <div class="top-right-controls">
-    <!-- Updated Direct Hyperlink to GAME.HTML -->
     <a href="GAME.HTML" class="nav-btn nav-btn-memory" title="Open Game">🎮 Game</a>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
@@ -1020,7 +1052,6 @@
       </div>
       <div class="setting-item">
         <label>Game</label>
-        <!-- Updated Dropdown Hyperlink to GAME.HTML -->
         <a href="GAME.HTML" class="nav-btn-game" id="memoryGameBtn">🎮 Play Game</a>
       </div>
       <div class="setting-item">
@@ -1043,9 +1074,6 @@
   </div>
   <div class="bg-overlay"></div>
 
-  <!-- Hidden dummy element for script compatibility -->
-  <button id="gameBtn" style="display:none;" onclick="openTypingModal()"></button>
-
   <!-- App Main Wrapper -->
   <div class="app-wrapper">
     <div class="header">
@@ -1054,7 +1082,6 @@
         <p id="appSubTitle">Multi-Format Conversion • Ultra HD Quality</p>
       </div>
 
-      <!-- Compact Upload Box -->
       <div class="compact-upload-wrapper">
         <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
           <span class="drop-zone-icon">🚀</span>
@@ -1096,24 +1123,30 @@
     </div>
 
     <div class="output-section" id="outputSection"></div>
-
     <div class="footer" id="footerText"></div>
   </div>
 
-  <!-- TypePro Ultra Modal -->
+  <!-- TypePro Ultra Modal Window inside index.html -->
   <div class="typing-modal-overlay" id="typingModal">
     <div class="typing-container">
-      <button class="modal-close-btn" onclick="closeTypingModal()">✕</button>
+      <button class="modal-close-btn" onclick="closeTypingModal()" title="Close (Esc)">✕</button>
 
       <div class="typing-header">
         <div class="brand">
           <div class="brand-logo">T</div>
           <span>TypePro Ultra</span>
         </div>
-        <div class="user-xp-badge">
-          <span>Level <strong id="userLevel" class="xp-level">1</strong></span>
-          <span style="color: var(--typing-text-muted)">|</span>
-          <span>XP: <strong id="userXP" style="color:#fff">0</strong></span>
+
+        <!-- Home Button & User Stats -->
+        <div class="header-right-group">
+          <button class="modal-home-btn" onclick="closeTypingModal()" title="Close to Home">
+            🏠 <span>Home</span>
+          </button>
+          <div class="user-xp-badge">
+            <span>Level <strong id="userLevel" class="xp-level">1</strong></span>
+            <span style="color: var(--typing-text-muted)">|</span>
+            <span>XP: <strong id="userXP" style="color:#fff">0</strong></span>
+          </div>
         </div>
       </div>
 
@@ -1195,7 +1228,10 @@
           </div>
         </div>
 
-        <button class="btn-action" id="tryAgainBtn">🔄 Try Another Test</button>
+        <div style="display:flex; justify-content:center; gap:10px;">
+          <button class="btn-action" style="background:#334155;" onclick="closeTypingModal()">🏠 Back to Home</button>
+          <button class="btn-action" id="tryAgainBtn">🔄 Try Another Test</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1674,7 +1710,7 @@
 
       document.onkeydown = (e) => {
         if (e.key === 'Escape' && tEls.typingModal.classList.contains('active')) {
-          resetTest();
+          closeTypingModal();
         }
       };
     }
