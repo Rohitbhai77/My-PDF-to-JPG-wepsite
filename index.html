@@ -59,7 +59,6 @@
       --font-main: 'Outfit', sans-serif;
     }
 
-    /* Light Mode Overrides */
     body.light-mode {
       --glass-bg: rgba(255, 255, 255, 0.75);
       --glass-card: rgba(255, 255, 255, 0.85);
@@ -94,7 +93,6 @@
       padding: 24px 20px 30px 20px;
     }
 
-    /* Clear Fullscreen Background Video */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -109,7 +107,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(1) contrast(1); /* 100% Clear & Vivid */
+      filter: brightness(1) contrast(1);
       transition: opacity 1s ease-in-out, filter 0.8s ease;
       opacity: 1;
     }
@@ -124,12 +122,11 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.1); /* Subtle transparent tint to keep background video totally visible */
+      background: rgba(0, 0, 0, 0.1);
       z-index: -1;
       pointer-events: none;
     }
 
-    /* App Wrapper & Idle Mode */
     .app-wrapper {
       width: 100%;
       max-width: 920px;
@@ -147,7 +144,6 @@
       pointer-events: none;
     }
 
-    /* Top Navigation Bar */
     .top-right-controls {
       position: fixed;
       top: 18px;
@@ -159,7 +155,6 @@
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
-    /* GLOW ANIMATIONS FOR BUTTONS */
     @keyframes btnPulsePrimary {
       0%, 100% { box-shadow: 0 0 12px rgba(255, 0, 127, 0.5), 0 0 20px rgba(121, 40, 202, 0.3); }
       50% { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85), 0 0 30px rgba(0, 242, 254, 0.6); }
@@ -192,6 +187,7 @@
       align-items: center;
       gap: 6px;
       letter-spacing: 0.3px;
+      text-decoration: none;
     }
 
     .nav-btn:hover {
@@ -200,7 +196,6 @@
       box-shadow: 0 0 20px var(--neon-cyan);
       color: #ffffff;
     }
-
 
     .nav-btn-memory {
       background: linear-gradient(135deg, rgba(124, 92, 255, 0.38), rgba(34, 211, 238, 0.28));
@@ -214,6 +209,7 @@
       background: linear-gradient(135deg, #7c5cff, #22d3ee);
       border-color: #ffffff;
       box-shadow: 0 0 24px rgba(124, 92, 255, 0.8);
+      color: #ffffff;
     }
 
     @keyframes memoryGamePulse {
@@ -232,6 +228,9 @@
       font-size: 0.8rem;
       font-weight: 800;
       box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
     }
 
     .nav-btn-game:hover {
@@ -241,7 +240,6 @@
       transform: translateY(-2px);
     }
 
-    /* Settings Panel */
     .settings-panel {
       position: absolute;
       top: 48px;
@@ -297,7 +295,6 @@
       box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
     }
 
-    /* Header Layout */
     .header {
       position: relative;
       text-align: center;
@@ -350,7 +347,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    /* Compact Dropzone */
     .compact-upload-wrapper {
       width: 100%;
       display: flex;
@@ -421,7 +417,6 @@
       display: none;
     }
 
-    /* Mode Tabs */
     .mode-tabs-wrapper {
       display: flex;
       justify-content: center;
@@ -467,7 +462,6 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    /* Action Controls & Buttons */
     .main-card {
       background: transparent;
       border: none;
@@ -533,7 +527,6 @@
       box-shadow: none !important;
     }
 
-    /* Progress Bar Container */
     .progress-bar-container {
       margin-top: 16px;
       display: none;
@@ -574,7 +567,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* Output Section */
     .output-section {
       margin-top: 18px;
       width: 100%;
@@ -663,7 +655,6 @@
       transform: scale(1.02);
     }
 
-    /* Clean Footer Positioned Naturally */
     .footer {
       text-align: center;
       margin-top: 30px;
@@ -675,7 +666,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* TypePro Ultra Modal */
     .typing-modal-overlay {
       position: fixed;
       top: 0;
@@ -985,7 +975,6 @@
     }
     .btn-action:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 22px var(--typing-primary-glow); }
 
-    /* Responsive Breakpoints */
     @media (max-width: 900px) {
       .app-wrapper { max-width: 100%; }
       .animated-title { font-size: 2.2rem; }
@@ -1010,7 +999,8 @@
 
   <!-- Top Fixed Utility Bar -->
   <div class="top-right-controls">
-    <button class="nav-btn nav-btn-memory" onclick="openMemoryMaster()" title="Open Memory Master Game">🎮 Memory Game</button>
+    <!-- Updated Direct Hyperlink to GAME.HTML -->
+    <a href="GAME.HTML" class="nav-btn nav-btn-memory" title="Open Game">🎮 Game</a>
     <button class="nav-btn" onclick="toggleSettingsModal()">⚙️ Settings</button>
     <button class="nav-btn" onclick="window.location.reload()">🔄 Refresh</button>
     
@@ -1029,8 +1019,9 @@
         </select>
       </div>
       <div class="setting-item">
-        <label>Memory Game</label>
-        <button class="nav-btn-game" id="memoryGameBtn" onclick="openMemoryMaster(); toggleSettingsModal();">🎮 Memory Master</button>
+        <label>Game</label>
+        <!-- Updated Dropdown Hyperlink to GAME.HTML -->
+        <a href="GAME.HTML" class="nav-btn-game" id="memoryGameBtn">🎮 Play Game</a>
       </div>
       <div class="setting-item">
         <label id="lblTyping">Typing Engine</label>
@@ -1106,8 +1097,7 @@
 
     <div class="output-section" id="outputSection"></div>
 
-    <div class="footer" id="footerText">
-    </div>
+    <div class="footer" id="footerText"></div>
   </div>
 
   <!-- TypePro Ultra Modal -->
@@ -1220,7 +1210,6 @@
     let isAudioPlaying = false;
     let idleTimer = null;
 
-    // --- Dynamic Background Video Switching ---
     const bgVideoList = [
       "oggy-bg.mp4",
       "https://www.image2url.com/r2/default/videos/1786355014073-b8f7d1c1-8ffb-41c3-aed8-3b92496e882f.mp4",
@@ -1245,7 +1234,6 @@
 
     setInterval(rotateBackgroundVideo, 10000);
 
-    // --- Idle Detection Logic (15 Seconds) ---
     function resetIdleTimer() {
       document.body.classList.remove('idle-mode');
       clearTimeout(idleTimer);
@@ -1259,7 +1247,6 @@
     });
     resetIdleTimer();
 
-    // --- Settings & UI Translations ---
     const translations = {
       en: {
         title: "⚡ File Converter Pro",
@@ -1345,7 +1332,6 @@
       }
     }
 
-    // Audio Control
     const soundBtn = document.getElementById('soundBtn');
     const bgAudio = document.getElementById('bgAudio');
 
@@ -1362,16 +1348,6 @@
       }
     }
 
-    // --- Memory Master Game ---
-    function openMemoryMaster() {
-      const gameUrl = 'Memory_Master_Pro.html';
-      const gameWindow = window.open(gameUrl, '_blank');
-      if (!gameWindow) {
-        alert('Please allow pop-ups for this site to open Memory Master.');
-      }
-    }
-
-    // --- Main Converter Logic ---
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
     const dropTitle = document.getElementById('dropTitle');
