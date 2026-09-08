@@ -6,18 +6,18 @@
   <title>TypePro Ultra — Precision Speed Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* ===== DARK PROFESSIONAL DESIGN SYSTEM ===== */
-      --bg-color: #0b1120;
-      --card-bg: rgba(17, 24, 39, 0.78);
+      /* ===== MODERN CYBER DARK DESIGN SYSTEM ===== */
+      --bg-color: #070913;
+      --card-bg: rgba(18, 24, 43, 0.75);
       --card-bg-solid: #111827;
-      --surface-2: #1f2937;
+      --surface-2: rgba(255, 255, 255, 0.05);
       --surface-3: #374151;
 
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(255, 255, 255, 0.16);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-hover: rgba(0, 242, 254, 0.45);
 
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
@@ -25,20 +25,20 @@
 
       --primary: #6366f1;
       --primary-hover: #818cf8;
-      --primary-glow: rgba(99, 102, 241, 0.28);
-      --accent: #22d3ee;
-      --accent-glow: rgba(34, 211, 238, 0.2);
+      --primary-glow: rgba(99, 102, 241, 0.4);
+      --accent: #00f2fe;
+      --accent-glow: rgba(0, 242, 254, 0.35);
 
-      --success: #22c55e;
+      --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
 
       /* Typing States */
-      --typing-correct: #22c55e;
+      --typing-correct: #10b981;
       --typing-wrong: #ef4444;
-      --typing-wrong-bg: rgba(239, 68, 68, 0.18);
-      --typing-current: #f8fafc;
-      --caret-color: #22d3ee;
+      --typing-wrong-bg: rgba(239, 68, 68, 0.22);
+      --typing-current: #ffffff;
+      --caret-color: #00f2fe;
 
       /* Typography */
       --font-mono: 'Fira Code', monospace;
@@ -47,11 +47,11 @@
 
       /* Scaffolding */
       --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
-      --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-      --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 26px;
+      --shadow-subtle: 0 12px 36px -4px rgba(0, 0, 0, 0.65);
+      --transition-smooth: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -68,8 +68,9 @@
     body {
       background-color: var(--bg-color);
       background-image: 
-        radial-gradient(ellipse 70% 40% at 50% -10%, rgba(99, 102, 241, 0.12), transparent 70%),
-        radial-gradient(ellipse 60% 30% at 85% 95%, rgba(34, 211, 238, 0.05), transparent 60%);
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.16), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.12), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.06), transparent 60%);
       color: var(--text-primary);
       font-family: var(--font-ui);
       min-height: 100vh;
@@ -88,10 +89,10 @@
 
     .app-shell {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 1.4rem;
+      gap: 1.25rem;
     }
 
     /* ===== HEADER ===== */
@@ -105,7 +106,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 0.75rem 1.4rem;
+      padding: 0.8rem 1.4rem;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       box-shadow: var(--shadow-subtle);
@@ -124,32 +125,62 @@
     }
 
     .logo-badge {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-weight: 800;
-      color: #0b1120;
-      font-size: 1.3rem;
-      box-shadow: 0 0 16px var(--primary-glow);
-      transition: transform 0.25s ease;
+      font-weight: 900;
+      color: #070913;
+      font-size: 1.35rem;
+      box-shadow: 0 0 18px var(--primary-glow);
+      transition: transform 0.3s ease;
     }
 
     .brand-group:hover .logo-badge {
-      transform: rotate(5deg) scale(1.05);
+      transform: rotate(8deg) scale(1.06);
     }
 
     .brand-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 800;
-      letter-spacing: -0.4px;
-      background: linear-gradient(to right, #f8fafc, #94a3b8);
+      letter-spacing: -0.3px;
+      background: linear-gradient(90deg, #ffffff, #a5b4fc, #00f2fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* HOME BUTTON HYPERLINK */
+    .home-nav-btn {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.16), rgba(99, 102, 241, 0.22));
+      border: 1.5px solid var(--accent);
+      color: #ffffff;
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition-smooth);
+      box-shadow: 0 0 14px rgba(0, 242, 254, 0.25);
+    }
+
+    .home-nav-btn:hover {
+      background: var(--accent);
+      color: #070913;
+      box-shadow: 0 0 24px rgba(0, 242, 254, 0.75);
+      transform: translateY(-2px);
     }
 
     .stats-pill {
@@ -157,18 +188,17 @@
       border: 1px solid var(--border-color);
       padding: 0.45rem 1rem;
       border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.84rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+      gap: 0.55rem;
     }
 
     .xp-progress-bar {
       width: 50px;
       height: 6px;
-      background: var(--surface-3);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 4px;
       overflow: hidden;
       display: inline-block;
@@ -188,7 +218,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.75rem;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
@@ -198,7 +228,7 @@
 
     .btn-cluster {
       display: inline-flex;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.4);
       padding: 0.25rem;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-color);
@@ -212,7 +242,7 @@
       color: var(--text-muted);
       padding: 0.42rem 0.85rem;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       transition: var(--transition-smooth);
@@ -226,26 +256,21 @@
     .btn-item.active {
       background: var(--primary);
       color: #ffffff;
-      font-weight: 700;
       box-shadow: 0 0 14px var(--primary-glow);
-    }
-
-    .btn-item:focus-visible {
-      outline: 2px solid var(--accent);
     }
 
     /* ===== HUD STATS ===== */
     .hud-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      gap: 0.9rem;
     }
 
     .stat-box {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 0.9rem;
       text-align: center;
       position: relative;
       box-shadow: var(--shadow-subtle);
@@ -260,44 +285,44 @@
       font-size: 0.72rem;
       color: var(--text-secondary);
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.08em;
     }
 
     .stat-number {
       font-family: var(--font-mono);
-      font-size: clamp(1.6rem, 3.2vw, 2.3rem);
-      font-weight: 700;
-      margin-top: 0.2rem;
+      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+      font-weight: 800;
+      margin-top: 0.15rem;
       color: var(--text-primary);
     }
 
     /* ===== TYPING VIEWPORT ===== */
     .typing-box {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
+      border: 1.5px solid var(--border-color);
       border-radius: var(--radius-xl);
-      padding: clamp(1.4rem, 3.5vw, 2.4rem);
+      padding: clamp(1.4rem, 3.5vw, 2.2rem);
       position: relative;
       cursor: text;
       height: 195px;
       overflow-y: hidden;
-      box-shadow: inset 0 2px 16px rgba(0, 0, 0, 0.55);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: inset 0 3px 20px rgba(0, 0, 0, 0.65);
+      transition: border-color 0.25s, box-shadow 0.25s;
     }
 
     .typing-box.focused {
-      border-color: rgba(99, 102, 241, 0.4);
-      box-shadow: inset 0 2px 16px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.15);
+      border-color: var(--accent);
+      box-shadow: inset 0 3px 20px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 242, 254, 0.2);
     }
 
     .text-stream {
       font-family: var(--font-mono);
-      font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+      font-size: clamp(1.35rem, 2.3vw, 1.75rem);
       line-height: 2.7rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.65em;
+      gap: 0.6em;
       color: var(--text-muted);
       user-select: none;
       transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -305,7 +330,7 @@
 
     .text-stream.devanagari {
       font-family: var(--font-devanagari);
-      font-size: clamp(1.55rem, 2.7vw, 2rem);
+      font-size: clamp(1.5rem, 2.6vw, 1.95rem);
       line-height: 3rem;
     }
 
@@ -316,8 +341,8 @@
     }
 
     .char {
-      transition: color 0.05s ease, background-color 0.05s ease;
-      border-radius: 2px;
+      transition: color 0.06s ease, background-color 0.06s ease;
+      border-radius: 3px;
       position: relative;
     }
 
@@ -339,18 +364,18 @@
       content: '';
       position: absolute;
       left: 0;
-      bottom: -1px;
+      bottom: -2px;
       width: 100%;
       height: 3px;
       background: var(--caret-color);
       border-radius: 2px;
-      box-shadow: 0 0 10px var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-glow);
       animation: blinkCaret 1s ease-in-out infinite;
     }
 
     @keyframes blinkCaret {
       0%, 100% { opacity: 1; transform: scaleY(1); }
-      50% { opacity: 0.15; transform: scaleY(0.7); }
+      50% { opacity: 0.2; transform: scaleY(0.7); }
     }
 
     .typing-hint {
@@ -364,8 +389,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: 0.75;
+      font-weight: 600;
     }
 
     /* ===== KEYBOARD DISPLAY ===== */
@@ -373,10 +398,10 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.1rem;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.4rem;
       align-items: center;
       overflow-x: auto;
       box-shadow: var(--shadow-subtle);
@@ -384,40 +409,40 @@
 
     .keyboard-row {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .key-cap {
-      min-width: 44px;
-      height: 42px;
-      background: rgba(0, 0, 0, 0.4);
+      min-width: 42px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.45);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-size: 0.88rem;
-      font-weight: 600;
+      font-size: 0.85rem;
+      font-weight: 700;
       color: var(--text-muted);
       transition: all 0.12s ease;
       user-select: none;
     }
 
     .key-cap.space-bar {
-      min-width: clamp(180px, 32vw, 300px);
+      min-width: clamp(180px, 30vw, 290px);
     }
 
     .key-cap.target {
       border-color: var(--accent);
       color: var(--accent);
-      background: rgba(34, 211, 238, 0.1);
-      box-shadow: 0 0 12px var(--accent-glow);
+      background: rgba(0, 242, 254, 0.12);
+      box-shadow: 0 0 14px var(--accent-glow);
       transform: translateY(-2px);
     }
 
     .key-cap.hit-ok {
-      background: rgba(34, 197, 94, 0.3) !important;
+      background: rgba(16, 185, 129, 0.3) !important;
       border-color: var(--success) !important;
       color: #fff !important;
       transform: translateY(2px);
@@ -433,8 +458,8 @@
     .finger-indicator {
       font-size: 0.82rem;
       color: var(--accent);
-      font-weight: 600;
-      margin-top: 0.4rem;
+      font-weight: 700;
+      margin-top: 0.35rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
@@ -452,14 +477,14 @@
       color: #ffffff;
       border: none;
       padding: 0.75rem 1.8rem;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.95rem;
       border-radius: var(--radius-md);
       cursor: pointer;
       align-self: center;
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.55rem;
       transition: var(--transition-smooth);
       box-shadow: 0 4px 14px var(--primary-glow);
     }
@@ -467,11 +492,6 @@
     .btn-action:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 22px var(--primary-glow);
-      background: linear-gradient(135deg, var(--primary-hover), var(--primary));
-    }
-
-    .btn-action:active {
-      transform: translateY(0);
     }
 
     /* ===== RESULTS DASHBOARD ===== */
@@ -480,9 +500,9 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-xl);
-      padding: clamp(1.4rem, 3.5vw, 2.5rem);
+      padding: clamp(1.4rem, 3.5vw, 2.4rem);
       flex-direction: column;
-      gap: 1.6rem;
+      gap: 1.5rem;
       box-shadow: var(--shadow-subtle);
     }
 
@@ -502,12 +522,12 @@
 
     .result-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.85rem;
     }
 
     .chart-panel {
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.38);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 1.25rem;
@@ -522,12 +542,12 @@
 
     .insights-panel {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
+      grid-template-columns: 1.4fr 1fr;
       gap: 1rem;
     }
 
     .feedback-box, .weak-keys-box {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.28);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 1.1rem;
@@ -554,7 +574,7 @@
 
     .weak-key-tag span {
       color: var(--danger);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     /* ===== MODAL ===== */
@@ -562,7 +582,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5, 8, 14, 0.85);
+      background: rgba(5, 8, 14, 0.88);
       backdrop-filter: blur(12px);
       z-index: 999;
       align-items: center;
@@ -580,17 +600,17 @@
       border-radius: var(--radius-lg);
       padding: 1.8rem;
       width: 100%;
-      max-width: 620px;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
+      gap: 1rem;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
     }
 
     .modal-card textarea {
       width: 100%;
       height: 160px;
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       color: #fff;
@@ -603,71 +623,34 @@
     }
 
     .modal-card textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 12px var(--primary-glow);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
     /* ===== RESPONSIVENESS ===== */
     @media (max-width: 840px) {
-      .insights-panel {
-        grid-template-columns: 1fr;
-      }
-      .hud-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .insights-panel { grid-template-columns: 1fr; }
+      .hud-row { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 700px) {
-      body {
-        padding: 0.6rem;
-      }
-      .app-shell {
-        gap: 1rem;
-      }
-      header {
-        padding: 0.6rem 0.9rem;
-      }
-      .brand-title {
-        font-size: 1.05rem;
-      }
-      .logo-badge {
-        width: 36px;
-        height: 36px;
-        font-size: 1.1rem;
-      }
-      .config-strip {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .btn-cluster {
-        width: 100%;
-      }
-      .btn-item {
-        flex: 1;
-        text-align: center;
-      }
-      .key-cap {
-        min-width: 30px;
-        height: 34px;
-        font-size: 0.72rem;
-      }
-      .key-cap.space-bar {
-        min-width: 130px;
-      }
-      .typing-box {
-        height: 170px;
-        padding: 1.2rem;
-      }
-      .text-stream {
-        font-size: 1.3rem;
-        line-height: 2.3rem;
-      }
+      body { padding: 0.6rem; }
+      .app-shell { gap: 0.9rem; }
+      header { padding: 0.6rem 0.9rem; }
+      .brand-title { font-size: 1.1rem; }
+      .logo-badge { width: 34px; height: 34px; font-size: 1.1rem; }
+      .config-strip { flex-direction: column; align-items: stretch; }
+      .btn-cluster { width: 100%; }
+      .btn-item { flex: 1; text-align: center; }
+      .key-cap { min-width: 30px; height: 34px; font-size: 0.72rem; }
+      .key-cap.space-bar { min-width: 130px; }
+      .typing-box { height: 170px; padding: 1.2rem; }
+      .text-stream { font-size: 1.25rem; line-height: 2.2rem; }
     }
 
     @media (max-width: 480px) {
-      .keyboard-container {
-        display: none;
-      }
+      .keyboard-container { display: none; }
+      .home-nav-btn span { display: none; }
     }
   </style>
 </head>
@@ -679,12 +662,18 @@
       <div class="logo-badge">⚡</div>
       <div class="brand-title">TypePro Ultra</div>
     </div>
-    <div class="stats-pill" aria-label="Level and Experience">
-      <span>Lvl <strong id="userLevel" style="color:var(--accent)">1</strong></span>
-      <span style="opacity:0.3">•</span>
-      <span>XP <strong id="userXP">0</strong></span>
-      <div class="xp-progress-bar" title="Level Progress">
-        <div class="xp-progress-fill" id="xpProgressBar"></div>
+    <div class="header-actions">
+      <!-- DIRECT HYPERLINK TO INDEX.HTML -->
+      <a href="index.html" class="home-nav-btn" title="Go to Home Page">
+        🏠 <span>Home</span>
+      </a>
+      <div class="stats-pill" aria-label="Level and Experience">
+        <span>Lvl <strong id="userLevel" style="color:var(--accent)">1</strong></span>
+        <span style="opacity:0.3">•</span>
+        <span>XP <strong id="userXP">0</strong></span>
+        <div class="xp-progress-bar" title="Level Progress">
+          <div class="xp-progress-fill" id="xpProgressBar"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -788,15 +777,18 @@
       </div>
     </div>
 
-    <button class="btn-action" id="tryAgainBtn" style="align-self:center; margin-top:0.5rem;">Next Test (Enter)</button>
+    <div style="display:flex; justify-content:center; gap:0.85rem; margin-top:0.5rem;">
+      <a href="index.html" class="home-nav-btn" style="padding:0.75rem 1.6rem;">🏠 Return Home</a>
+      <button class="btn-action" id="tryAgainBtn">Next Test (Enter)</button>
+    </div>
   </section>
 </div>
 
 <!-- Custom Text Modal -->
 <div class="modal-overlay" id="customModal" role="dialog" aria-modal="true" aria-labelledby="customModalHeading">
   <div class="modal-card">
-    <h3 id="customModalHeading" style="font-size:1.2rem; font-weight:700;">Custom Practice Corpus</h3>
-    <p style="font-size: 0.85rem; color: var(--text-secondary);">Paste custom sentences, paragraphs, or snippets below:</p>
+    <h3 id="customModalHeading" style="font-size:1.2rem; font-weight:800;">Custom Practice Corpus</h3>
+    <p style="font-size: 0.85rem; color: var(--text-secondary);">Paste custom sentences, paragraphs, or code snippets below:</p>
     <textarea id="customTextInput" placeholder="Paste or write your custom practice text here..."></textarea>
     <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
       <button class="btn-item" id="cancelCustomBtn" style="padding:0.6rem 1.2rem; background: var(--surface-2);">Cancel</button>
@@ -908,7 +900,7 @@ const state = {
   topic: 'easy',
   timeLimit: 30,
   timeLeft: 30,
-  words: [], // Array of { chars: string[], typedChars: string[] }
+  words: [],
   currentWordIdx: 0,
   customText: safeGetStorage('typepro_custom_text', ""),
   totalKeystrokes: 0,
@@ -956,7 +948,36 @@ const els = {
   customTopicBtn: document.getElementById('customTopicBtn')
 };
 
-// Grapheme Splitter Supporting Hindi & Complex Glyphs
+// Web Audio API Synthesizer (Zero External Dependencies)
+let audioContext = null;
+function playKeyBeep(isCorrect) {
+  try {
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === 'suspended') audioContext.resume();
+
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+
+    if (isCorrect) {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, audioContext.currentTime);
+      gain.gain.setValueAtTime(0.04, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.04);
+      osc.start();
+      osc.stop(audioContext.currentTime + 0.04);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, audioContext.currentTime);
+      gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.12);
+      osc.start();
+      osc.stop(audioContext.currentTime + 0.12);
+    }
+  } catch(e) {}
+}
+
 function splitGraphemes(text) {
   if (typeof Intl !== 'undefined' && Intl.Segmenter) {
     const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
@@ -1096,7 +1117,6 @@ function updateCaret() {
     updateFingerGuide('space');
   }
 
-  // Smooth Auto-Scroll Viewport
   const wordEl = document.getElementById(`w-${state.currentWordIdx}`);
   if (wordEl) {
     const viewportBox = els.viewport.getBoundingClientRect();
@@ -1138,7 +1158,6 @@ function calculateEngineStats() {
       }
     }
 
-    // Space counted as correct keystroke between successfully typed words
     if (w < state.currentWordIdx) {
       totalCorrectChars++;
     }
@@ -1163,7 +1182,6 @@ function updateHUD() {
 function handleKeyDown(e) {
   if (e.key === 'Escape' || e.key === 'Tab') return;
 
-  // First keystroke initiates test
   if (!state.isStarted && e.key.length === 1) {
     startTest();
   }
@@ -1171,20 +1189,16 @@ function handleKeyDown(e) {
   const currentWord = state.words[state.currentWordIdx];
   if (!currentWord) return;
 
-  // Handle Backspace
   if (e.key === 'Backspace') {
     e.preventDefault();
     if (currentWord.typedChars.length > 0) {
       const removedIdx = currentWord.typedChars.length - 1;
       currentWord.typedChars.pop();
       const charEl = document.getElementById(`c-${state.currentWordIdx}-${removedIdx}`);
-      if (charEl) {
-        charEl.className = 'char';
-      }
+      if (charEl) charEl.className = 'char';
       updateCaret();
       updateHUD();
     } else if (state.currentWordIdx > 0) {
-      // Revert to previous word if not completed
       const prevWord = state.words[state.currentWordIdx - 1];
       if (prevWord.typedChars.length < prevWord.chars.length) {
         state.currentWordIdx--;
@@ -1195,20 +1209,17 @@ function handleKeyDown(e) {
     return;
   }
 
-  // Handle Space (Word Completion)
   if (e.key === ' ' || e.key === 'Spacebar') {
     e.preventDefault();
     if (currentWord.typedChars.length === 0) return;
 
     state.rawKeystrokes++;
     flashKey('space', true);
+    playKeyBeep(true);
 
-    // Check errors in currently committed word
     let wordHasError = false;
     currentWord.chars.forEach((ch, idx) => {
-      if (currentWord.typedChars[idx] !== ch) {
-        wordHasError = true;
-      }
+      if (currentWord.typedChars[idx] !== ch) wordHasError = true;
     });
 
     if (currentWord.typedChars.length < currentWord.chars.length) {
@@ -1229,16 +1240,12 @@ function handleKeyDown(e) {
     return;
   }
 
-  // Handle Printable Characters
   if (e.key.length === 1) {
     e.preventDefault();
     const typedChar = e.key;
     const charIndex = currentWord.typedChars.length;
 
-    // Do not permit overflowing beyond target word boundary
-    if (charIndex >= currentWord.chars.length) {
-      return;
-    }
+    if (charIndex >= currentWord.chars.length) return;
 
     currentWord.typedChars.push(typedChar);
     state.rawKeystrokes++;
@@ -1249,11 +1256,13 @@ function handleKeyDown(e) {
     if (typedChar === expectedChar) {
       if (charEl) charEl.className = 'char correct';
       flashKey(typedChar.toLowerCase(), true);
+      playKeyBeep(true);
     } else {
       if (charEl) charEl.className = 'char wrong';
       state.totalErrors++;
       state.keyMistakeCounts[expectedChar.toLowerCase()] = (state.keyMistakeCounts[expectedChar.toLowerCase()] || 0) + 1;
       flashKey(typedChar.toLowerCase(), false);
+      playKeyBeep(false);
     }
 
     updateHUD();
@@ -1285,9 +1294,7 @@ function startTest() {
 
     updateHUD();
 
-    if (state.timeLeft <= 0) {
-      finishTest();
-    }
+    if (state.timeLeft <= 0) finishTest();
   }, 1000);
 }
 
@@ -1329,7 +1336,6 @@ function finishTest() {
   const stats = calculateEngineStats();
   const consistency = calculateConsistency(state.wpmTimeline);
 
-  // Experience & Progression calculation
   const gainedXP = Math.max(15, Math.round(stats.netWpm * (stats.accuracy / 100) * 1.5 + (state.timeLimit / 2)));
   state.xp += gainedXP;
 
@@ -1343,7 +1349,6 @@ function finishTest() {
   safeSetStorage('typepro_level', state.level.toString());
   updateUserStatsUI();
 
-  // Populate UI
   els.resWpm.textContent = stats.netWpm;
   els.resRawWpm.textContent = stats.rawWpm;
   els.resAcc.textContent = `${stats.accuracy}%`;
@@ -1352,7 +1357,6 @@ function finishTest() {
   els.resXp.textContent = `+${gainedXP} XP`;
   els.testMetaDetails.textContent = `${state.lang.toUpperCase()} • ${state.topic.toUpperCase()} • ${state.timeLimit}s`;
 
-  // Weak Keys Analysis
   const sortedWeakKeys = Object.entries(state.keyMistakeCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4);
@@ -1369,7 +1373,6 @@ function finishTest() {
     });
   }
 
-  // AI Feedback Engine
   const weakKeyList = sortedWeakKeys.map(item => item[0].toUpperCase());
   els.aiFeedbackText.textContent = generateAIFeedback(stats.netWpm, stats.accuracy, consistency, weakKeyList);
 
@@ -1400,13 +1403,13 @@ function renderChart(timeline) {
   els.wpmGraphSvg.innerHTML = `
     <defs>
       <linearGradient id="wpmGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"/>
+        <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#00f2fe" stop-opacity="0.0"/>
       </linearGradient>
     </defs>
-    <line x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+    <line x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
     <polygon fill="url(#wpmGradient)" points="${areaStr}" />
-    <polyline fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylineStr}" />
+    <polyline fill="none" stroke="#00f2fe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylineStr}" />
   `;
 }
 
