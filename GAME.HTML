@@ -12,7 +12,7 @@
       --bg-dark: #070913;
       --card-bg: rgba(255, 255, 255, 0.05);
       --card-border: rgba(255, 255, 255, 0.15);
-      --glass: rgba(18, 22, 40, 0.78);
+      --glass: rgba(18, 22, 40, 0.85);
       --glass-border: rgba(255, 255, 255, 0.18);
       --primary: #6366f1;
       --primary-glow: rgba(99, 102, 241, 0.6);
@@ -38,12 +38,10 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Animated Dark Gradient Body Background */
+    /* Fixed performant background without continuous paint-heavy repaints */
     body {
       font-family: var(--font-family);
-      background: linear-gradient(-45deg, #05060d, #0f172a, #1e112a, #080c1b);
-      background-size: 400% 400%;
-      animation: bgGradientFlow 16s ease infinite;
+      background: #070913 radial-gradient(circle at 50% 20%, #1e112a 0%, #0c1222 55%, #05060d 100%);
       color: var(--text-main);
       min-height: 100vh;
       min-height: 100dvh;
@@ -55,53 +53,39 @@
       position: relative;
     }
 
-    @keyframes bgGradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Ambient Canvas */
-    #bg-canvas {
+    #bg-canvas, #confetti-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
       height: 100dvh;
-      z-index: 0;
       pointer-events: none;
     }
 
-    #confetti-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000;
-    }
+    #bg-canvas { z-index: 0; }
+    #confetti-canvas { z-index: 1000; }
 
+    /* Performance-friendly floating text using transform & opacity only */
     .floating-text {
       position: fixed;
       font-weight: 900;
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-size: clamp(1.3rem, 3.8vw, 2rem);
       color: #fbbf24;
-      text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+      text-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
       pointer-events: none;
       z-index: 999;
-      transform: translate(-50%, -50%);
-      animation: floatUp 0.85s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+      transform: translate3d(-50%, -50%, 0);
+      will-change: transform, opacity;
+      animation: floatUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes floatUp {
-      0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
-      30% { opacity: 1; transform: translate(-50%, -20px) scale(1.15); }
-      100% { opacity: 0; transform: translate(-50%, -55px) scale(1); }
+      0% { opacity: 0; transform: translate3d(-50%, 0, 0) scale(0.7); }
+      25% { opacity: 1; transform: translate3d(-50%, -18px, 0) scale(1.1); }
+      100% { opacity: 0; transform: translate3d(-50%, -46px, 0) scale(1); }
     }
 
-    /* App Container */
     .app-viewport {
       width: 100%;
       max-width: 900px;
@@ -116,7 +100,6 @@
       z-index: 1;
     }
 
-    /* Action Control Icons */
     .app-header-controls {
       position: absolute;
       top: 0.85rem;
@@ -127,7 +110,6 @@
       z-index: 20;
     }
 
-    /* HOME BUTTON HYPERLINK */
     .home-nav-btn {
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(99, 102, 241, 0.3));
       border: 1.5px solid #00f2fe;
@@ -140,16 +122,15 @@
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 0 14px rgba(0, 242, 254, 0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 14px rgba(0, 242, 254, 0.25);
     }
 
     .home-nav-btn:hover {
       background: #00f2fe;
       color: #070913;
-      box-shadow: 0 0 24px rgba(0, 242, 254, 0.8);
       transform: translateY(-2px);
     }
 
@@ -165,33 +146,32 @@
       justify-content: center;
       cursor: pointer;
       font-size: 1.1rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
     .icon-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.08);
       border-color: var(--primary);
-      box-shadow: 0 0 12px var(--primary-glow);
     }
-    .icon-btn:active { transform: scale(0.92); }
+    .icon-btn:active { transform: scale(0.94); }
 
-    /* Screens */
     .screen {
       display: none;
       width: 100%;
       flex-direction: column;
       align-items: center;
-      animation: fadeIn 0.35s ease-out forwards;
     }
-    .screen.active { display: flex; }
+    .screen.active {
+      display: flex;
+      animation: fadeIn 0.22s ease-out forwards;
+    }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
+      from { opacity: 0; transform: scale(0.99); }
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* ANIMATED TITLE & SUBTITLE */
     .logo-container {
       text-align: center;
       margin-bottom: clamp(1rem, 3vh, 2rem);
@@ -204,22 +184,10 @@
       letter-spacing: 2px;
       line-height: 1.15;
       margin-bottom: 0.5rem;
-      background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ec4899);
-      background-size: 300% 300%;
+      background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6, #10b981);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: titleGradientAnim 7s linear infinite, glowPulse 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes titleGradientAnim {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes glowPulse {
-      0% { filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.45)); }
-      100% { filter: drop-shadow(0 0 28px rgba(236, 72, 153, 0.75)); }
+      filter: drop-shadow(0 0 16px rgba(139, 92, 246, 0.45));
     }
 
     .game-subtitle {
@@ -260,15 +228,15 @@
       padding: clamp(0.6rem, 1.8vh, 0.85rem) 0.35rem;
       text-align: center;
       cursor: pointer;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
-    .diff-card:hover { transform: translateY(-3px); }
+    .diff-card:hover { transform: translateY(-2px); }
     .diff-card.selected {
       border-color: #6366f1;
-      background: rgba(99, 102, 241, 0.2);
-      box-shadow: 0 0 18px var(--primary-glow);
+      background: rgba(99, 102, 241, 0.22);
+      box-shadow: 0 0 14px var(--primary-glow);
     }
     .diff-card .badge {
       display: inline-block;
@@ -277,14 +245,13 @@
       border-radius: 50%;
       margin-bottom: 0.3rem;
     }
-    .diff-card.easy .badge { background: #10b981; box-shadow: 0 0 8px #10b981; }
-    .diff-card.medium .badge { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
-    .diff-card.hard .badge { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    .diff-card.easy .badge { background: #10b981; }
+    .diff-card.medium .badge { background: #f59e0b; }
+    .diff-card.hard .badge { background: #ef4444; }
 
     .diff-name { font-weight: 800; font-size: clamp(0.85rem, 2vw, 1rem); margin-bottom: 0.2rem; }
     .diff-meta { font-size: clamp(0.65rem, 1.6vw, 0.72rem); color: var(--text-muted); line-height: 1.25; }
 
-    /* BUTTONS */
     .btn {
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -299,30 +266,27 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, border-color 0.15s ease;
       width: 100%;
       text-decoration: none;
     }
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
       border-color: rgba(255, 255, 255, 0.35);
     }
-    .btn:active { transform: translateY(1px) scale(0.98); }
+    .btn:active { transform: scale(0.98); }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
       border: none;
-      box-shadow: 0 6px 18px var(--primary-glow);
+      box-shadow: 0 4px 14px var(--primary-glow);
     }
     .btn-primary:hover {
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.7);
-      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.7);
     }
 
-    /* RESPONSIVE GAMEPLAY HUD */
     .game-hud {
       width: 100%;
       max-width: 680px;
@@ -333,10 +297,10 @@
       border: 1px solid var(--glass-border);
       padding: clamp(0.5rem, 1.5vh, 0.75rem) 0.6rem;
       border-radius: var(--radius-md);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       margin-bottom: clamp(0.6rem, 2vh, 1.1rem);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
     .hud-item {
@@ -361,20 +325,19 @@
     }
     .hud-timer.hurry {
       color: var(--danger);
-      animation: pulseAlert 0.8s infinite alternate;
+      animation: pulseAlert 0.7s infinite alternate;
     }
     @keyframes pulseAlert {
-      from { transform: scale(1); text-shadow: 0 0 6px var(--danger); }
-      to { transform: scale(1.15); text-shadow: 0 0 16px var(--danger); }
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
     }
 
-    /* FULLY RESPONSIVE GAME BOARD */
     .game-board-container {
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1000px;
+      perspective: 1200px;
     }
 
     .game-board {
@@ -386,6 +349,7 @@
       --max-h: min(60vh, 560px);
       width: min(var(--max-w), var(--max-h));
       height: min(var(--max-w), var(--max-h));
+      touch-action: manipulation;
     }
 
     .game-board.grid-4x4 {
@@ -404,22 +368,46 @@
       gap: clamp(3px, 0.8vw, 6px);
     }
 
-    /* Card Setup */
+    /* CARD SYSTEM & GPU ACCELERATION */
     .memory-card {
       position: relative;
       cursor: pointer;
-      transform-style: preserve-3d;
-      transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       border-radius: clamp(6px, 1.5vw, 10px);
       width: 100%;
       height: 100%;
+      perspective: 1000px;
+      touch-action: manipulation;
     }
-    .memory-card:hover { transform: scale(1.03); }
-    .memory-card.flipped { transform: rotateY(180deg) scale(1.02); }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      transform-style: preserve-3d;
+      transform: translateZ(0) rotateY(0deg);
+      transition: transform 210ms cubic-bezier(0.2, 0.8, 0.3, 1);
+      will-change: transform;
+    }
+
+    /* Controlled hover - scoped exclusively to non-flipped, non-matched states on pointer devices */
+    @media (hover: hover) and (pointer: fine) {
+      .memory-card:not(.flipped):not(.matched):hover .card-inner {
+        transform: translateZ(0) rotateY(0deg) scale(1.03);
+      }
+    }
+
+    .memory-card.flipped .card-inner {
+      transform: translateZ(0) rotateY(180deg);
+    }
+
     .memory-card.matched {
-      transform: rotateY(180deg) scale(0.96);
-      cursor: default;
       pointer-events: none;
+    }
+
+    .memory-card.matched .card-inner {
+      transform: translateZ(0) rotateY(180deg) scale(0.96);
+      animation: matchSuccess 260ms ease-out forwards;
     }
 
     .card-face {
@@ -445,11 +433,6 @@
       background: linear-gradient(135deg, #a5b4fc, #ec4899);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      transition: transform 0.3s;
-    }
-    .memory-card:hover .card-front::after {
-      transform: rotate(45deg);
-      opacity: 1;
     }
 
     .card-back {
@@ -464,25 +447,26 @@
     }
 
     .memory-card.matched .card-back {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.35) 100%);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.45) 100%);
       border-color: #10b981;
-      animation: matchSuccess 0.55s ease;
     }
+
     @keyframes matchSuccess {
-      0% { transform: rotateY(180deg) scale(1); }
-      50% { transform: rotateY(180deg) scale(1.14); box-shadow: 0 0 18px #10b981; }
-      100% { transform: rotateY(180deg) scale(0.96); }
+      0% { transform: translateZ(0) rotateY(180deg) scale(1); }
+      50% { transform: translateZ(0) rotateY(180deg) scale(1.08); }
+      100% { transform: translateZ(0) rotateY(180deg) scale(0.96); }
     }
 
-    .memory-card.shake {
-      animation: shakeMismatch 0.42s ease-in-out both;
+    .memory-card.shake .card-inner {
+      animation: shakeMismatch 220ms ease-in-out forwards;
     }
+
     @keyframes shakeMismatch {
-      20%, 60% { transform: rotateY(180deg) translate3d(-4px, 0, 0); }
-      40%, 80% { transform: rotateY(180deg) translate3d(4px, 0, 0); }
+      0%, 100% { transform: translate3d(0, 0, 0) rotateY(180deg); }
+      25% { transform: translate3d(-5px, 0, 0) rotateY(180deg); }
+      75% { transform: translate3d(5px, 0, 0) rotateY(180deg); }
     }
 
-    /* In-game Bottom Buttons */
     .ingame-controls {
       display: flex;
       gap: 0.75rem;
@@ -505,7 +489,7 @@
       padding: 1rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
     .modal-overlay.active {
       opacity: 1;
@@ -520,8 +504,8 @@
       width: 100%;
       max-width: 440px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      transform: translateY(18px) scale(0.96);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateY(14px) scale(0.97);
+      transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -633,7 +617,7 @@
       inset: 0;
       background-color: rgba(255, 255, 255, 0.18);
       border-radius: 30px;
-      transition: 0.3s;
+      transition: background-color 0.2s;
     }
     .toggle-slider:before {
       position: absolute;
@@ -644,7 +628,7 @@
       bottom: 3px;
       background-color: white;
       border-radius: 50%;
-      transition: 0.3s;
+      transition: transform 0.2s;
     }
     input:checked + .toggle-slider { background-color: var(--primary); }
     input:checked + .toggle-slider:before { transform: translateX(20px); }
@@ -673,6 +657,12 @@
       font-size: 1.6rem;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      *, body.reduced-motion * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
     body.reduced-motion * {
       animation: none !important;
       transition: none !important;
@@ -683,18 +673,10 @@
         grid-template-columns: repeat(3, 1fr);
         row-gap: 0.45rem;
       }
-      .game-hud .hud-item:nth-child(4) {
-        grid-column: span 1;
-      }
-      .game-hud .hud-item:nth-child(5) {
-        grid-column: span 2;
-      }
-      .difficulty-cards {
-        gap: 0.35rem;
-      }
-      .home-nav-btn span {
-        display: none;
-      }
+      .game-hud .hud-item:nth-child(4) { grid-column: span 1; }
+      .game-hud .hud-item:nth-child(5) { grid-column: span 2; }
+      .difficulty-cards { gap: 0.35rem; }
+      .home-nav-btn span { display: none; }
     }
   </style>
 </head>
@@ -703,7 +685,6 @@
   <canvas id="confetti-canvas"></canvas>
 
   <div class="app-viewport">
-    <!-- Top Action Buttons (Including Direct Home Link) -->
     <div class="app-header-controls">
       <a href="index.html" class="home-nav-btn" title="Back to Home">
         🏠 <span>Home</span>
@@ -936,13 +917,15 @@
   </div>
 
   <script>
-    /* GAME LOGIC & SCRIPTS */
+    /* ==========================================================================
+       OPTIMIZED GAME STATE & CONSTANTS
+       ========================================================================== */
     const CARD_ICONS = [
       '🚀','🛸','🏎️','🏍️','✈️','🚢','👾','💎',
       '🔥','⚡','⭐','🌈','🍕','🍔','🍩','🍉',
       '🍓','🥑','🦁','🐯','🐼','🐨','🦊','🐸',
       '🐵','🦄','🏆','🎮','🎯','🎲','🎸','🎧',
-      '🤖','🔮','👑','🪐','🥑','🍒','🍎','🍦'
+      '🤖','🔮','👑','🪐','🍒','🍎','🍦','🌵'
     ];
 
     const CONFIG = {
@@ -963,10 +946,6 @@
     let isBoardLocked = false;
     let gameStartTime = 0;
 
-    let audioCtx = null;
-    let isMusicPlaying = false;
-    let bgInterval = null;
-
     let settings = {
       sfx: true,
       music: true,
@@ -974,112 +953,178 @@
       reduceMotion: false
     };
 
+    /* ==========================================================================
+       CACHED DOM REFS (Avoids query overhead during game loop)
+       ========================================================================== */
+    const DOM = {};
+    function cacheDOMElements() {
+      DOM.board = document.getElementById('board');
+      DOM.hudLevel = document.getElementById('hud-level');
+      DOM.hudMoves = document.getElementById('hud-moves');
+      DOM.hudScore = document.getElementById('hud-score');
+      DOM.hudMatches = document.getElementById('hud-matches');
+      DOM.hudTimer = document.getElementById('hud-timer');
+      DOM.completeStars = document.getElementById('complete-stars');
+      DOM.completeScore = document.getElementById('complete-score');
+      DOM.completeTime = document.getElementById('complete-time');
+      DOM.completeMoves = document.getElementById('complete-moves');
+      DOM.completeCombo = document.getElementById('complete-combo');
+      DOM.playerNameInput = document.getElementById('player-name-input');
+      DOM.goScore = document.getElementById('go-score');
+      DOM.goMatches = document.getElementById('go-matches');
+      DOM.leaderboardBody = document.getElementById('leaderboard-body');
+      DOM.settingSfx = document.getElementById('setting-sfx');
+      DOM.settingMusic = document.getElementById('setting-music');
+      DOM.settingVolume = document.getElementById('setting-volume');
+      DOM.volumeVal = document.getElementById('volume-val');
+      DOM.settingReduceMotion = document.getElementById('setting-reduce-motion');
+      DOM.soundToggleBtn = document.getElementById('sound-toggle-btn');
+      DOM.musicToggleBtn = document.getElementById('music-toggle-btn');
+    }
+
+    /* ==========================================================================
+       OPTIMIZED AUDIO ENGINE (Master AudioContext & Persistent Node Network)
+       ========================================================================== */
+    let audioCtx = null;
+    let masterGain = null;
+    let isMusicPlaying = false;
+    let bgInterval = null;
+
     function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioClass) return;
+        audioCtx = new AudioClass();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(settings.volume, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
     }
 
     function playSound(type) {
       if (!settings.sfx) return;
-      try {
-        initAudio();
-        const now = audioCtx.currentTime;
-        const masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(settings.volume, now);
-        masterGain.connect(audioCtx.destination);
+      initAudio();
+      if (!audioCtx || !masterGain) return;
 
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(masterGain);
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(masterGain);
 
-        if (type === 'flip') {
+      switch (type) {
+        case 'flip':
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(420, now);
-          osc.frequency.exponentialRampToValueAtTime(750, now + 0.08);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.08);
+          osc.frequency.setValueAtTime(450, now);
+          osc.frequency.exponentialRampToValueAtTime(750, now + 0.05);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
           osc.start(now);
-          osc.stop(now + 0.08);
-        } else if (type === 'match') {
+          osc.stop(now + 0.05);
+          break;
+
+        case 'match':
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.setValueAtTime(554, now + 0.07);
-          osc.frequency.setValueAtTime(659, now + 0.14);
-          gain.gain.setValueAtTime(0.35, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.32);
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.05);
+          osc.frequency.setValueAtTime(783.99, now + 0.1);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
           osc.start(now);
-          osc.stop(now + 0.32);
-        } else if (type === 'wrong') {
+          osc.stop(now + 0.2);
+          break;
+
+        case 'wrong':
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(220, now);
-          osc.frequency.linearRampToValueAtTime(140, now + 0.22);
-          gain.gain.setValueAtTime(0.28, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.22);
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.14);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.14);
           osc.start(now);
-          osc.stop(now + 0.22);
-        } else if (type === 'combo') {
+          osc.stop(now + 0.14);
+          break;
+
+        case 'combo':
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(587, now);
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.18);
-          gain.gain.setValueAtTime(0.4, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.18);
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(950, now + 0.12);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
           osc.start(now);
-          osc.stop(now + 0.18);
-        } else if (type === 'click') {
+          osc.stop(now + 0.12);
+          break;
+
+        case 'click':
           osc.type = 'sine';
           osc.frequency.setValueAtTime(650, now);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.035);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.025);
           osc.start(now);
-          osc.stop(now + 0.035);
-        } else if (type === 'complete') {
-          [523, 659, 783, 1046].forEach((f, i) => {
+          osc.stop(now + 0.025);
+          break;
+
+        case 'complete':
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
             o.connect(g);
             g.connect(masterGain);
-            o.frequency.value = f;
-            const t = now + i * 0.1;
-            g.gain.setValueAtTime(0.3, t);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+            o.type = 'triangle';
+            o.frequency.value = freq;
+            const t = now + i * 0.07;
+            g.gain.setValueAtTime(0.25, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
             o.start(t);
-            o.stop(t + 0.35);
+            o.stop(t + 0.25);
           });
-        } else if (type === 'gameover') {
+          break;
+
+        case 'gameover':
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(280, now);
-          osc.frequency.linearRampToValueAtTime(75, now + 0.6);
-          gain.gain.setValueAtTime(0.4, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.6);
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
           osc.start(now);
-          osc.stop(now + 0.6);
-        }
-      } catch (e) {}
+          osc.stop(now + 0.4);
+          break;
+      }
     }
 
     function startMusic() {
       if (!settings.music || isMusicPlaying) return;
       initAudio();
+      if (!audioCtx || !masterGain) return;
+
       isMusicPlaying = true;
-      const chords = [[261.63, 329.63, 392.00], [220.00, 261.63, 329.63], [174.61, 220.00, 261.63], [196.00, 246.94, 293.66]];
+      const chords = [
+        [261.63, 329.63, 392.00],
+        [220.00, 261.63, 329.63],
+        [174.61, 220.00, 261.63],
+        [196.00, 246.94, 293.66]
+      ];
       let step = 0;
+
       bgInterval = setInterval(() => {
-        if (!isMusicPlaying || !settings.music) return;
+        if (!isMusicPlaying || !settings.music || !audioCtx) return;
         try {
           const chord = chords[step % chords.length];
           step++;
+          const now = audioCtx.currentTime;
           chord.forEach(freq => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq * 0.5, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.015 * settings.volume, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.6);
+            osc.frequency.setValueAtTime(freq * 0.5, now);
+            gain.gain.setValueAtTime(0.015, now);
+            gain.gain.linearRampToValueAtTime(0.0001, now + 1.5);
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.6);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 1.5);
           });
         } catch(e) {}
       }, 1600);
@@ -1087,19 +1132,25 @@
 
     function stopMusic() {
       isMusicPlaying = false;
-      if (bgInterval) clearInterval(bgInterval);
+      if (bgInterval) {
+        clearInterval(bgInterval);
+        bgInterval = null;
+      }
     }
 
-    /* Ambient Particle Canvas */
+    /* ==========================================================================
+       OPTIMIZED AMBIENT PARTICLES (Reduced count, throttled frame updates)
+       ========================================================================== */
     const bgCanvas = document.getElementById('bg-canvas');
-    const bgCtx = bgCanvas.getContext('2d');
+    const bgCtx = bgCanvas.getContext('2d', { alpha: true });
     let particles = [];
+    let isGameRunning = false;
 
     function resizeCanvas() {
       bgCanvas.width = window.innerWidth;
       bgCanvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas, { passive: true });
     resizeCanvas();
 
     class Particle {
@@ -1107,38 +1158,46 @@
       reset() {
         this.x = Math.random() * bgCanvas.width;
         this.y = Math.random() * bgCanvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.35;
-        this.speedY = (Math.random() - 0.5) * 0.35;
-        this.alpha = Math.random() * 0.5 + 0.1;
+        this.size = Math.random() * 1.6 + 0.6;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.35 + 0.1;
       }
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x < 0 || this.x > bgCanvas.width || this.y < 0 || this.y > bgCanvas.height) this.reset();
+        if (this.x < 0 || this.x > bgCanvas.width || this.y < 0 || this.y > bgCanvas.height) {
+          this.reset();
+        }
       }
       draw() {
         bgCtx.fillStyle = `rgba(165, 180, 252, ${this.alpha})`;
         bgCtx.beginPath();
-        bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        bgCtx.arc(this.x, this.y, this.size, 0, 6.28318);
         bgCtx.fill();
       }
     }
 
-    for (let i = 0; i < 40; i++) particles.push(new Particle());
+    // 16 lightweight particles are optimal for ambient depth without GPU strain
+    for (let i = 0; i < 16; i++) particles.push(new Particle());
 
     function renderBackground() {
       if (!settings.reduceMotion) {
         bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+        }
       }
       requestAnimationFrame(renderBackground);
     }
-    renderBackground();
+    requestAnimationFrame(renderBackground);
 
-    /* Confetti FX */
+    /* ==========================================================================
+       OPTIMIZED CONFETTI EFFECT
+       ========================================================================== */
     const confCanvas = document.getElementById('confetti-canvas');
-    const confCtx = confCanvas.getContext('2d');
+    const confCtx = confCanvas.getContext('2d', { alpha: true });
     let confettiList = [];
     let confettiActive = false;
 
@@ -1146,7 +1205,7 @@
       confCanvas.width = window.innerWidth;
       confCanvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeConfetti);
+    window.addEventListener('resize', resizeConfetti, { passive: true });
     resizeConfetti();
 
     function fireConfetti() {
@@ -1154,32 +1213,38 @@
       confettiList = [];
       confettiActive = true;
       const colors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#3b82f6'];
-      for (let i = 0; i < 90; i++) {
+      const cx = confCanvas.width / 2;
+      const cy = confCanvas.height / 2;
+
+      for (let i = 0; i < 55; i++) {
         confettiList.push({
-          x: confCanvas.width / 2,
-          y: confCanvas.height / 2,
-          vx: (Math.random() - 0.5) * 14,
-          vy: (Math.random() - 0.5) * 14 - 2,
-          size: Math.random() * 7 + 4,
+          x: cx,
+          y: cy,
+          vx: (Math.random() - 0.5) * 12,
+          vy: (Math.random() - 0.5) * 12 - 2,
+          size: Math.random() * 5 + 4,
           color: colors[Math.floor(Math.random() * colors.length)],
           rotation: Math.random() * 360,
-          vRot: (Math.random() - 0.5) * 8,
+          vRot: (Math.random() - 0.5) * 6,
           opacity: 1
         });
       }
-      renderConfetti();
+      requestAnimationFrame(renderConfetti);
     }
 
     function renderConfetti() {
       if (!confettiActive) return;
       confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
       let alive = false;
-      confettiList.forEach(c => {
+
+      for (let i = 0; i < confettiList.length; i++) {
+        const c = confettiList[i];
         c.x += c.vx;
         c.y += c.vy;
         c.vy += 0.35;
         c.rotation += c.vRot;
-        c.opacity -= 0.012;
+        c.opacity -= 0.016;
+
         if (c.opacity > 0) {
           alive = true;
           confCtx.save();
@@ -1190,25 +1255,33 @@
           confCtx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size);
           confCtx.restore();
         }
-      });
-      if (alive) requestAnimationFrame(renderConfetti);
-      else {
+      }
+
+      if (alive) {
+        requestAnimationFrame(renderConfetti);
+      } else {
         confettiActive = false;
         confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
       }
     }
 
-    /* Core Actions */
+    /* ==========================================================================
+       FAST FISHER-YATES SHUFFLE
+       ========================================================================== */
     function shuffle(arr) {
-      let cur = arr.length, rand;
-      while (cur !== 0) {
-        rand = Math.floor(Math.random() * cur);
-        cur--;
-        [arr[cur], arr[rand]] = [arr[rand], arr[cur]];
+      let m = arr.length, t, i;
+      while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = arr[m];
+        arr[m] = arr[i];
+        arr[i] = t;
       }
       return arr;
     }
 
+    /* ==========================================================================
+       CORE GAMEPLAY ENGINE
+       ========================================================================== */
     function startGame(diffKey) {
       currentDifficulty = diffKey || currentDifficulty;
       const config = CONFIG[currentDifficulty];
@@ -1222,11 +1295,12 @@
       isBoardLocked = false;
       timer = config.timeLimit;
       gameStartTime = Date.now();
+      isGameRunning = true;
 
-      document.getElementById('hud-level').innerText = currentDifficulty.toUpperCase();
-      document.getElementById('hud-moves').innerText = '0';
-      document.getElementById('hud-score').innerText = '0';
-      document.getElementById('hud-matches').innerText = `0/${config.pairs}`;
+      DOM.hudLevel.innerText = currentDifficulty.toUpperCase();
+      DOM.hudMoves.innerText = '0';
+      DOM.hudScore.innerText = '0';
+      DOM.hudMatches.innerText = `0/${config.pairs}`;
       updateTimerDisplay();
 
       if (settings.music) startMusic();
@@ -1234,40 +1308,36 @@
       const selectedIcons = shuffle([...CARD_ICONS]).slice(0, config.pairs);
       const cardDeck = shuffle([...selectedIcons, ...selectedIcons]);
 
-      const board = document.getElementById('board');
-      board.innerHTML = '';
-      board.className = `game-board ${config.class}`;
+      // Fast DocumentFragment population (zero reflow spikes)
+      DOM.board.innerHTML = '';
+      DOM.board.className = `game-board ${config.class}`;
+      const fragment = document.createDocumentFragment();
 
       cardDeck.forEach((icon, idx) => {
         const card = document.createElement('div');
-        card.classList.add('memory-card');
+        card.className = 'memory-card';
         card.dataset.icon = icon;
         card.dataset.index = idx;
         card.tabIndex = 0;
 
         card.innerHTML = `
-          <div class="card-face card-front"></div>
-          <div class="card-face card-back">${icon}</div>
+          <div class="card-inner">
+            <div class="card-face card-front"></div>
+            <div class="card-face card-back">${icon}</div>
+          </div>
         `;
-
-        card.addEventListener('click', () => onCardClick(card));
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onCardClick(card);
-          }
-        });
-        board.appendChild(card);
+        fragment.appendChild(card);
       });
 
+      DOM.board.appendChild(fragment);
+
       clearInterval(timerInterval);
-      const timerHud = document.getElementById('hud-timer');
-      timerHud.classList.remove('hurry');
+      DOM.hudTimer.classList.remove('hurry');
 
       timerInterval = setInterval(() => {
         timer--;
         updateTimerDisplay();
-        if (timer <= 15) timerHud.classList.add('hurry');
+        if (timer <= 15) DOM.hudTimer.classList.add('hurry');
         if (timer <= 0) {
           clearInterval(timerInterval);
           onGameOver();
@@ -1281,30 +1351,54 @@
     function updateTimerDisplay() {
       const m = Math.floor(timer / 60);
       const s = timer % 60;
-      document.getElementById('hud-timer').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      DOM.hudTimer.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function onCardClick(card) {
-      if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.includes(card)) return;
+    /* Event Delegation on the Game Board: Eliminates hundreds of event closures */
+    DOM.board = document.getElementById('board');
+    DOM.board.addEventListener('click', (e) => {
+      const card = e.target.closest('.memory-card');
+      if (card) handleCardSelect(card);
+    });
 
-      initAudio();
+    DOM.board.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = e.target.closest('.memory-card');
+        if (card) {
+          e.preventDefault();
+          handleCardSelect(card);
+        }
+      }
+    });
+
+    function handleCardSelect(card) {
+      if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched')) {
+        return;
+      }
+
       playSound('flip');
       card.classList.add('flipped');
       flippedCards.push(card);
 
       if (flippedCards.length === 2) {
         moves++;
-        document.getElementById('hud-moves').innerText = moves;
+        DOM.hudMoves.innerText = moves;
         checkMatch();
       }
     }
 
+    /*
+      Optimized Matching Timing Pipeline:
+      - Flip transition: ~210ms
+      - Match evaluates right as cards face up: 120ms delay
+      - Wrong pair displays clearly: 280ms delay, then shakes and flips back smoothly
+    */
     function checkMatch() {
       isBoardLocked = true;
       const [card1, card2] = flippedCards;
-      const match = card1.dataset.icon === card2.dataset.icon;
+      const isMatch = card1.dataset.icon === card2.dataset.icon;
 
-      if (match) {
+      if (isMatch) {
         setTimeout(() => {
           card1.classList.add('matched');
           card2.classList.add('matched');
@@ -1312,8 +1406,8 @@
 
           const earned = Math.round(150 * combo + (timer * 2));
           score += earned;
-          document.getElementById('hud-score').innerText = score.toLocaleString();
-          document.getElementById('hud-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+          DOM.hudScore.innerText = score.toLocaleString();
+          DOM.hudMatches.innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
 
           showComboFloatingText(card2, `+${earned} ×${combo}!`);
 
@@ -1326,8 +1420,10 @@
           flippedCards = [];
           isBoardLocked = false;
 
-          if (matchedPairs === CONFIG[currentDifficulty].pairs) onLevelComplete();
-        }, 300);
+          if (matchedPairs === CONFIG[currentDifficulty].pairs) {
+            onLevelComplete();
+          }
+        }, 120);
       } else {
         setTimeout(() => {
           card1.classList.add('shake');
@@ -1336,15 +1432,15 @@
 
           combo = 1;
           score = Math.max(0, score - 20);
-          document.getElementById('hud-score').innerText = score.toLocaleString();
+          DOM.hudScore.innerText = score.toLocaleString();
 
           setTimeout(() => {
             card1.classList.remove('flipped', 'shake');
             card2.classList.remove('flipped', 'shake');
             flippedCards = [];
             isBoardLocked = false;
-          }, 600);
-        }, 380);
+          }, 240);
+        }, 280);
       }
     }
 
@@ -1356,10 +1452,11 @@
       pop.style.left = `${rect.left + rect.width / 2}px`;
       pop.style.top = `${rect.top}px`;
       document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 850);
+      setTimeout(() => pop.remove(), 650);
     }
 
     function onLevelComplete() {
+      isGameRunning = false;
       clearInterval(timerInterval);
       playSound('complete');
       fireConfetti();
@@ -1367,7 +1464,7 @@
       const timeTakenSec = Math.round((Date.now() - gameStartTime) / 1000);
       const m = Math.floor(timeTakenSec / 60);
       const s = timeTakenSec % 60;
-      const timeFormatted = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      const timeFormatted = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
 
       score += timer * 25;
 
@@ -1377,20 +1474,21 @@
       if (ratio >= 0.7 && timer > conf.timeLimit * 0.4) stars = '⭐⭐⭐';
       else if (ratio >= 0.4) stars = '⭐⭐';
 
-      document.getElementById('complete-stars').innerText = stars;
-      document.getElementById('complete-score').innerText = score.toLocaleString();
-      document.getElementById('complete-time').innerText = timeFormatted;
-      document.getElementById('complete-moves').innerText = moves;
-      document.getElementById('complete-combo').innerText = `×${bestCombo}`;
+      DOM.completeStars.innerText = stars;
+      DOM.completeScore.innerText = score.toLocaleString();
+      DOM.completeTime.innerText = timeFormatted;
+      DOM.completeMoves.innerText = moves;
+      DOM.completeCombo.innerText = `×${bestCombo}`;
 
       openModal('modal-complete');
     }
 
     function onGameOver() {
+      isGameRunning = false;
       clearInterval(timerInterval);
       playSound('gameover');
-      document.getElementById('go-score').innerText = score.toLocaleString();
-      document.getElementById('go-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+      DOM.goScore.innerText = score.toLocaleString();
+      DOM.goMatches.innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
       openModal('modal-gameover');
     }
 
@@ -1400,8 +1498,15 @@
       if (target) target.classList.add('active');
     }
 
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+    
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    }
 
     function getHighScores() {
       try {
@@ -1422,13 +1527,13 @@
     }
 
     function renderLeaderboard() {
-      const body = document.getElementById('leaderboard-body');
-      body.innerHTML = '';
+      DOM.leaderboardBody.innerHTML = '';
       const list = getHighScores();
       if (!list.length) {
-        body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">No scores recorded</td></tr>`;
+        DOM.leaderboardBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">No scores recorded</td></tr>`;
         return;
       }
+      const frag = document.createDocumentFragment();
       list.forEach((item, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -1437,8 +1542,9 @@
           <td style="text-transform: uppercase; font-size: 0.72rem; color: var(--text-muted);">${item.diff}</td>
           <td>${item.score.toLocaleString()}</td>
         `;
-        body.appendChild(tr);
+        frag.appendChild(tr);
       });
+      DOM.leaderboardBody.appendChild(frag);
     }
 
     function loadSettings() {
@@ -1447,22 +1553,31 @@
         if (stored) settings = Object.assign(settings, JSON.parse(stored));
       } catch (e) {}
 
-      document.getElementById('setting-sfx').checked = settings.sfx;
-      document.getElementById('setting-music').checked = settings.music;
-      document.getElementById('setting-volume').value = settings.volume;
-      document.getElementById('volume-val').innerText = `${Math.round(settings.volume * 100)}%`;
-      document.getElementById('setting-reduce-motion').checked = settings.reduceMotion;
+      DOM.settingSfx.checked = settings.sfx;
+      DOM.settingMusic.checked = settings.music;
+      DOM.settingVolume.value = settings.volume;
+      DOM.volumeVal.innerText = `${Math.round(settings.volume * 100)}%`;
+      DOM.settingReduceMotion.checked = settings.reduceMotion;
+      
       if (settings.reduceMotion) document.body.classList.add('reduced-motion');
+      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
+      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
 
-      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
-      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
+      if (masterGain && audioCtx) {
+        masterGain.gain.setValueAtTime(settings.volume, audioCtx.currentTime);
+      }
     }
 
     function saveSettings() {
       try { localStorage.setItem('mm_settings', JSON.stringify(settings)); } catch (e) {}
+      if (masterGain && audioCtx) {
+        masterGain.gain.setValueAtTime(settings.volume, audioCtx.currentTime);
+      }
     }
 
-    /* Event Listeners */
+    /* ==========================================================================
+       UI EVENT REGISTRATIONS
+       ========================================================================== */
     document.querySelectorAll('.diff-card').forEach(card => {
       card.addEventListener('click', () => {
         playSound('click');
@@ -1481,6 +1596,7 @@
     document.getElementById('btn-quit-game').addEventListener('click', () => {
       clearInterval(timerInterval);
       stopMusic();
+      isGameRunning = false;
       playSound('click');
       switchScreen('screen-menu');
     });
@@ -1506,7 +1622,7 @@
 
     document.getElementById('btn-save-next').addEventListener('click', () => {
       playSound('click');
-      const name = document.getElementById('player-name-input').value.trim() || 'Player';
+      const name = DOM.playerNameInput.value.trim() || 'Player';
       saveHighScoreEntry(name, currentDifficulty, score);
       closeModal('modal-complete');
       if (currentDifficulty === 'easy') currentDifficulty = 'medium';
@@ -1516,7 +1632,7 @@
 
     document.getElementById('btn-complete-menu').addEventListener('click', () => {
       playSound('click');
-      const name = document.getElementById('player-name-input').value.trim() || 'Player';
+      const name = DOM.playerNameInput.value.trim() || 'Player';
       saveHighScoreEntry(name, currentDifficulty, score);
       closeModal('modal-complete');
       stopMusic();
@@ -1534,45 +1650,44 @@
       switchScreen('screen-menu');
     });
 
-    // Sound toggle buttons
-    document.getElementById('sound-toggle-btn').addEventListener('click', () => {
+    DOM.soundToggleBtn.addEventListener('click', () => {
       settings.sfx = !settings.sfx;
       saveSettings();
-      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
-      document.getElementById('setting-sfx').checked = settings.sfx;
+      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
+      DOM.settingSfx.checked = settings.sfx;
       if (settings.sfx) playSound('click');
     });
 
-    document.getElementById('music-toggle-btn').addEventListener('click', () => {
+    DOM.musicToggleBtn.addEventListener('click', () => {
       settings.music = !settings.music;
       saveSettings();
-      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
-      document.getElementById('setting-music').checked = settings.music;
+      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
+      DOM.settingMusic.checked = settings.music;
       if (settings.music) startMusic();
       else stopMusic();
     });
 
-    document.getElementById('setting-sfx').addEventListener('change', e => {
+    DOM.settingSfx.addEventListener('change', e => {
       settings.sfx = e.target.checked;
       saveSettings();
-      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
+      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
     });
 
-    document.getElementById('setting-music').addEventListener('change', e => {
+    DOM.settingMusic.addEventListener('change', e => {
       settings.music = e.target.checked;
       saveSettings();
-      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
+      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
       if (settings.music) startMusic();
       else stopMusic();
     });
 
-    document.getElementById('setting-volume').addEventListener('input', e => {
+    DOM.settingVolume.addEventListener('input', e => {
       settings.volume = parseFloat(e.target.value);
-      document.getElementById('volume-val').innerText = `${Math.round(settings.volume * 100)}%`;
+      DOM.volumeVal.innerText = `${Math.round(settings.volume * 100)}%`;
       saveSettings();
     });
 
-    document.getElementById('setting-reduce-motion').addEventListener('change', e => {
+    DOM.settingReduceMotion.addEventListener('change', e => {
       settings.reduceMotion = e.target.checked;
       if (settings.reduceMotion) document.body.classList.add('reduced-motion');
       else document.body.classList.remove('reduced-motion');
@@ -1586,11 +1701,15 @@
       }
     });
 
+    // Warm up AudioContext on initial user gesture without delay
     ['click', 'touchstart', 'keydown'].forEach(evt => {
-      window.addEventListener(evt, () => initAudio(), { once: true });
+      window.addEventListener(evt, () => initAudio(), { once: true, passive: true });
     });
 
-    window.addEventListener('DOMContentLoaded', loadSettings);
+    window.addEventListener('DOMContentLoaded', () => {
+      cacheDOMElements();
+      loadSettings();
+    });
   </script>
 </body>
 </html>
