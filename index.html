@@ -244,7 +244,7 @@
       position: absolute;
       top: 48px;
       right: 0;
-      width: 260px;
+      width: 280px;
       background: var(--panel-bg);
       border: 1px solid var(--glass-border);
       border-radius: 18px;
@@ -585,7 +585,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 14px;
     }
 
@@ -607,7 +607,7 @@
 
     .page-card img {
       width: 100%;
-      height: 150px;
+      height: 170px;
       display: block;
       object-fit: contain;
       background: #ffffff;
@@ -615,7 +615,7 @@
     }
 
     .page-info {
-      padding: 8px;
+      padding: 10px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -628,6 +628,14 @@
       color: var(--text-main);
       display: block;
       font-weight: 700;
+    }
+
+    .page-specs {
+      font-size: 0.68rem !important;
+      color: var(--neon-cyan) !important;
+      font-family: var(--font-mono);
+      letter-spacing: -0.2px;
+      line-height: 1.3;
     }
 
     .dl-btn {
@@ -1010,7 +1018,7 @@
     @media (max-width: 900px) {
       .app-wrapper { max-width: 100%; }
       .animated-title { font-size: 2.2rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     }
 
     @media (max-width: 768px) {
@@ -1020,7 +1028,7 @@
       .btn { width: 100%; min-width: unset; }
       .top-right-controls { top: 12px; right: 12px; gap: 6px; }
       .nav-btn { padding: 6px 12px; font-size: 0.75rem; }
-      .settings-panel { width: 230px; right: 0; }
+      .settings-panel { width: 250px; right: 0; }
       .hud-grid { grid-template-columns: repeat(2, 1fr); }
       .key.space { min-width: 140px; }
       .drop-zone { max-width: 100%; }
@@ -1048,6 +1056,23 @@
           <option value="hi">हिंदी (Hindi)</option>
           <option value="es">Español</option>
           <option value="fr">Français</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label id="lblDpi">Image Quality (DPI)</label>
+        <select id="dpiSelect">
+          <option value="150">Standard — 150 DPI</option>
+          <option value="200">High — 200 DPI</option>
+          <option value="300" selected>Ultra HD — 300 DPI</option>
+          <option value="400">Maximum — 400 DPI</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label id="lblFormat">Output Format</label>
+        <select id="formatSelect">
+          <option value="jpg_high">JPG — High Quality (95%)</option>
+          <option value="jpg_max" selected>JPG — Maximum Quality (98%)</option>
+          <option value="png_lossless">PNG — Lossless</option>
         </select>
       </div>
       <div class="setting-item">
@@ -1096,7 +1121,7 @@
 
     <div class="mode-tabs-wrapper">
       <div class="mode-tabs">
-        <button class="tab-btn active" id="modePdfToJpgBtn" onclick="switchMode('pdf2jpg')">📄 PDF to JPG</button>
+        <button class="tab-btn active" id="modePdfToJpgBtn" onclick="switchMode('pdf2jpg')">📄 PDF to Image</button>
         <button class="tab-btn" id="modeImgToPdfBtn" onclick="switchMode('img2pdf')">🖼️ JPG / PNG to PDF</button>
       </div>
     </div>
@@ -1245,6 +1270,7 @@
     let createdPdfBlob = null;
     let isAudioPlaying = false;
     let idleTimer = null;
+    let activeObjectUrls = [];
 
     const bgVideoList = [
       "oggy-bg.mp4",
@@ -1295,7 +1321,9 @@
         lblTheme: "Theme Mode",
         lblLang: "Language",
         lblTyping: "Typing Engine",
-        lblAudio: "Audio Control"
+        lblAudio: "Audio Control",
+        lblDpi: "Image Quality (DPI)",
+        lblFormat: "Output Format"
       },
       hi: {
         title: "⚡ फ़ाइल कनवर्टर प्रो",
@@ -1308,7 +1336,9 @@
         lblTheme: "थीम मोड",
         lblLang: "भाषा",
         lblTyping: "टाइपिंग इंजन",
-        lblAudio: "ऑडियो नियंत्रण"
+        lblAudio: "ऑडियो नियंत्रण",
+        lblDpi: "इमेज क्वालिटी (DPI)",
+        lblFormat: "आउटपुट प्रारूप"
       },
       es: {
         title: "⚡ Convertidor Pro",
@@ -1321,7 +1351,9 @@
         lblTheme: "Modo de Tema",
         lblLang: "Idioma",
         lblTyping: "Motor de Mecanografía",
-        lblAudio: "Control de Audio"
+        lblAudio: "Control de Audio",
+        lblDpi: "Calidad de Imagen (DPI)",
+        lblFormat: "Formato de Salida"
       },
       fr: {
         title: "⚡ Convertisseur Pro",
@@ -1334,7 +1366,9 @@
         lblTheme: "Thème",
         lblLang: "Langue",
         lblTyping: "Moteur de Tape",
-        lblAudio: "Contrôle Audio"
+        lblAudio: "Contrôle Audio",
+        lblDpi: "Qualité d'image (DPI)",
+        lblFormat: "Format de Sortie"
       }
     };
 
@@ -1357,6 +1391,8 @@
       document.getElementById('convertBtn').innerText = t.convert;
       document.getElementById('lblTheme').innerText = t.lblTheme;
       document.getElementById('lblLang').innerText = t.lblLang;
+      if (document.getElementById('lblDpi')) document.getElementById('lblDpi').innerText = t.lblDpi;
+      if (document.getElementById('lblFormat')) document.getElementById('lblFormat').innerText = t.lblFormat;
       if (document.getElementById('lblTyping')) document.getElementById('lblTyping').innerText = t.lblTyping;
       if (document.getElementById('lblAudio')) document.getElementById('lblAudio').innerText = t.lblAudio;
       if (document.getElementById('typingPracticeBtn')) document.getElementById('typingPracticeBtn').innerText = t.game;
@@ -1394,6 +1430,16 @@
     const progressFill = document.getElementById('progressFill');
     const statusText = document.getElementById('statusText');
     const outputSection = document.getElementById('outputSection');
+    const dpiSelect = document.getElementById('dpiSelect');
+    const formatSelect = document.getElementById('formatSelect');
+
+    function clearOldResults() {
+      activeObjectUrls.forEach(url => URL.revokeObjectURL(url));
+      activeObjectUrls = [];
+      processedResults = [];
+      outputSection.innerHTML = '';
+      createdPdfBlob = null;
+    }
 
     function switchMode(mode) {
       currentMode = mode;
@@ -1402,7 +1448,7 @@
       downloadZipBtn.style.display = 'none';
       downloadPdfBtn.style.display = 'none';
       progressContainer.style.display = 'none';
-      outputSection.innerHTML = '';
+      clearOldResults();
 
       document.getElementById('modePdfToJpgBtn').classList.toggle('active', mode === 'pdf2jpg');
       document.getElementById('modeImgToPdfBtn').classList.toggle('active', mode === 'img2pdf');
@@ -1427,7 +1473,7 @@
 
     function handleFiles(files) {
       fileQueue = currentMode === 'pdf2jpg' 
-        ? Array.from(files).filter(f => f.type === 'application/pdf')
+        ? Array.from(files).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'))
         : Array.from(files).filter(f => f.type.startsWith('image/'));
 
       if (fileQueue.length > 0) {
@@ -1456,12 +1502,68 @@
       });
     }
 
+    /* Helper: Convert Canvas directly to high-fidelity Blob */
+    function canvasToBlobAsync(canvas, mimeType, quality) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob);
+          else reject(new Error("Canvas to Blob conversion failed"));
+        }, mimeType, quality);
+      });
+    }
+
+    /* Helper: Calculate safe high-resolution scale targeting requested DPI */
+    function getSafeRenderScale(baseViewport, targetDpi) {
+      // PDF standard coordinate points are 72 per inch
+      let calculatedScale = targetDpi / 72.0;
+
+      // Smart Resolution: Clamp against browser maximum canvas limits (approx 4096px edge / 16MP area)
+      const MAX_SIDE = 4096;
+      const MAX_PIXELS = 16777216; // 16 MegaPixels
+
+      const potentialWidth = baseViewport.width * calculatedScale;
+      const potentialHeight = baseViewport.height * calculatedScale;
+
+      if (potentialWidth > MAX_SIDE || potentialHeight > MAX_SIDE || (potentialWidth * potentialHeight) > MAX_PIXELS) {
+        const scaleByWidth = MAX_SIDE / baseViewport.width;
+        const scaleByHeight = MAX_SIDE / baseViewport.height;
+        const scaleByArea = Math.sqrt(MAX_PIXELS / (baseViewport.width * baseViewport.height));
+        calculatedScale = Math.min(calculatedScale, scaleByWidth, scaleByHeight, scaleByArea);
+      }
+
+      return Math.max(calculatedScale, 1.0);
+    }
+
     async function processPdfToJpg() {
       if (!fileQueue.length) return;
-      outputSection.innerHTML = '';
-      processedResults = [];
+      clearOldResults();
       convertBtn.disabled = true;
       progressContainer.style.display = 'block';
+
+      const selectedDpi = parseInt(dpiSelect.value) || 300;
+      const selectedFormatMode = formatSelect.value;
+      
+      let mimeType = 'image/jpeg';
+      let exportExt = 'jpg';
+      let exportQuality = 0.98;
+      let formatLabel = 'JPG';
+
+      if (selectedFormatMode === 'jpg_high') {
+        mimeType = 'image/jpeg';
+        exportExt = 'jpg';
+        exportQuality = 0.95;
+        formatLabel = 'JPG (95%)';
+      } else if (selectedFormatMode === 'jpg_max') {
+        mimeType = 'image/jpeg';
+        exportExt = 'jpg';
+        exportQuality = 0.98;
+        formatLabel = 'JPG (98%)';
+      } else if (selectedFormatMode === 'png_lossless') {
+        mimeType = 'image/png';
+        exportExt = 'png';
+        exportQuality = 1.0;
+        formatLabel = 'PNG (Lossless)';
+      }
 
       let totalPages = 0, globalCounter = 0, parsedPdfs = [];
 
@@ -1476,7 +1578,11 @@
         }
       }
 
-      if (!totalPages) { convertBtn.disabled = false; return; }
+      if (!totalPages) { 
+        convertBtn.disabled = false; 
+        progressContainer.style.display = 'none';
+        return; 
+      }
 
       for (let i = 0; i < parsedPdfs.length; i++) {
         const { name, pdfDoc } = parsedPdfs[i];
@@ -1484,42 +1590,84 @@
         
         const groupDiv = document.createElement('div');
         groupDiv.className = 'pdf-group';
-        groupDiv.innerHTML = `<div style="font-size:0.95rem;font-weight:800;margin-bottom:14px;color:var(--neon-cyan);">📄 ${name} (${pdfDoc.numPages} Pages)</div><div class="grid" id="grid-${i}"></div>`;
+        groupDiv.innerHTML = `<div style="font-size:0.95rem;font-weight:800;margin-bottom:14px;color:var(--neon-cyan);">📄 ${name} (${pdfDoc.numPages} Pages) • Target: ${selectedDpi} DPI</div><div class="grid" id="grid-${i}"></div>`;
         outputSection.appendChild(groupDiv);
         const grid = document.getElementById(`grid-${i}`);
 
         const fileImages = [];
+
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           globalCounter++;
           const percent = Math.round((globalCounter / totalPages) * 100);
           progressFill.style.width = `${percent}%`;
-          updateStatus(`Converting Page ${pageNum}/${pdfDoc.numPages}`);
+          updateStatus(`Rendering Page ${pageNum}/${pdfDoc.numPages} in Ultra HD...`);
 
           const page = await pdfDoc.getPage(pageNum);
-          const viewport = page.getViewport({ scale: 1.5 });
+          const unscaledViewport = page.getViewport({ scale: 1.0 });
+
+          // Calculate precise DPI scale with smart clamping
+          const finalScale = getSafeRenderScale(unscaledViewport, selectedDpi);
+          const viewport = page.getViewport({ scale: finalScale });
+
+          // High-Resolution Canvas Allocation
           const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
+          const finalWidth = Math.floor(viewport.width);
+          const finalHeight = Math.floor(viewport.height);
 
-          await page.render({ canvasContext: ctx, viewport }).promise;
-          const jpgData = canvas.toDataURL('image/jpeg', 0.9);
-          const imgName = `${cleanName}_page_${pageNum}.jpg`;
+          canvas.width = finalWidth;
+          canvas.height = finalHeight;
 
-          fileImages.push({ name: imgName, data: jpgData.split(',')[1] });
-          renderCard(grid, jpgData, pageNum, imgName);
+          const ctx = canvas.getContext('2d', {
+            alpha: false,
+            willReadFrequently: false
+          });
+
+          // Fill clean opaque background for consistent document colors
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, finalWidth, finalHeight);
+
+          // Configure crisp image smoothing for vector clarity
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          // Render at genuine print/archival resolution
+          await page.render({
+            canvasContext: ctx,
+            viewport: viewport,
+            intent: 'print'
+          }).promise;
+
+          // Convert canvas directly to high-fidelity Blob (Zero loss from double-scaling)
+          const imgBlob = await canvasToBlobAsync(canvas, mimeType, exportQuality);
+          const blobUrl = URL.createObjectURL(imgBlob);
+          activeObjectUrls.push(blobUrl);
+
+          const imgName = `${cleanName}_page_${pageNum}.${exportExt}`;
+          fileImages.push({ name: imgName, blob: imgBlob });
+
+          // Render UI Card with actual native pixel resolution and settings
+          renderCard(grid, blobUrl, pageNum, imgName, {
+            width: finalWidth,
+            height: finalHeight,
+            dpi: Math.round(finalScale * 72),
+            format: formatLabel
+          });
+
+          // Release memory immediately
+          canvas.width = 0;
+          canvas.height = 0;
         }
         processedResults.push({ folderName: cleanName, images: fileImages });
       }
 
-      updateStatus("✨ Conversion Completed!");
+      updateStatus("✨ Ultra HD Conversion Completed!");
       convertBtn.disabled = false;
       downloadZipBtn.style.display = 'inline-flex';
     }
 
     async function processImgToPdf() {
       if (!fileQueue.length) return;
-      outputSection.innerHTML = '';
+      clearOldResults();
       convertBtn.disabled = true;
       progressContainer.style.display = 'block';
 
@@ -1553,7 +1701,12 @@
         }
 
         pdf.addImage(dataUrl, 'JPEG', margin, margin, imgProps.width, imgProps.height);
-        renderCard(grid, dataUrl, i + 1, file.name);
+        renderCard(grid, dataUrl, i + 1, file.name, {
+          width: imgProps.width,
+          height: imgProps.height,
+          dpi: 'Source',
+          format: 'PDF Page'
+        });
       }
 
       createdPdfBlob = pdf.output('blob');
@@ -1578,25 +1731,34 @@
       });
     }
 
-    function renderCard(grid, dataUrl, num, name) {
+    function renderCard(grid, srcUrl, num, name, specs) {
       const card = document.createElement('div');
       card.className = 'page-card';
       card.innerHTML = `
-        <img src="${dataUrl}" loading="lazy">
+        <img src="${srcUrl}" loading="lazy">
         <div class="page-info">
-          <span>#${num}</span>
-          <a href="${dataUrl}" download="${name}" class="dl-btn">⬇ Download</a>
+          <span>#${num} ${name}</span>
+          ${specs ? `<span class="page-specs">${specs.width} × ${specs.height} px<br>${specs.dpi} DPI • ${specs.format}</span>` : ''}
+          <a href="${srcUrl}" download="${name}" class="dl-btn">⬇ Download HD</a>
         </div>`;
       grid.appendChild(card);
     }
 
-    function downloadMasterZip() {
+    async function downloadMasterZip() {
+      if (!processedResults.length) return;
+      updateStatus("Creating Master ZIP archive...");
       const zip = new JSZip();
+
       processedResults.forEach(res => {
         const folder = zip.folder(res.folderName);
-        res.images.forEach(img => folder.file(img.name, img.data, { base64: true }));
+        res.images.forEach(img => {
+          folder.file(img.name, img.blob);
+        });
       });
-      zip.generateAsync({ type: 'blob' }).then(content => saveAs(content, 'Converted_Images.zip'));
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      saveAs(zipBlob, 'UltraHD_Converted_Images.zip');
+      updateStatus("✨ Master ZIP downloaded!");
     }
 
     function downloadSinglePdf() {
