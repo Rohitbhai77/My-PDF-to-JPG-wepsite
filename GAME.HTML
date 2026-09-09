@@ -38,10 +38,9 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Fixed performant background without continuous paint-heavy repaints */
     body {
       font-family: var(--font-family);
-      background: #070913 radial-gradient(circle at 50% 20%, #1e112a 0%, #0c1222 55%, #05060d 100%);
+      background: radial-gradient(circle at 50% 25%, #1e112a 0%, #0c1222 55%, #05060d 100%);
       color: var(--text-main);
       min-height: 100vh;
       min-height: 100dvh;
@@ -66,7 +65,6 @@
     #bg-canvas { z-index: 0; }
     #confetti-canvas { z-index: 1000; }
 
-    /* Performance-friendly floating text using transform & opacity only */
     .floating-text {
       position: fixed;
       font-weight: 900;
@@ -368,46 +366,35 @@
       gap: clamp(3px, 0.8vw, 6px);
     }
 
-    /* CARD SYSTEM & GPU ACCELERATION */
+    /* DIRECT GPU-ACCELERATED CARDS (Fast & Clean 210ms Flip) */
     .memory-card {
       position: relative;
       cursor: pointer;
       border-radius: clamp(6px, 1.5vw, 10px);
       width: 100%;
       height: 100%;
-      perspective: 1000px;
-      touch-action: manipulation;
-    }
-
-    .card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
       transform-style: preserve-3d;
       transform: translateZ(0) rotateY(0deg);
       transition: transform 210ms cubic-bezier(0.2, 0.8, 0.3, 1);
       will-change: transform;
+      touch-action: manipulation;
     }
 
-    /* Controlled hover - scoped exclusively to non-flipped, non-matched states on pointer devices */
     @media (hover: hover) and (pointer: fine) {
-      .memory-card:not(.flipped):not(.matched):hover .card-inner {
+      .memory-card:not(.flipped):not(.matched):hover {
         transform: translateZ(0) rotateY(0deg) scale(1.03);
       }
     }
 
-    .memory-card.flipped .card-inner {
+    .memory-card.flipped {
       transform: translateZ(0) rotateY(180deg);
     }
 
     .memory-card.matched {
-      pointer-events: none;
-    }
-
-    .memory-card.matched .card-inner {
       transform: translateZ(0) rotateY(180deg) scale(0.96);
-      animation: matchSuccess 260ms ease-out forwards;
+      cursor: default;
+      pointer-events: none;
+      animation: matchSuccess 250ms ease-out forwards;
     }
 
     .card-face {
@@ -420,6 +407,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      pointer-events: none;
     }
 
     .card-front {
@@ -457,7 +445,7 @@
       100% { transform: translateZ(0) rotateY(180deg) scale(0.96); }
     }
 
-    .memory-card.shake .card-inner {
+    .memory-card.shake {
       animation: shakeMismatch 220ms ease-in-out forwards;
     }
 
@@ -918,7 +906,7 @@
 
   <script>
     /* ==========================================================================
-       OPTIMIZED GAME STATE & CONSTANTS
+       GAME STATE & CONFIGURATION
        ========================================================================== */
     const CARD_ICONS = [
       '🚀','🛸','🏎️','🏍️','✈️','🚢','👾','💎',
@@ -954,36 +942,7 @@
     };
 
     /* ==========================================================================
-       CACHED DOM REFS (Avoids query overhead during game loop)
-       ========================================================================== */
-    const DOM = {};
-    function cacheDOMElements() {
-      DOM.board = document.getElementById('board');
-      DOM.hudLevel = document.getElementById('hud-level');
-      DOM.hudMoves = document.getElementById('hud-moves');
-      DOM.hudScore = document.getElementById('hud-score');
-      DOM.hudMatches = document.getElementById('hud-matches');
-      DOM.hudTimer = document.getElementById('hud-timer');
-      DOM.completeStars = document.getElementById('complete-stars');
-      DOM.completeScore = document.getElementById('complete-score');
-      DOM.completeTime = document.getElementById('complete-time');
-      DOM.completeMoves = document.getElementById('complete-moves');
-      DOM.completeCombo = document.getElementById('complete-combo');
-      DOM.playerNameInput = document.getElementById('player-name-input');
-      DOM.goScore = document.getElementById('go-score');
-      DOM.goMatches = document.getElementById('go-matches');
-      DOM.leaderboardBody = document.getElementById('leaderboard-body');
-      DOM.settingSfx = document.getElementById('setting-sfx');
-      DOM.settingMusic = document.getElementById('setting-music');
-      DOM.settingVolume = document.getElementById('setting-volume');
-      DOM.volumeVal = document.getElementById('volume-val');
-      DOM.settingReduceMotion = document.getElementById('setting-reduce-motion');
-      DOM.soundToggleBtn = document.getElementById('sound-toggle-btn');
-      DOM.musicToggleBtn = document.getElementById('music-toggle-btn');
-    }
-
-    /* ==========================================================================
-       OPTIMIZED AUDIO ENGINE (Master AudioContext & Persistent Node Network)
+       OPTIMIZED SINGLETON AUDIO ENGINE
        ========================================================================== */
     let audioCtx = null;
     let masterGain = null;
@@ -1009,89 +968,91 @@
       initAudio();
       if (!audioCtx || !masterGain) return;
 
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(masterGain);
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(masterGain);
 
-      switch (type) {
-        case 'flip':
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(450, now);
-          osc.frequency.exponentialRampToValueAtTime(750, now + 0.05);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
-          osc.start(now);
-          osc.stop(now + 0.05);
-          break;
+        switch (type) {
+          case 'flip':
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(450, now);
+            osc.frequency.exponentialRampToValueAtTime(750, now + 0.05);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+            break;
 
-        case 'match':
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(523.25, now);
-          osc.frequency.setValueAtTime(659.25, now + 0.05);
-          osc.frequency.setValueAtTime(783.99, now + 0.1);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
-          osc.start(now);
-          osc.stop(now + 0.2);
-          break;
+          case 'match':
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.05);
+            osc.frequency.setValueAtTime(783.99, now + 0.1);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now);
+            osc.stop(now + 0.2);
+            break;
 
-        case 'wrong':
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(240, now);
-          osc.frequency.linearRampToValueAtTime(140, now + 0.14);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.14);
-          osc.start(now);
-          osc.stop(now + 0.14);
-          break;
+          case 'wrong':
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(240, now);
+            osc.frequency.linearRampToValueAtTime(140, now + 0.14);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.14);
+            osc.start(now);
+            osc.stop(now + 0.14);
+            break;
 
-        case 'combo':
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(600, now);
-          osc.frequency.exponentialRampToValueAtTime(950, now + 0.12);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
-          osc.start(now);
-          osc.stop(now + 0.12);
-          break;
+          case 'combo':
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(950, now + 0.12);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
+            osc.start(now);
+            osc.stop(now + 0.12);
+            break;
 
-        case 'click':
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(650, now);
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.025);
-          osc.start(now);
-          osc.stop(now + 0.025);
-          break;
+          case 'click':
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(650, now);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.025);
+            osc.start(now);
+            osc.stop(now + 0.025);
+            break;
 
-        case 'complete':
-          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g);
-            g.connect(masterGain);
-            o.type = 'triangle';
-            o.frequency.value = freq;
-            const t = now + i * 0.07;
-            g.gain.setValueAtTime(0.25, t);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-            o.start(t);
-            o.stop(t + 0.25);
-          });
-          break;
+          case 'complete':
+            [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+              const o = audioCtx.createOscillator();
+              const g = audioCtx.createGain();
+              o.connect(g);
+              g.connect(masterGain);
+              o.type = 'triangle';
+              o.frequency.value = freq;
+              const t = now + i * 0.07;
+              g.gain.setValueAtTime(0.25, t);
+              g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+              o.start(t);
+              o.stop(t + 0.25);
+            });
+            break;
 
-        case 'gameover':
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(260, now);
-          osc.frequency.linearRampToValueAtTime(80, now + 0.4);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
-          osc.start(now);
-          osc.stop(now + 0.4);
-          break;
-      }
+          case 'gameover':
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(260, now);
+            osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
+            osc.start(now);
+            osc.stop(now + 0.4);
+            break;
+        }
+      } catch (e) {}
     }
 
     function startMusic() {
@@ -1139,12 +1100,11 @@
     }
 
     /* ==========================================================================
-       OPTIMIZED AMBIENT PARTICLES (Reduced count, throttled frame updates)
+       CANVAS AMBIENT BACKGROUND & CONFETTI
        ========================================================================== */
     const bgCanvas = document.getElementById('bg-canvas');
     const bgCtx = bgCanvas.getContext('2d', { alpha: true });
     let particles = [];
-    let isGameRunning = false;
 
     function resizeCanvas() {
       bgCanvas.width = window.innerWidth;
@@ -1178,7 +1138,6 @@
       }
     }
 
-    // 16 lightweight particles are optimal for ambient depth without GPU strain
     for (let i = 0; i < 16; i++) particles.push(new Particle());
 
     function renderBackground() {
@@ -1193,9 +1152,6 @@
     }
     requestAnimationFrame(renderBackground);
 
-    /* ==========================================================================
-       OPTIMIZED CONFETTI EFFECT
-       ========================================================================== */
     const confCanvas = document.getElementById('confetti-canvas');
     const confCtx = confCanvas.getContext('2d', { alpha: true });
     let confettiList = [];
@@ -1266,7 +1222,7 @@
     }
 
     /* ==========================================================================
-       FAST FISHER-YATES SHUFFLE
+       UTILITIES & SHUFFLE
        ========================================================================== */
     function shuffle(arr) {
       let m = arr.length, t, i;
@@ -1280,7 +1236,7 @@
     }
 
     /* ==========================================================================
-       CORE GAMEPLAY ENGINE
+       GAME ENGINE & CARD CLICK HANDLING
        ========================================================================== */
     function startGame(diffKey) {
       currentDifficulty = diffKey || currentDifficulty;
@@ -1295,12 +1251,11 @@
       isBoardLocked = false;
       timer = config.timeLimit;
       gameStartTime = Date.now();
-      isGameRunning = true;
 
-      DOM.hudLevel.innerText = currentDifficulty.toUpperCase();
-      DOM.hudMoves.innerText = '0';
-      DOM.hudScore.innerText = '0';
-      DOM.hudMatches.innerText = `0/${config.pairs}`;
+      document.getElementById('hud-level').innerText = currentDifficulty.toUpperCase();
+      document.getElementById('hud-moves').innerText = '0';
+      document.getElementById('hud-score').innerText = '0';
+      document.getElementById('hud-matches').innerText = `0/${config.pairs}`;
       updateTimerDisplay();
 
       if (settings.music) startMusic();
@@ -1308,9 +1263,9 @@
       const selectedIcons = shuffle([...CARD_ICONS]).slice(0, config.pairs);
       const cardDeck = shuffle([...selectedIcons, ...selectedIcons]);
 
-      // Fast DocumentFragment population (zero reflow spikes)
-      DOM.board.innerHTML = '';
-      DOM.board.className = `game-board ${config.class}`;
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      board.className = `game-board ${config.class}`;
       const fragment = document.createDocumentFragment();
 
       cardDeck.forEach((icon, idx) => {
@@ -1321,23 +1276,31 @@
         card.tabIndex = 0;
 
         card.innerHTML = `
-          <div class="card-inner">
-            <div class="card-face card-front"></div>
-            <div class="card-face card-back">${icon}</div>
-          </div>
+          <div class="card-face card-front"></div>
+          <div class="card-face card-back">${icon}</div>
         `;
+
+        card.addEventListener('click', () => handleCardClick(card));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCardClick(card);
+          }
+        });
+
         fragment.appendChild(card);
       });
 
-      DOM.board.appendChild(fragment);
+      board.appendChild(fragment);
 
       clearInterval(timerInterval);
-      DOM.hudTimer.classList.remove('hurry');
+      const timerHud = document.getElementById('hud-timer');
+      timerHud.classList.remove('hurry');
 
       timerInterval = setInterval(() => {
         timer--;
         updateTimerDisplay();
-        if (timer <= 15) DOM.hudTimer.classList.add('hurry');
+        if (timer <= 15) timerHud.classList.add('hurry');
         if (timer <= 0) {
           clearInterval(timerInterval);
           onGameOver();
@@ -1351,48 +1314,26 @@
     function updateTimerDisplay() {
       const m = Math.floor(timer / 60);
       const s = timer % 60;
-      DOM.hudTimer.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      document.getElementById('hud-timer').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    /* Event Delegation on the Game Board: Eliminates hundreds of event closures */
-    DOM.board = document.getElementById('board');
-    DOM.board.addEventListener('click', (e) => {
-      const card = e.target.closest('.memory-card');
-      if (card) handleCardSelect(card);
-    });
-
-    DOM.board.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        const card = e.target.closest('.memory-card');
-        if (card) {
-          e.preventDefault();
-          handleCardSelect(card);
-        }
-      }
-    });
-
-    function handleCardSelect(card) {
-      if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched')) {
+    function handleCardClick(card) {
+      if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.includes(card)) {
         return;
       }
 
+      initAudio();
       playSound('flip');
       card.classList.add('flipped');
       flippedCards.push(card);
 
       if (flippedCards.length === 2) {
         moves++;
-        DOM.hudMoves.innerText = moves;
+        document.getElementById('hud-moves').innerText = moves;
         checkMatch();
       }
     }
 
-    /*
-      Optimized Matching Timing Pipeline:
-      - Flip transition: ~210ms
-      - Match evaluates right as cards face up: 120ms delay
-      - Wrong pair displays clearly: 280ms delay, then shakes and flips back smoothly
-    */
     function checkMatch() {
       isBoardLocked = true;
       const [card1, card2] = flippedCards;
@@ -1406,8 +1347,8 @@
 
           const earned = Math.round(150 * combo + (timer * 2));
           score += earned;
-          DOM.hudScore.innerText = score.toLocaleString();
-          DOM.hudMatches.innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+          document.getElementById('hud-score').innerText = score.toLocaleString();
+          document.getElementById('hud-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
 
           showComboFloatingText(card2, `+${earned} ×${combo}!`);
 
@@ -1432,7 +1373,7 @@
 
           combo = 1;
           score = Math.max(0, score - 20);
-          DOM.hudScore.innerText = score.toLocaleString();
+          document.getElementById('hud-score').innerText = score.toLocaleString();
 
           setTimeout(() => {
             card1.classList.remove('flipped', 'shake');
@@ -1456,7 +1397,6 @@
     }
 
     function onLevelComplete() {
-      isGameRunning = false;
       clearInterval(timerInterval);
       playSound('complete');
       fireConfetti();
@@ -1474,21 +1414,20 @@
       if (ratio >= 0.7 && timer > conf.timeLimit * 0.4) stars = '⭐⭐⭐';
       else if (ratio >= 0.4) stars = '⭐⭐';
 
-      DOM.completeStars.innerText = stars;
-      DOM.completeScore.innerText = score.toLocaleString();
-      DOM.completeTime.innerText = timeFormatted;
-      DOM.completeMoves.innerText = moves;
-      DOM.completeCombo.innerText = `×${bestCombo}`;
+      document.getElementById('complete-stars').innerText = stars;
+      document.getElementById('complete-score').innerText = score.toLocaleString();
+      document.getElementById('complete-time').innerText = timeFormatted;
+      document.getElementById('complete-moves').innerText = moves;
+      document.getElementById('complete-combo').innerText = `×${bestCombo}`;
 
       openModal('modal-complete');
     }
 
     function onGameOver() {
-      isGameRunning = false;
       clearInterval(timerInterval);
       playSound('gameover');
-      DOM.goScore.innerText = score.toLocaleString();
-      DOM.goMatches.innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+      document.getElementById('go-score').innerText = score.toLocaleString();
+      document.getElementById('go-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
       openModal('modal-gameover');
     }
 
@@ -1527,10 +1466,11 @@
     }
 
     function renderLeaderboard() {
-      DOM.leaderboardBody.innerHTML = '';
+      const body = document.getElementById('leaderboard-body');
+      body.innerHTML = '';
       const list = getHighScores();
       if (!list.length) {
-        DOM.leaderboardBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">No scores recorded</td></tr>`;
+        body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">No scores recorded</td></tr>`;
         return;
       }
       const frag = document.createDocumentFragment();
@@ -1544,7 +1484,7 @@
         `;
         frag.appendChild(tr);
       });
-      DOM.leaderboardBody.appendChild(frag);
+      body.appendChild(frag);
     }
 
     function loadSettings() {
@@ -1553,15 +1493,15 @@
         if (stored) settings = Object.assign(settings, JSON.parse(stored));
       } catch (e) {}
 
-      DOM.settingSfx.checked = settings.sfx;
-      DOM.settingMusic.checked = settings.music;
-      DOM.settingVolume.value = settings.volume;
-      DOM.volumeVal.innerText = `${Math.round(settings.volume * 100)}%`;
-      DOM.settingReduceMotion.checked = settings.reduceMotion;
+      document.getElementById('setting-sfx').checked = settings.sfx;
+      document.getElementById('setting-music').checked = settings.music;
+      document.getElementById('setting-volume').value = settings.volume;
+      document.getElementById('volume-val').innerText = `${Math.round(settings.volume * 100)}%`;
+      document.getElementById('setting-reduce-motion').checked = settings.reduceMotion;
       
       if (settings.reduceMotion) document.body.classList.add('reduced-motion');
-      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
-      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
+      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
+      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
 
       if (masterGain && audioCtx) {
         masterGain.gain.setValueAtTime(settings.volume, audioCtx.currentTime);
@@ -1576,7 +1516,7 @@
     }
 
     /* ==========================================================================
-       UI EVENT REGISTRATIONS
+       EVENT LISTENERS
        ========================================================================== */
     document.querySelectorAll('.diff-card').forEach(card => {
       card.addEventListener('click', () => {
@@ -1596,7 +1536,6 @@
     document.getElementById('btn-quit-game').addEventListener('click', () => {
       clearInterval(timerInterval);
       stopMusic();
-      isGameRunning = false;
       playSound('click');
       switchScreen('screen-menu');
     });
@@ -1622,7 +1561,7 @@
 
     document.getElementById('btn-save-next').addEventListener('click', () => {
       playSound('click');
-      const name = DOM.playerNameInput.value.trim() || 'Player';
+      const name = document.getElementById('player-name-input').value.trim() || 'Player';
       saveHighScoreEntry(name, currentDifficulty, score);
       closeModal('modal-complete');
       if (currentDifficulty === 'easy') currentDifficulty = 'medium';
@@ -1632,7 +1571,7 @@
 
     document.getElementById('btn-complete-menu').addEventListener('click', () => {
       playSound('click');
-      const name = DOM.playerNameInput.value.trim() || 'Player';
+      const name = document.getElementById('player-name-input').value.trim() || 'Player';
       saveHighScoreEntry(name, currentDifficulty, score);
       closeModal('modal-complete');
       stopMusic();
@@ -1650,44 +1589,44 @@
       switchScreen('screen-menu');
     });
 
-    DOM.soundToggleBtn.addEventListener('click', () => {
+    document.getElementById('sound-toggle-btn').addEventListener('click', () => {
       settings.sfx = !settings.sfx;
       saveSettings();
-      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
-      DOM.settingSfx.checked = settings.sfx;
+      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
+      document.getElementById('setting-sfx').checked = settings.sfx;
       if (settings.sfx) playSound('click');
     });
 
-    DOM.musicToggleBtn.addEventListener('click', () => {
+    document.getElementById('music-toggle-btn').addEventListener('click', () => {
       settings.music = !settings.music;
       saveSettings();
-      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
-      DOM.settingMusic.checked = settings.music;
+      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
+      document.getElementById('setting-music').checked = settings.music;
       if (settings.music) startMusic();
       else stopMusic();
     });
 
-    DOM.settingSfx.addEventListener('change', e => {
+    document.getElementById('setting-sfx').addEventListener('change', e => {
       settings.sfx = e.target.checked;
       saveSettings();
-      DOM.soundToggleBtn.innerText = settings.sfx ? '🔊' : '🔇';
+      document.getElementById('sound-toggle-btn').innerText = settings.sfx ? '🔊' : '🔇';
     });
 
-    DOM.settingMusic.addEventListener('change', e => {
+    document.getElementById('setting-music').addEventListener('change', e => {
       settings.music = e.target.checked;
       saveSettings();
-      DOM.musicToggleBtn.innerText = settings.music ? '🎵' : '🚫';
+      document.getElementById('music-toggle-btn').innerText = settings.music ? '🎵' : '🚫';
       if (settings.music) startMusic();
       else stopMusic();
     });
 
-    DOM.settingVolume.addEventListener('input', e => {
+    document.getElementById('setting-volume').addEventListener('input', e => {
       settings.volume = parseFloat(e.target.value);
-      DOM.volumeVal.innerText = `${Math.round(settings.volume * 100)}%`;
+      document.getElementById('volume-val').innerText = `${Math.round(settings.volume * 100)}%`;
       saveSettings();
     });
 
-    DOM.settingReduceMotion.addEventListener('change', e => {
+    document.getElementById('setting-reduce-motion').addEventListener('change', e => {
       settings.reduceMotion = e.target.checked;
       if (settings.reduceMotion) document.body.classList.add('reduced-motion');
       else document.body.classList.remove('reduced-motion');
@@ -1701,15 +1640,11 @@
       }
     });
 
-    // Warm up AudioContext on initial user gesture without delay
     ['click', 'touchstart', 'keydown'].forEach(evt => {
       window.addEventListener(evt, () => initAudio(), { once: true, passive: true });
     });
 
-    window.addEventListener('DOMContentLoaded', () => {
-      cacheDOMElements();
-      loadSettings();
-    });
+    window.addEventListener('DOMContentLoaded', loadSettings);
   </script>
 </body>
 </html>
