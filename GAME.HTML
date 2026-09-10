@@ -285,11 +285,12 @@
       box-shadow: 0 6px 20px rgba(99, 102, 241, 0.7);
     }
 
+    /* ENHANCED HUD: ADD ROUND INDICATOR (6 COLUMNS) */
     .game-hud {
       width: 100%;
-      max-width: 680px;
+      max-width: 760px;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 0.4rem;
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -309,7 +310,7 @@
       text-align: center;
     }
     .hud-label {
-      font-size: clamp(0.55rem, 1.6vw, 0.68rem);
+      font-size: clamp(0.52rem, 1.4vw, 0.65rem);
       font-weight: 700;
       color: var(--text-muted);
       letter-spacing: 0.8px;
@@ -317,7 +318,7 @@
       margin-bottom: 0.15rem;
     }
     .hud-value {
-      font-size: clamp(0.95rem, 2.6vw, 1.25rem);
+      font-size: clamp(0.85rem, 2.3vw, 1.2rem);
       font-weight: 800;
       color: #fff;
     }
@@ -335,7 +336,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1200px;
+      perspective: 1400px;
+      position: relative;
     }
 
     .game-board {
@@ -344,7 +346,7 @@
       align-content: center;
       margin: 0 auto;
       --max-w: min(94vw, 560px);
-      --max-h: min(60vh, 560px);
+      --max-h: min(58vh, 560px);
       width: min(var(--max-w), var(--max-h));
       height: min(var(--max-w), var(--max-h));
       touch-action: manipulation;
@@ -355,10 +357,24 @@
       grid-template-rows: repeat(4, 1fr);
       gap: clamp(6px, 1.6vw, 12px);
     }
+    .game-board.grid-4x6 {
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: clamp(5px, 1.3vw, 9px);
+      --max-w: min(95vw, 620px);
+      --max-h: min(56vh, 440px);
+    }
     .game-board.grid-6x6 {
       grid-template-columns: repeat(6, 1fr);
       grid-template-rows: repeat(6, 1fr);
       gap: clamp(4px, 1.1vw, 8px);
+    }
+    .game-board.grid-6x8 {
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: clamp(3px, 0.9vw, 6px);
+      --max-w: min(96vw, 680px);
+      --max-h: min(58vh, 520px);
     }
     .game-board.grid-8x8 {
       grid-template-columns: repeat(8, 1fr);
@@ -366,7 +382,7 @@
       gap: clamp(3px, 0.8vw, 6px);
     }
 
-    /* DIRECT GPU-ACCELERATED CARDS (Fast & Clean 210ms Flip) */
+    /* SMOOTH 3D CARD FLIP WITH CUBIC BEZIER SPRING & DEPTH LIFT */
     .memory-card {
       position: relative;
       cursor: pointer;
@@ -374,27 +390,28 @@
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
-      transform: translateZ(0) rotateY(0deg);
-      transition: transform 210ms cubic-bezier(0.2, 0.8, 0.3, 1);
+      transform: perspective(1000px) translateZ(0) rotateY(0deg);
+      transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 380ms ease;
       will-change: transform;
       touch-action: manipulation;
     }
 
     @media (hover: hover) and (pointer: fine) {
       .memory-card:not(.flipped):not(.matched):hover {
-        transform: translateZ(0) rotateY(0deg) scale(1.03);
+        transform: perspective(1000px) translateZ(12px) scale(1.04);
+        box-shadow: 0 10px 24px rgba(99, 102, 241, 0.35);
       }
     }
 
     .memory-card.flipped {
-      transform: translateZ(0) rotateY(180deg);
+      transform: perspective(1000px) translateZ(10px) rotateY(180deg);
     }
 
     .memory-card.matched {
-      transform: translateZ(0) rotateY(180deg) scale(0.96);
+      transform: perspective(1000px) translateZ(0) rotateY(180deg) scale(0.96);
       cursor: default;
       pointer-events: none;
-      animation: matchSuccess 250ms ease-out forwards;
+      animation: matchSuccess 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     .card-face {
@@ -406,8 +423,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       pointer-events: none;
+      overflow: hidden;
     }
 
     .card-front {
@@ -421,38 +439,49 @@
       background: linear-gradient(135deg, #a5b4fc, #ec4899);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      transition: transform 0.2s ease;
+    }
+    .memory-card:hover .card-front::after {
+      transform: scale(1.15) rotate(15deg);
     }
 
     .card-back {
       background: linear-gradient(135deg, #242b4d 0%, #1a1e36 100%);
       border: 1.5px solid rgba(255, 255, 255, 0.25);
       transform: rotateY(180deg);
-      font-size: clamp(1.1rem, 4.2vw, 2.4rem);
+      font-size: clamp(1.1rem, 4.2vw, 2.3rem);
     }
 
+    .game-board.grid-4x6 .card-back {
+      font-size: clamp(1rem, 3.6vw, 1.9rem);
+    }
+    .game-board.grid-6x8 .card-back {
+      font-size: clamp(0.85rem, 2.8vw, 1.45rem);
+    }
     .game-board.grid-8x8 .card-back {
-      font-size: clamp(0.9rem, 3.2vw, 1.6rem);
+      font-size: clamp(0.8rem, 2.6vw, 1.35rem);
     }
 
     .memory-card.matched .card-back {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.45) 100%);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(5, 150, 105, 0.6) 100%);
       border-color: #10b981;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
     }
 
     @keyframes matchSuccess {
-      0% { transform: translateZ(0) rotateY(180deg) scale(1); }
-      50% { transform: translateZ(0) rotateY(180deg) scale(1.08); }
-      100% { transform: translateZ(0) rotateY(180deg) scale(0.96); }
+      0% { transform: perspective(1000px) translateZ(0) rotateY(180deg) scale(1); }
+      50% { transform: perspective(1000px) translateZ(16px) rotateY(180deg) scale(1.1); }
+      100% { transform: perspective(1000px) translateZ(0) rotateY(180deg) scale(0.96); }
     }
 
     .memory-card.shake {
-      animation: shakeMismatch 220ms ease-in-out forwards;
+      animation: shakeMismatch 240ms ease-in-out forwards;
     }
 
     @keyframes shakeMismatch {
-      0%, 100% { transform: translate3d(0, 0, 0) rotateY(180deg); }
-      25% { transform: translate3d(-5px, 0, 0) rotateY(180deg); }
-      75% { transform: translate3d(5px, 0, 0) rotateY(180deg); }
+      0%, 100% { transform: perspective(1000px) translate3d(0, 0, 8px) rotateY(180deg); }
+      25% { transform: perspective(1000px) translate3d(-6px, 0, 8px) rotateY(180deg); }
+      75% { transform: perspective(1000px) translate3d(6px, 0, 8px) rotateY(180deg); }
     }
 
     .ingame-controls {
@@ -461,6 +490,61 @@
       margin-top: clamp(0.7rem, 2vh, 1.2rem);
       width: 100%;
       max-width: min(var(--max-w, 560px), 420px);
+    }
+
+    /* ROUND INTRO OVERLAY & COUNTDOWN */
+    .round-intro-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 9, 19, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      border-radius: var(--radius-md);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .round-intro-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .round-intro-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #00f2fe;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.4rem;
+    }
+    .round-intro-title {
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .round-intro-info {
+      font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .round-intro-countdown {
+      font-size: clamp(2.6rem, 9vw, 4rem);
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 20px rgba(251, 191, 36, 0.7);
+      animation: popIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0.3; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.9; }
     }
 
     /* MODAL WINDOWS */
@@ -656,13 +740,11 @@
       transition: none !important;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 520px) {
       .game-hud {
         grid-template-columns: repeat(3, 1fr);
         row-gap: 0.45rem;
       }
-      .game-hud .hud-item:nth-child(4) { grid-column: span 1; }
-      .game-hud .hud-item:nth-child(5) { grid-column: span 2; }
       .difficulty-cards { gap: 0.35rem; }
       .home-nav-btn span { display: none; }
     }
@@ -695,12 +777,12 @@
           <div class="diff-card easy selected" data-diff="easy" tabindex="0" role="radio" aria-checked="true">
             <span class="badge"></span>
             <div class="diff-name">EASY</div>
-            <div class="diff-meta">4×4 • 8 Pairs<br>100s Limit</div>
+            <div class="diff-meta">4×4 • 8 Pairs<br>85s Limit</div>
           </div>
           <div class="diff-card medium" data-diff="medium" tabindex="0" role="radio" aria-checked="false">
             <span class="badge"></span>
-            <div class="diff-name">MEDIUM</div>
-            <div class="diff-meta">6×6 • 18 Pairs<br>150s Limit</div>
+            <div class="diff-name">LEVEL 2</div>
+            <div class="diff-meta">4 Rounds • Progressive<br>Up to 24 Pairs</div>
           </div>
           <div class="diff-card hard" data-diff="hard" tabindex="0" role="radio" aria-checked="false">
             <span class="badge"></span>
@@ -729,6 +811,10 @@
           <span class="hud-value" id="hud-level">EASY</span>
         </div>
         <div class="hud-item">
+          <span class="hud-label">Round</span>
+          <span class="hud-value" id="hud-round">1/1</span>
+        </div>
+        <div class="hud-item">
           <span class="hud-label">Time</span>
           <span class="hud-value hud-timer" id="hud-timer">01:40</span>
         </div>
@@ -748,32 +834,71 @@
 
       <div class="game-board-container">
         <main class="game-board" id="board" aria-label="Card grid"></main>
+
+        <!-- ROUND INTRO / COUNTDOWN -->
+        <div class="round-intro-overlay" id="round-intro-overlay">
+          <div class="round-intro-badge" id="intro-level-badge">LEVEL 2</div>
+          <div class="round-intro-title" id="intro-round-title">ROUND 1</div>
+          <div class="round-intro-info" id="intro-round-info">8 PAIRS • 80 SEC</div>
+          <div class="round-intro-countdown" id="intro-countdown">3</div>
+        </div>
       </div>
 
       <div class="ingame-controls">
-        <button class="btn" id="btn-restart-game">🔄 Restart</button>
+        <button class="btn" id="btn-restart-game">🔄 Restart Round</button>
         <button class="btn" id="btn-quit-game">🏠 Menu</button>
       </div>
     </section>
   </div>
 
-  <!-- LEVEL COMPLETE MODAL -->
+  <!-- INTERMEDIATE ROUND COMPLETE MODAL -->
+  <div class="modal-overlay" id="modal-round-complete">
+    <div class="modal-window">
+      <h2 class="modal-title" id="round-complete-title">🎉 ROUND 1 COMPLETE!</h2>
+
+      <div class="stats-summary">
+        <div class="stat-box">
+          <div class="title">Round Score</div>
+          <div class="val" id="rc-round-score">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="title">Time Bonus</div>
+          <div class="val" id="rc-time-bonus">+0</div>
+        </div>
+        <div class="stat-box">
+          <div class="title">Round Moves</div>
+          <div class="val" id="rc-moves">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="title">Round Accuracy</div>
+          <div class="val" id="rc-accuracy">100%</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+        <button class="btn btn-primary" id="btn-next-round">NEXT ROUND ▶</button>
+        <button class="btn" id="btn-rc-menu">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL / GAME COMPLETE MODAL (FINAL) -->
   <div class="modal-overlay" id="modal-complete">
     <div class="modal-window">
-      <h2 class="modal-title">🎉 LEVEL COMPLETE!</h2>
+      <h2 class="modal-title" id="final-complete-title">🏆 LEVEL 2 COMPLETE!</h2>
       <div class="star-rating" id="complete-stars">⭐⭐⭐</div>
 
       <div class="stats-summary">
         <div class="stat-box">
-          <div class="title">Final Score</div>
+          <div class="title">Total Score</div>
           <div class="val" id="complete-score">0</div>
         </div>
         <div class="stat-box">
-          <div class="title">Time Taken</div>
+          <div class="title">Total Time</div>
           <div class="val" id="complete-time">00:00</div>
         </div>
         <div class="stat-box">
-          <div class="title">Moves Made</div>
+          <div class="title">Total Moves</div>
           <div class="val" id="complete-moves">0</div>
         </div>
         <div class="stat-box">
@@ -895,9 +1020,10 @@
         <div class="tutorial-card">🚀</div>
       </div>
       <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem;">
-        <li>Flip cards to find pairs.</li>
-        <li>Consecutive matches increase your **Combo Multiplier (×2, ×3)**!</li>
-        <li>Wrong attempts break streak & carry a small penalty.</li>
+        <li>Flip cards to reveal matching pairs.</li>
+        <li>In Level 2, conquer all <strong>4 Progressive Rounds</strong>!</li>
+        <li>Consecutive matches fuel your <strong>Combo Multiplier (×2, ×3...)</strong>.</li>
+        <li>Speed & efficiency earn huge Time and Accuracy bonuses.</li>
         <li>Clear all pairs before the timer runs out!</li>
       </ul>
       <button class="btn btn-primary" id="btn-close-tutorial" style="margin-top: 1.2rem;">GOT IT!</button>
@@ -906,33 +1032,118 @@
 
   <script>
     /* ==========================================================================
-       GAME STATE & CONFIGURATION
+       CARD ICONS & EXTENDED REUSABLE CONFIGURATION
        ========================================================================== */
     const CARD_ICONS = [
       '🚀','🛸','🏎️','🏍️','✈️','🚢','👾','💎',
       '🔥','⚡','⭐','🌈','🍕','🍔','🍩','🍉',
       '🍓','🥑','🦁','🐯','🐼','🐨','🦊','🐸',
       '🐵','🦄','🏆','🎮','🎯','🎲','🎸','🎧',
-      '🤖','🔮','👑','🪐','🍒','🍎','🍦','🌵'
+      '🤖','🔮','👑','🪐','🍒','🍎','🍦','🌵',
+      '🌸','🌺','🎃','🎄','🎈','🎪','🎨','🎭'
     ];
 
-    const CONFIG = {
-      easy:   { rows: 4, cols: 4, pairs: 8,  timeLimit: 100, class: 'grid-4x4' },
-      medium: { rows: 6, cols: 6, pairs: 18, timeLimit: 150, class: 'grid-6x6' },
-      hard:   { rows: 8, cols: 8, pairs: 32, timeLimit: 180, class: 'grid-8x8' }
+    // Dynamic timer formula: baseSeconds + (pairs * secondsPerPair)
+    function calculateTimeLimit(pairs, baseSeconds, perPair) {
+      return baseSeconds + (pairs * perPair);
+    }
+
+    const LEVEL_CONFIG = {
+      easy: {
+        name: 'EASY',
+        rounds: [
+          {
+            round: 1,
+            rows: 4,
+            cols: 4,
+            pairs: 8,
+            timeLimit: calculateTimeLimit(8, 35, 6.25), // 85s
+            class: 'grid-4x4',
+            scoreMultiplier: 1.0
+          }
+        ]
+      },
+      medium: {
+        name: 'LEVEL 2',
+        rounds: [
+          {
+            round: 1,
+            rows: 4,
+            cols: 4,
+            pairs: 8,
+            timeLimit: 80, // Comfortable warm-up
+            class: 'grid-4x4',
+            scoreMultiplier: 1.0
+          },
+          {
+            round: 2,
+            rows: 4,
+            cols: 6,
+            pairs: 12,
+            timeLimit: 100, // Focused progression
+            class: 'grid-4x6',
+            scoreMultiplier: 1.25
+          },
+          {
+            round: 3,
+            rows: 6,
+            cols: 6,
+            pairs: 18,
+            timeLimit: 125, // Demanding challenge
+            class: 'grid-6x6',
+            scoreMultiplier: 1.5
+          },
+          {
+            round: 4,
+            rows: 6,
+            cols: 8,
+            pairs: 24,
+            timeLimit: 165, // Final: intensely thrilling yet completely solvable!
+            class: 'grid-6x8',
+            scoreMultiplier: 2.0
+          }
+        ]
+      },
+      hard: {
+        name: 'HARD',
+        rounds: [
+          {
+            round: 1,
+            rows: 8,
+            cols: 8,
+            pairs: 32,
+            timeLimit: 180,
+            class: 'grid-8x8',
+            scoreMultiplier: 2.2
+          }
+        ]
+      }
     };
 
+    /* ==========================================================================
+       APPLICATION & GAME STATE
+       ========================================================================== */
     let currentDifficulty = 'easy';
-    let flippedCards = [];
-    let matchedPairs = 0;
-    let moves = 0;
-    let score = 0;
-    let combo = 1;
+    let currentRoundIndex = 0;
+
+    // Cumulative stats for the entire level
+    let totalScore = 0;
+    let totalMoves = 0;
+    let totalElapsedSec = 0;
     let bestCombo = 1;
-    let timer = 0;
+
+    // Current round active state
+    let roundMoves = 0;
+    let roundMatchedPairs = 0;
+    let roundTimer = 0;
+    let roundScore = 0;
+    let combo = 1;
+    let roundStartTime = 0;
+
+    let flippedCards = [];
+    let isBoardLocked = true; // locked during countdown and checks
     let timerInterval = null;
-    let isBoardLocked = false;
-    let gameStartTime = 0;
+    let countdownTimer = null;
 
     let settings = {
       sfx: true,
@@ -979,7 +1190,7 @@
           case 'flip':
             osc.type = 'sine';
             osc.frequency.setValueAtTime(450, now);
-            osc.frequency.exponentialRampToValueAtTime(750, now + 0.05);
+            osc.frequency.exponentialRampToValueAtTime(780, now + 0.05);
             gain.gain.setValueAtTime(0.2, now);
             gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
             osc.start(now);
@@ -1009,8 +1220,8 @@
 
           case 'combo':
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, now);
-            osc.frequency.exponentialRampToValueAtTime(950, now + 0.12);
+            osc.frequency.setValueAtTime(620, now);
+            osc.frequency.exponentialRampToValueAtTime(1020, now + 0.12);
             gain.gain.setValueAtTime(0.25, now);
             gain.gain.linearRampToValueAtTime(0.001, now + 0.12);
             osc.start(now);
@@ -1024,6 +1235,24 @@
             gain.gain.linearRampToValueAtTime(0.001, now + 0.025);
             osc.start(now);
             osc.stop(now + 0.025);
+            break;
+
+          case 'tick':
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+            osc.start(now);
+            osc.stop(now + 0.04);
+            break;
+
+          case 'go':
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(1046.5, now);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.15);
             break;
 
           case 'complete':
@@ -1172,7 +1401,7 @@
       const cx = confCanvas.width / 2;
       const cy = confCanvas.height / 2;
 
-      for (let i = 0; i < 55; i++) {
+      for (let i = 0; i < 60; i++) {
         confettiList.push({
           x: cx,
           y: cy,
@@ -1236,36 +1465,58 @@
     }
 
     /* ==========================================================================
-       GAME ENGINE & CARD CLICK HANDLING
+       REUSABLE GAME LEVEL & ROUND ARCHITECTURE
        ========================================================================== */
-    function startGame(diffKey) {
-      currentDifficulty = diffKey || currentDifficulty;
-      const config = CONFIG[currentDifficulty];
-
-      flippedCards = [];
-      matchedPairs = 0;
-      moves = 0;
-      score = 0;
-      combo = 1;
+    function startLevel(levelKey) {
+      currentDifficulty = levelKey || currentDifficulty;
+      currentRoundIndex = 0;
+      totalScore = 0;
+      totalMoves = 0;
+      totalElapsedSec = 0;
       bestCombo = 1;
-      isBoardLocked = false;
-      timer = config.timeLimit;
-      gameStartTime = Date.now();
 
-      document.getElementById('hud-level').innerText = currentDifficulty.toUpperCase();
-      document.getElementById('hud-moves').innerText = '0';
-      document.getElementById('hud-score').innerText = '0';
-      document.getElementById('hud-matches').innerText = `0/${config.pairs}`;
-      updateTimerDisplay();
-
+      switchScreen('screen-game');
       if (settings.music) startMusic();
+      startRound(currentRoundIndex);
+    }
 
-      const selectedIcons = shuffle([...CARD_ICONS]).slice(0, config.pairs);
+    function startRound(roundIdx) {
+      resetRoundTimers();
+      currentRoundIndex = roundIdx;
+
+      const levelData = LEVEL_CONFIG[currentDifficulty];
+      const roundData = levelData.rounds[currentRoundIndex];
+
+      resetRoundState(roundData);
+      buildCardDeck(roundData);
+      updateHUD();
+      showRoundIntro(roundData);
+    }
+
+    function resetRoundTimers() {
+      clearInterval(timerInterval);
+      clearInterval(countdownTimer);
+      timerInterval = null;
+      countdownTimer = null;
+    }
+
+    function resetRoundState(roundData) {
+      flippedCards = [];
+      roundMoves = 0;
+      roundMatchedPairs = 0;
+      roundScore = 0;
+      combo = 1;
+      roundTimer = roundData.timeLimit;
+      isBoardLocked = true; // Locked until intro countdown completes
+    }
+
+    function buildCardDeck(roundData) {
+      const selectedIcons = shuffle([...CARD_ICONS]).slice(0, roundData.pairs);
       const cardDeck = shuffle([...selectedIcons, ...selectedIcons]);
 
       const board = document.getElementById('board');
       board.innerHTML = '';
-      board.className = `game-board ${config.class}`;
+      board.className = `game-board ${roundData.class}`;
       const fragment = document.createDocumentFragment();
 
       cardDeck.forEach((icon, idx) => {
@@ -1292,33 +1543,90 @@
       });
 
       board.appendChild(fragment);
+    }
 
-      clearInterval(timerInterval);
+    function showRoundIntro(roundData) {
+      const levelData = LEVEL_CONFIG[currentDifficulty];
+      const totalRounds = levelData.rounds.length;
+
+      const overlay = document.getElementById('round-intro-overlay');
+      const badge = document.getElementById('intro-level-badge');
+      const title = document.getElementById('intro-round-title');
+      const info = document.getElementById('intro-round-info');
+      const countdownEl = document.getElementById('intro-countdown');
+
+      badge.innerText = levelData.name;
+      title.innerText = totalRounds > 1 ? `ROUND ${roundData.round} / ${totalRounds}` : `GET READY!`;
+      info.innerText = `${roundData.pairs} PAIRS • TIME LIMIT: ${roundData.timeLimit}S`;
+      
+      let count = 3;
+      countdownEl.innerText = count;
+      overlay.classList.add('active');
+      playSound('tick');
+
+      countdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.innerText = count;
+          playSound('tick');
+        } else if (count === 0) {
+          countdownEl.innerText = 'GO!';
+          playSound('go');
+        } else {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          overlay.classList.remove('active');
+          isBoardLocked = false;
+          roundStartTime = Date.now();
+          startRoundTimer();
+        }
+      }, 700);
+    }
+
+    function startRoundTimer() {
       const timerHud = document.getElementById('hud-timer');
       timerHud.classList.remove('hurry');
 
       timerInterval = setInterval(() => {
-        timer--;
+        roundTimer--;
         updateTimerDisplay();
-        if (timer <= 15) timerHud.classList.add('hurry');
-        if (timer <= 0) {
-          clearInterval(timerInterval);
+
+        if (roundTimer <= 15) timerHud.classList.add('hurry');
+        if (roundTimer <= 0) {
+          resetRoundTimers();
           onGameOver();
         }
       }, 1000);
+    }
 
-      switchScreen('screen-game');
-      playSound('click');
+    function updateHUD() {
+      const levelData = LEVEL_CONFIG[currentDifficulty];
+      const currentRoundData = levelData.rounds[currentRoundIndex];
+
+      document.getElementById('hud-level').innerText = levelData.name;
+      document.getElementById('hud-round').innerText = `${currentRoundData.round}/${levelData.rounds.length}`;
+      document.getElementById('hud-moves').innerText = totalMoves + roundMoves;
+      document.getElementById('hud-matches').innerText = `${roundMatchedPairs}/${currentRoundData.pairs}`;
+      document.getElementById('hud-score').innerText = (totalScore + roundScore).toLocaleString();
+      updateTimerDisplay();
     }
 
     function updateTimerDisplay() {
-      const m = Math.floor(timer / 60);
-      const s = timer % 60;
+      const m = Math.floor(roundTimer / 60);
+      const s = roundTimer % 60;
       document.getElementById('hud-timer').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
+    /* ==========================================================================
+       CARD INTERACTION & MATCH ENGINE
+       ========================================================================== */
     function handleCardClick(card) {
-      if (isBoardLocked || card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.includes(card)) {
+      if (
+        isBoardLocked ||
+        card.classList.contains('flipped') ||
+        card.classList.contains('matched') ||
+        flippedCards.includes(card)
+      ) {
         return;
       }
 
@@ -1328,8 +1636,8 @@
       flippedCards.push(card);
 
       if (flippedCards.length === 2) {
-        moves++;
-        document.getElementById('hud-moves').innerText = moves;
+        roundMoves++;
+        updateHUD();
         checkMatch();
       }
     }
@@ -1338,17 +1646,19 @@
       isBoardLocked = true;
       const [card1, card2] = flippedCards;
       const isMatch = card1.dataset.icon === card2.dataset.icon;
+      const roundData = LEVEL_CONFIG[currentDifficulty].rounds[currentRoundIndex];
 
       if (isMatch) {
         setTimeout(() => {
           card1.classList.add('matched');
           card2.classList.add('matched');
-          matchedPairs++;
+          roundMatchedPairs++;
 
-          const earned = Math.round(150 * combo + (timer * 2));
-          score += earned;
-          document.getElementById('hud-score').innerText = score.toLocaleString();
-          document.getElementById('hud-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+          // Rewarding formula: base 160 * roundMultiplier * combo + timer bonus
+          const earned = Math.round(
+            (160 * roundData.scoreMultiplier * combo) + (roundTimer * 1.5)
+          );
+          roundScore += earned;
 
           showComboFloatingText(card2, `+${earned} ×${combo}!`);
 
@@ -1360,9 +1670,10 @@
 
           flippedCards = [];
           isBoardLocked = false;
+          updateHUD();
 
-          if (matchedPairs === CONFIG[currentDifficulty].pairs) {
-            onLevelComplete();
+          if (roundMatchedPairs === roundData.pairs) {
+            handleRoundComplete();
           }
         }, 120);
       } else {
@@ -1372,8 +1683,9 @@
           playSound('wrong');
 
           combo = 1;
-          score = Math.max(0, score - 20);
-          document.getElementById('hud-score').innerText = score.toLocaleString();
+          // Fair penalty: -15 score, no frustrating game-ending time penalty
+          roundScore = Math.max(0, roundScore - 15);
+          updateHUD();
 
           setTimeout(() => {
             card1.classList.remove('flipped', 'shake');
@@ -1396,41 +1708,83 @@
       setTimeout(() => pop.remove(), 650);
     }
 
-    function onLevelComplete() {
-      clearInterval(timerInterval);
+    /* ==========================================================================
+       ROUND & LEVEL COMPLETION WORKFLOW
+       ========================================================================== */
+    function handleRoundComplete() {
+      resetRoundTimers();
       playSound('complete');
       fireConfetti();
 
-      const timeTakenSec = Math.round((Date.now() - gameStartTime) / 1000);
-      const m = Math.floor(timeTakenSec / 60);
-      const s = timeTakenSec % 60;
+      const roundDuration = Math.round((Date.now() - roundStartTime) / 1000);
+      totalElapsedSec += roundDuration;
+      totalMoves += roundMoves;
+
+      // Time bonus: 20 pts per remaining second * round multiplier
+      const currentRoundData = LEVEL_CONFIG[currentDifficulty].rounds[currentRoundIndex];
+      const timeBonus = Math.round(roundTimer * 20 * currentRoundData.scoreMultiplier);
+      roundScore += timeBonus;
+      totalScore += roundScore;
+
+      updateHUD();
+
+      const levelData = LEVEL_CONFIG[currentDifficulty];
+      const isFinalRound = (currentRoundIndex + 1) >= levelData.rounds.length;
+
+      if (!isFinalRound) {
+        showRoundComplete(currentRoundData, timeBonus);
+      } else {
+        completeLevel();
+      }
+    }
+
+    function showRoundComplete(roundData, timeBonus) {
+      document.getElementById('round-complete-title').innerText = `🎉 ROUND ${roundData.round} COMPLETE!`;
+      document.getElementById('rc-round-score').innerText = roundScore.toLocaleString();
+      document.getElementById('rc-time-bonus').innerText = `+${timeBonus.toLocaleString()}`;
+      document.getElementById('rc-moves').innerText = roundMoves;
+
+      const accuracy = Math.round((roundData.pairs / Math.max(roundMoves, 1)) * 100);
+      document.getElementById('rc-accuracy').innerText = `${Math.min(accuracy, 100)}%`;
+
+      openModal('modal-round-complete');
+    }
+
+    function completeLevel() {
+      const levelData = LEVEL_CONFIG[currentDifficulty];
+      const totalPairsAcrossLevel = levelData.rounds.reduce((acc, r) => acc + r.pairs, 0);
+
+      const m = Math.floor(totalElapsedSec / 60);
+      const s = totalElapsedSec % 60;
       const timeFormatted = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
 
-      score += timer * 25;
-
-      const conf = CONFIG[currentDifficulty];
-      const ratio = conf.pairs / Math.max(moves, 1);
+      const efficiency = totalPairsAcrossLevel / Math.max(totalMoves, 1);
       let stars = '⭐';
-      if (ratio >= 0.7 && timer > conf.timeLimit * 0.4) stars = '⭐⭐⭐';
-      else if (ratio >= 0.4) stars = '⭐⭐';
+      if (efficiency >= 0.6) stars = '⭐⭐⭐';
+      else if (efficiency >= 0.35) stars = '⭐⭐';
 
+      document.getElementById('final-complete-title').innerText = `🏆 ${levelData.name} COMPLETE!`;
       document.getElementById('complete-stars').innerText = stars;
-      document.getElementById('complete-score').innerText = score.toLocaleString();
+      document.getElementById('complete-score').innerText = totalScore.toLocaleString();
       document.getElementById('complete-time').innerText = timeFormatted;
-      document.getElementById('complete-moves').innerText = moves;
+      document.getElementById('complete-moves').innerText = totalMoves;
       document.getElementById('complete-combo').innerText = `×${bestCombo}`;
 
       openModal('modal-complete');
     }
 
     function onGameOver() {
-      clearInterval(timerInterval);
+      resetRoundTimers();
       playSound('gameover');
-      document.getElementById('go-score').innerText = score.toLocaleString();
-      document.getElementById('go-matches').innerText = `${matchedPairs}/${CONFIG[currentDifficulty].pairs}`;
+      const finalScore = totalScore + roundScore;
+      document.getElementById('go-score').innerText = finalScore.toLocaleString();
+      document.getElementById('go-matches').innerText = `${roundMatchedPairs}/${LEVEL_CONFIG[currentDifficulty].rounds[currentRoundIndex].pairs}`;
       openModal('modal-gameover');
     }
 
+    /* ==========================================================================
+       SCREEN & MODAL CONTROLLERS
+       ========================================================================== */
     function switchScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(screenId);
@@ -1447,13 +1801,16 @@
       if (el) el.classList.remove('active');
     }
 
+    /* ==========================================================================
+       LOCALSTORAGE & HIGHSCORES
+       ========================================================================== */
     function getHighScores() {
       try {
         const data = localStorage.getItem('mm_leaderboard');
         return data ? JSON.parse(data) : [
-          { name: 'Aakash', diff: 'hard', score: 12400 },
-          { name: 'Rohit', diff: 'medium', score: 8500 },
-          { name: 'Shadow', diff: 'easy', score: 4200 }
+          { name: 'Aakash', diff: 'hard', score: 14500 },
+          { name: 'Rohit', diff: 'medium', score: 11200 },
+          { name: 'Shadow', diff: 'easy', score: 4500 }
         ];
       } catch (e) { return []; }
     }
@@ -1516,7 +1873,7 @@
     }
 
     /* ==========================================================================
-       EVENT LISTENERS
+       EVENT LISTENERS & BINDINGS
        ========================================================================== */
     document.querySelectorAll('.diff-card').forEach(card => {
       card.addEventListener('click', () => {
@@ -1531,12 +1888,33 @@
       });
     });
 
-    document.getElementById('btn-start-game').addEventListener('click', () => startGame(currentDifficulty));
-    document.getElementById('btn-restart-game').addEventListener('click', () => startGame(currentDifficulty));
+    document.getElementById('btn-start-game').addEventListener('click', () => startLevel(currentDifficulty));
+
+    // Restart button restarts the CURRENT round
+    document.getElementById('btn-restart-game').addEventListener('click', () => {
+      playSound('click');
+      startRound(currentRoundIndex);
+    });
+
+    // Ingame quit button returns to main menu
     document.getElementById('btn-quit-game').addEventListener('click', () => {
-      clearInterval(timerInterval);
+      resetRoundTimers();
       stopMusic();
       playSound('click');
+      switchScreen('screen-menu');
+    });
+
+    // Next round progression
+    document.getElementById('btn-next-round').addEventListener('click', () => {
+      playSound('click');
+      closeModal('modal-round-complete');
+      startRound(currentRoundIndex + 1);
+    });
+
+    document.getElementById('btn-rc-menu').addEventListener('click', () => {
+      playSound('click');
+      closeModal('modal-round-complete');
+      stopMusic();
       switchScreen('screen-menu');
     });
 
@@ -1559,20 +1937,21 @@
     });
     document.getElementById('btn-close-settings').addEventListener('click', () => closeModal('modal-settings'));
 
+    // Save and next difficulty progression
     document.getElementById('btn-save-next').addEventListener('click', () => {
       playSound('click');
       const name = document.getElementById('player-name-input').value.trim() || 'Player';
-      saveHighScoreEntry(name, currentDifficulty, score);
+      saveHighScoreEntry(name, currentDifficulty, totalScore);
       closeModal('modal-complete');
       if (currentDifficulty === 'easy') currentDifficulty = 'medium';
       else if (currentDifficulty === 'medium') currentDifficulty = 'hard';
-      startGame(currentDifficulty);
+      startLevel(currentDifficulty);
     });
 
     document.getElementById('btn-complete-menu').addEventListener('click', () => {
       playSound('click');
       const name = document.getElementById('player-name-input').value.trim() || 'Player';
-      saveHighScoreEntry(name, currentDifficulty, score);
+      saveHighScoreEntry(name, currentDifficulty, totalScore);
       closeModal('modal-complete');
       stopMusic();
       switchScreen('screen-menu');
@@ -1580,7 +1959,7 @@
 
     document.getElementById('btn-try-again').addEventListener('click', () => {
       closeModal('modal-gameover');
-      startGame(currentDifficulty);
+      startRound(currentRoundIndex);
     });
 
     document.getElementById('btn-go-menu').addEventListener('click', () => {
