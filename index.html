@@ -138,10 +138,58 @@
     }
 
     body.idle-mode .app-wrapper,
-    body.idle-mode .top-right-controls {
+    body.idle-mode .top-right-controls,
+    body.idle-mode .top-left-logo-link {
       opacity: 0.2;
       transform: scale(0.98);
       pointer-events: none;
+    }
+
+    /* Fixed Home Logo */
+    .top-left-logo-link {
+      position: fixed;
+      top: 18px;
+      left: 24px;
+      z-index: 100;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      border: 1.5px solid var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 0 14px rgba(0, 242, 254, 0.3);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .top-left-logo-link img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5));
+      transition: transform 0.3s ease;
+    }
+
+    .top-left-logo-link:hover {
+      transform: translateY(-2px) scale(1.08);
+      border-color: #ffffff;
+      box-shadow: 0 0 24px var(--neon-cyan), 0 0 35px rgba(0, 242, 254, 0.5);
+    }
+
+    .top-left-logo-link:hover img {
+      transform: scale(1.08) rotate(-5deg);
+    }
+
+    .top-left-logo-link:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 10px var(--neon-cyan);
     }
 
     .top-right-controls {
@@ -1023,6 +1071,8 @@
 
     @media (max-width: 768px) {
       body { padding: 70px 14px 20px 14px; }
+      .top-left-logo-link { top: 12px; left: 12px; width: 38px; height: 38px; }
+      .top-left-logo-link img { width: 22px; height: 22px; }
       .animated-title { font-size: 1.8rem; }
       .controls { flex-direction: column; width: 100%; }
       .btn { width: 100%; min-width: unset; }
@@ -1037,6 +1087,11 @@
   </style>
 </head>
 <body>
+
+  <!-- Fixed Top-Left Home Logo -->
+  <a href="index.html" class="top-left-logo-link" onclick="handleLogoNavigation(event)" title="Return to Home">
+    <img src="favicon.png" alt="App Logo" />
+  </a>
 
   <!-- Top Fixed Utility Bar -->
   <div class="top-right-controls">
@@ -1262,6 +1317,15 @@
   </div>
 
   <script>
+    function handleLogoNavigation(e) {
+      e.preventDefault();
+      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+        window.location.reload();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     let currentMode = 'pdf2jpg';
@@ -1502,7 +1566,6 @@
       });
     }
 
-    /* Helper: Convert Canvas directly to high-fidelity Blob */
     function canvasToBlobAsync(canvas, mimeType, quality) {
       return new Promise((resolve, reject) => {
         canvas.toBlob(blob => {
@@ -1512,14 +1575,10 @@
       });
     }
 
-    /* Helper: Calculate safe high-resolution scale targeting requested DPI */
     function getSafeRenderScale(baseViewport, targetDpi) {
-      // PDF standard coordinate points are 72 per inch
       let calculatedScale = targetDpi / 72.0;
-
-      // Smart Resolution: Clamp against browser maximum canvas limits (approx 4096px edge / 16MP area)
       const MAX_SIDE = 4096;
-      const MAX_PIXELS = 16777216; // 16 MegaPixels
+      const MAX_PIXELS = 16777216;
 
       const potentialWidth = baseViewport.width * calculatedScale;
       const potentialHeight = baseViewport.height * calculatedScale;
@@ -1605,11 +1664,9 @@
           const page = await pdfDoc.getPage(pageNum);
           const unscaledViewport = page.getViewport({ scale: 1.0 });
 
-          // Calculate precise DPI scale with smart clamping
           const finalScale = getSafeRenderScale(unscaledViewport, selectedDpi);
           const viewport = page.getViewport({ scale: finalScale });
 
-          // High-Resolution Canvas Allocation
           const canvas = document.createElement('canvas');
           const finalWidth = Math.floor(viewport.width);
           const finalHeight = Math.floor(viewport.height);
@@ -1622,22 +1679,18 @@
             willReadFrequently: false
           });
 
-          // Fill clean opaque background for consistent document colors
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, finalWidth, finalHeight);
 
-          // Configure crisp image smoothing for vector clarity
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = 'high';
 
-          // Render at genuine print/archival resolution
           await page.render({
             canvasContext: ctx,
             viewport: viewport,
             intent: 'print'
           }).promise;
 
-          // Convert canvas directly to high-fidelity Blob (Zero loss from double-scaling)
           const imgBlob = await canvasToBlobAsync(canvas, mimeType, exportQuality);
           const blobUrl = URL.createObjectURL(imgBlob);
           activeObjectUrls.push(blobUrl);
@@ -1645,7 +1698,6 @@
           const imgName = `${cleanName}_page_${pageNum}.${exportExt}`;
           fileImages.push({ name: imgName, blob: imgBlob });
 
-          // Render UI Card with actual native pixel resolution and settings
           renderCard(grid, blobUrl, pageNum, imgName, {
             width: finalWidth,
             height: finalHeight,
@@ -1653,7 +1705,6 @@
             format: formatLabel
           });
 
-          // Release memory immediately
           canvas.width = 0;
           canvas.height = 0;
         }
