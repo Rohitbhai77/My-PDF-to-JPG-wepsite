@@ -124,6 +124,101 @@
       user-select: none;
     }
 
+    }
+
+    /* ================================
+   TOP LEFT HOME LOGO
+   ================================ */
+
+.top-left-logo-link {
+    position: fixed;
+    top: 110px;
+    left: 100px;
+    z-index: 100;
+
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    background: var(--glass-bg);
+    border: 1.5px solid var(--neon-cyan);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-shadow:
+        0 0 14px rgba(0, 242, 254, 0.3),
+        0 0 30px rgba(0, 242, 254, 0.12);
+
+    cursor: pointer;
+    text-decoration: none;
+
+    transition:
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.top-left-logo-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+
+    transform: scale(1.45);
+
+    transition:
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-left-logo-link:hover {
+    transform: translateY(-3px) scale(1.06);
+
+    border-color: #ffffff;
+
+    box-shadow:
+        0 0 20px var(--neon-cyan),
+        0 0 40px rgba(0, 242, 254, 0.55),
+        0 0 70px rgba(0, 242, 254, 0.2);
+}
+
+.top-left-logo-link:hover img {
+    transform: scale(1.58) rotate(-4deg);
+}
+
+.top-left-logo-link:active {
+    transform: scale(0.94);
+
+    box-shadow:
+        0 0 12px var(--neon-cyan),
+        0 0 25px rgba(0, 242, 254, 0.4);
+}
+
+@media (max-width: 768px) {
+
+    .top-left-logo-link {
+        top: 15px;
+        left: 15px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .top-left-logo-link img {
+        transform: scale(1.45);
+    }
+
+    .top-left-logo-link:hover img {
+        transform: scale(1.55) rotate(-3deg);
+    }
+}
+
     .logo-badge {
       width: 40px;
       height: 40px;
