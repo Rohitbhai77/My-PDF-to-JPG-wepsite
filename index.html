@@ -145,128 +145,70 @@
       pointer-events: none;
     }
 
-    /* Fixed Home Logo */
     /* ================================
-   TOP LEFT HOME LOGO
-   ================================ */
-
-.top-left-logo-link {
-    position: fixed;
-    top: 110px;
-    left: 100px;
-    z-index: 100;
-
-    width: 150px;
-    height: 150px;
-
-    border-radius: 50%;
-    overflow: hidden;
-
-    background: var(--glass-bg);
-    border: 1.5px solid var(--neon-cyan);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-
-    box-shadow:
-        0 0 14px rgba(0, 242, 254, 0.3),
-        0 0 30px rgba(0, 242, 254, 0.12);
-
-    cursor: pointer;
-    text-decoration: none;
-
-    transition:
-        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-        border-color 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-
-/* ================================
-   HOME LOGO IMAGE
-   ================================ */
-
-.top-left-logo-link img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-    border-radius: 50%;
-
-    display: block;
-
-    /* Cat ko bada rakhta hai */
-    transform: scale(1.45);
-
-    transition:
-        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-
-/* ================================
-   HOVER EFFECT
-   ================================ */
-
-.top-left-logo-link:hover {
-    transform: translateY(-3px) scale(1.06);
-
-    border-color: #ffffff;
-
-    box-shadow:
-        0 0 20px var(--neon-cyan),
-        0 0 40px rgba(0, 242, 254, 0.55),
-        0 0 70px rgba(0, 242, 254, 0.2);
-}
-
-
-/* Image hover
-   IMPORTANT: 1.45 → 1.58
-   so image doesn't become smaller */
-
-.top-left-logo-link:hover img {
-    transform: scale(1.58) rotate(-4deg);
-}
-
-
-/* ================================
-   CLICK / PRESS EFFECT
-   ================================ */
-
-.top-left-logo-link:active {
-    transform: scale(0.94);
-
-    box-shadow:
-        0 0 12px var(--neon-cyan),
-        0 0 25px rgba(0, 242, 254, 0.4);
-}
-
-
-/* ================================
-   MOBILE
-   ================================ */
-
-@media (max-width: 768px) {
-
+       TOP LEFT HOME LOGO
+       ================================ */
     .top-left-logo-link {
-        top: 15px;
-        left: 15px;
-
-        width: 70px;
-        height: 70px;
+      position: fixed;
+      top: 25px;
+      left: 35px;
+      z-index: 100;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--glass-bg);
+      border: 2px solid var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.35), 0 0 30px rgba(0, 242, 254, 0.15);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .top-left-logo-link img {
-        transform: scale(1.45);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      transform: scale(1);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .top-left-logo-link:hover {
+      transform: translateY(-2px) scale(1.05);
+      border-color: #ffffff;
+      box-shadow: 0 0 20px var(--neon-cyan), 0 0 35px rgba(0, 242, 254, 0.55);
     }
 
     .top-left-logo-link:hover img {
-        transform: scale(1.55) rotate(-3deg);
+      transform: scale(1.05);
     }
-}
+
+    .top-left-logo-link:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 12px var(--neon-cyan);
+    }
+
+    @media (max-width: 768px) {
+      .top-left-logo-link {
+        top: 14px;
+        left: 14px;
+        width: 48px;
+        height: 48px;
+      }
+      .top-left-logo-link img {
+        transform: scale(1);
+      }
+      .top-left-logo-link:hover img {
+        transform: scale(1.04);
+      }
+    }
 
     .top-right-controls {
       position: fixed;
@@ -1147,8 +1089,6 @@
 
     @media (max-width: 768px) {
       body { padding: 70px 14px 20px 14px; }
-      .top-left-logo-link { top: 12px; left: 12px; width: 38px; height: 38px; }
-      .top-left-logo-link img { width: 22px; height: 22px; }
       .animated-title { font-size: 1.8rem; }
       .controls { flex-direction: column; width: 100%; }
       .btn { width: 100%; min-width: unset; }
@@ -1164,7 +1104,7 @@
 </head>
 <body>
 
-  <!-- Fixed Top-Left Home Logo -->
+  <!-- Fixed Top-Left Home Logo (Balanced size, positioned higher, zero image clipping) -->
   <a href="index.html" class="top-left-logo-link" onclick="handleLogoNavigation(event)" title="Return to Home">
     <img src="favicon.png" alt="App Logo" />
   </a>
@@ -1293,7 +1233,6 @@
           <span>TypePro Ultra</span>
         </div>
 
-        <!-- Home Button & User Stats -->
         <div class="header-right-group">
           <button class="modal-home-btn" onclick="closeTypingModal()" title="Close to Home">
             🏠 <span>Home</span>
