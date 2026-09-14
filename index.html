@@ -148,11 +148,11 @@
     /* Fixed Home Logo */
     .top-left-logo-link {
       position: fixed;
-      top: 150px;
+      top: 110px;
       left: 100px;
       z-index: 100;
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       background: var(--glass-bg);
       border: 1.5px solid var(--neon-cyan);
@@ -168,15 +168,13 @@
     }
 
     .top-left-logo-link img {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5));
-      transition: transform 0.3s ease;
-    }
-
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    transform: scale(1.45);
+}
     .top-left-logo-link:hover {
       transform: translateY(-2px) scale(1.08);
       border-color: #ffffff;
