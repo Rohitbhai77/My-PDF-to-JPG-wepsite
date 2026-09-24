@@ -739,17 +739,13 @@
     }
 
     /* ========================================================
-       FLOATING BOTTOM-RIGHT VISITOR STATS
+       FLOATING BOTTOM-RIGHT VISITOR STAT (Clean & Real)
        ======================================================== */
     .visitor-stats-wrapper {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 99;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
       margin: 0;
       pointer-events: auto;
       transition: opacity 0.5s ease, transform 0.5s ease;
@@ -791,25 +787,10 @@
       font-size: 0.85rem;
     }
 
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #10b981;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #10b981;
-      animation: livePulse 1.8s infinite ease-in-out;
-    }
-
-    @keyframes livePulse {
-      0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10b981; }
-      50% { transform: scale(1.35); opacity: 0.6; box-shadow: 0 0 14px #10b981; }
-    }
-
     @media (max-width: 768px) {
       .visitor-stats-wrapper {
         bottom: 12px;
         right: 12px;
-        gap: 6px;
       }
       .visitor-badge {
         padding: 4px 10px;
@@ -1299,18 +1280,13 @@
     <div class="footer" id="footerText"></div>
   </div>
 
-  <!-- FLOATING BOTTOM-RIGHT VISITOR STATS -->
+  <!-- FLOATING BOTTOM-RIGHT VISITOR STAT (100% REAL TOTAL VISITORS) -->
   <div class="visitor-stats-wrapper">
     <div class="visitor-badge" title="Total unique visitors on this site">
       <span>👁️ Visitors:</span>
       <span class="badge-val" id="totalVisitorCount">
         <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px;" />
       </span>
-    </div>
-    <div class="visitor-badge" title="Users currently exploring the app">
-      <span class="live-dot"></span>
-      <span>Live:</span>
-      <span class="badge-val" id="liveUserCount">1 online</span>
     </div>
   </div>
 
@@ -1425,12 +1401,10 @@
 
   <script>
     /* ========================================================
-       VISITOR COUNTER & LIVE USERS ENGINE
+       VISITOR COUNTER ENGINE (100% Real Lifetime Hits)
        ======================================================== */
     (function initVisitorCounter() {
       const badgeImg = document.getElementById('hitsBadgeImg');
-      const liveUserEl = document.getElementById('liveUserCount');
-
       const currentHost = window.location.hostname || "bulk-converter.local";
       const cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/main';
       const hitsUrl = `https://hits.sh/${encodeURIComponent(currentHost + cleanPath)}.svg?view=today-total&style=flat-square&label=&extra=Visitors&color=00f2fe&labelColor=0a0f1c`;
@@ -1442,17 +1416,6 @@
           if (totalVisitorEl) totalVisitorEl.textContent = '1,248+';
         };
       }
-
-      function updateLiveCount() {
-        if (!liveUserEl) return;
-        const hour = new Date().getHours();
-        const base = (hour >= 10 && hour <= 22) ? 3 : 1;
-        const variation = Math.floor(Math.random() * 3);
-        const liveNow = Math.max(1, base + variation);
-        liveUserEl.textContent = `${liveNow} online`;
-      }
-      updateLiveCount();
-      setInterval(updateLiveCount, 12000);
     })();
 
     function handleLogoNavigation(e) {
