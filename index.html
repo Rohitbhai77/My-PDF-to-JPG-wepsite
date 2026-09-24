@@ -11,6 +11,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <!-- Confetti Celebration Effect for 1K and 10K Targets -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="manifest" href="manifest.json">
 
   <!-- Fonts for Typing Engine & UI -->
@@ -807,6 +809,80 @@
       50% { transform: scale(1.35); opacity: 0.6; box-shadow: 0 0 14px #10b981; }
     }
 
+    /* ========================================================
+       CELEBRATION MILESTONE MODAL (1K / 10K Target)
+       ======================================================== */
+    .milestone-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 7, 18, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .milestone-modal-overlay.active {
+      display: flex;
+      animation: milestonePop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes milestonePop {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .milestone-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 24px;
+      padding: 30px;
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.45);
+      position: relative;
+    }
+
+    .milestone-card h2 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #00f2fe, #ff2a75);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      font-weight: 900;
+    }
+
+    .milestone-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .milestone-btn {
+      background: var(--btn-gradient);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 42, 117, 0.5);
+      transition: all 0.2s;
+    }
+
+    .milestone-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 42, 117, 0.8);
+    }
+
     @media (max-width: 768px) {
       .visitor-stats-wrapper {
         bottom: 12px;
@@ -1301,18 +1377,25 @@
     <div class="footer" id="footerText"></div>
   </div>
 
-  <!-- FLOATING BOTTOM-RIGHT VISITOR STATS (Both Total & Live Online) -->
+  <!-- FLOATING BOTTOM-RIGHT VISITOR STATS (Both Total Visits & Live Online) -->
   <div class="visitor-stats-wrapper">
-    <div class="visitor-badge" title="Total unique visits on this site">
+    <div class="visitor-badge" title="Total visits on this site (Unique Sessions)">
       <span>👁️ Total Visits:</span>
-      <span class="badge-val" id="totalVisitorCount">
-        <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px; display: inline-block;" />
-      </span>
+      <span class="badge-val" id="totalVisitorCount">1</span>
     </div>
-    <div class="visitor-badge" title="Active users currently on site">
+    <div class="visitor-badge" title="Users active on site right now">
       <span class="live-dot"></span>
       <span>Live Online:</span>
       <span class="badge-val" id="liveUserCount">1 online</span>
+    </div>
+  </div>
+
+  <!-- CELEBRATION MILESTONE POPUP MODAL -->
+  <div class="milestone-modal-overlay" id="milestoneModal">
+    <div class="milestone-card">
+      <h2 id="milestoneTitle">🎉 1,000 Visitors Milestone!</h2>
+      <p id="milestoneDesc">Thank you to all our amazing users! File Converter Pro has officially crossed a major milestone today.</p>
+      <button class="milestone-btn" onclick="closeMilestoneModal()">🚀 Continue Using App</button>
     </div>
   </div>
 
@@ -1427,29 +1510,77 @@
 
   <script>
     /* ========================================================
-       VISITOR STATS ENGINE (Total Hits + Live Online)
+       SESSION-BASED VISITOR TRACKING & MILESTONE POPUPS
        ======================================================== */
-    (function initVisitorCounter() {
-      const badgeImg = document.getElementById('hitsBadgeImg');
-      const liveUserEl = document.getElementById('liveUserCount');
-      
-      // Auto-detect GitHub Pages Host & Path
-      const isGitHub = window.location.hostname.includes('github.io');
-      const host = isGitHub ? window.location.hostname : 'file-converter-v2.live';
-      const cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/live-root';
-      
-      // Real Unique Hits URL
-      const hitsUrl = `https://hits.sh/${encodeURIComponent(host + cleanPath + '-fresh-v2')}.svg?view=today-total&style=flat-square&label=&color=00f2fe&labelColor=0a0f1c`;
-      
-      if (badgeImg) {
-        badgeImg.src = hitsUrl;
-        badgeImg.onerror = () => {
-          const totalVisitorEl = document.getElementById('totalVisitorCount');
-          if (totalVisitorEl) totalVisitorEl.textContent = '1';
-        };
-      }
+    const TARGET_1K = 1000;
+    const TARGET_10K = 10000;
 
-      // Live Active Counter
+    function triggerConfettiCelebration() {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        setTimeout(() => confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } }), 250);
+        setTimeout(() => confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } }), 400);
+      }
+    }
+
+    function checkAndShowMilestone(count) {
+      const modal = document.getElementById('milestoneModal');
+      const title = document.getElementById('milestoneTitle');
+      const desc = document.getElementById('milestoneDesc');
+
+      if (count >= TARGET_10K && !localStorage.getItem('milestone_10k_shown')) {
+        title.innerText = "🏆 10,000 Visitors Milestone Reached!";
+        desc.innerText = "Incredible! We have crossed 10,000 unique sessions. Huge gratitude to the community for supporting File Converter Pro!";
+        modal.classList.add('active');
+        localStorage.setItem('milestone_10k_shown', 'true');
+        triggerConfettiCelebration();
+      } else if (count >= TARGET_1K && !localStorage.getItem('milestone_1k_shown')) {
+        title.innerText = "🎉 1,000 Visitors Milestone Reached!";
+        desc.innerText = "Awesome news! File Converter Pro has officially crossed its first 1,000 visitor sessions milestone today.";
+        modal.classList.add('active');
+        localStorage.setItem('milestone_1k_shown', 'true');
+        triggerConfettiCelebration();
+      }
+    }
+
+    function closeMilestoneModal() {
+      document.getElementById('milestoneModal').classList.remove('active');
+    }
+
+    (function initVisitorCounter() {
+      const totalVisitorEl = document.getElementById('totalVisitorCount');
+      const liveUserEl = document.getElementById('liveUserCount');
+
+      // 1. Session-based Tracking (Tab open rehne par refresh se nahi badhega, naye visit/session par badhega)
+      const namespace = 'file-converter-session-tracker-v3';
+      const hasVisitedThisSession = sessionStorage.getItem('visited_session');
+
+      // countapi.xyz API for accurate numerical count & milestones
+      const apiAction = hasVisitedThisSession ? 'get' : 'hit';
+      const apiUrl = `https://api.counterapi.dev/v1/${encodeURIComponent(window.location.hostname || 'file-converter')}/${namespace}/${apiAction}`;
+
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (data && typeof data.count === 'number') {
+            totalVisitorEl.textContent = data.count.toLocaleString();
+            sessionStorage.setItem('visited_session', 'true');
+            checkAndShowMilestone(data.count);
+          }
+        })
+        .catch(() => {
+          // Fallback if network blocked
+          let localCount = parseInt(localStorage.getItem('app_site_visits') || '1');
+          if (!hasVisitedThisSession) {
+            localCount++;
+            localStorage.setItem('app_site_visits', localCount);
+            sessionStorage.setItem('visited_session', 'true');
+          }
+          totalVisitorEl.textContent = localCount.toLocaleString();
+          checkAndShowMilestone(localCount);
+        });
+
+      // 2. Live Active User Simulation
       function updateLiveCount() {
         if (!liveUserEl) return;
         const hour = new Date().getHours();
@@ -1459,7 +1590,7 @@
         liveUserEl.textContent = `${liveNow} online`;
       }
       updateLiveCount();
-      setInterval(updateLiveCount, 12000);
+      setInterval(updateLiveCount, 14000);
     })();
 
     function handleLogoNavigation(e) {
