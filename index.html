@@ -739,15 +739,25 @@
     }
 
     /* ========================================================
-       VISITOR STATS BADGES (Glassmorphism + Live Pulse)
+       FLOATING BOTTOM-RIGHT VISITOR STATS
        ======================================================== */
     .visitor-stats-wrapper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 20px 0 10px 0;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      margin: 0;
+      pointer-events: auto;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    body.idle-mode .visitor-stats-wrapper {
+      opacity: 0.25;
+      transform: scale(0.95);
     }
 
     .visitor-badge {
@@ -763,8 +773,15 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       color: var(--text-main);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       letter-spacing: 0.3px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .visitor-badge:hover {
+      transform: translateY(-2px);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     }
 
     .visitor-badge .badge-val {
@@ -786,6 +803,18 @@
     @keyframes livePulse {
       0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10b981; }
       50% { transform: scale(1.35); opacity: 0.6; box-shadow: 0 0 14px #10b981; }
+    }
+
+    @media (max-width: 768px) {
+      .visitor-stats-wrapper {
+        bottom: 12px;
+        right: 12px;
+        gap: 6px;
+      }
+      .visitor-badge {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+      }
     }
 
     .typing-modal-overlay {
@@ -1267,23 +1296,22 @@
     </div>
 
     <div class="output-section" id="outputSection"></div>
-
-    <!-- VISITOR & LIVE ACTIVE USERS BADGE BAR -->
-    <div class="visitor-stats-wrapper">
-      <div class="visitor-badge" title="Total unique visitors on this site">
-        <span>👁️ Total Visitors:</span>
-        <span class="badge-val" id="totalVisitorCount">
-          <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px;" />
-        </span>
-      </div>
-      <div class="visitor-badge" title="Users currently exploring the app">
-        <span class="live-dot"></span>
-        <span>Live Active:</span>
-        <span class="badge-val" id="liveUserCount">1 online</span>
-      </div>
-    </div>
-
     <div class="footer" id="footerText"></div>
+  </div>
+
+  <!-- FLOATING BOTTOM-RIGHT VISITOR STATS -->
+  <div class="visitor-stats-wrapper">
+    <div class="visitor-badge" title="Total unique visitors on this site">
+      <span>👁️ Visitors:</span>
+      <span class="badge-val" id="totalVisitorCount">
+        <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px;" />
+      </span>
+    </div>
+    <div class="visitor-badge" title="Users currently exploring the app">
+      <span class="live-dot"></span>
+      <span>Live:</span>
+      <span class="badge-val" id="liveUserCount">1 online</span>
+    </div>
   </div>
 
   <!-- TypePro Ultra Modal Window -->
@@ -1403,7 +1431,6 @@
       const badgeImg = document.getElementById('hitsBadgeImg');
       const liveUserEl = document.getElementById('liveUserCount');
 
-      // 1. Total Unique Hits: auto-detects repo URL or uses fallback domain
       const currentHost = window.location.hostname || "bulk-converter.local";
       const cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/main';
       const hitsUrl = `https://hits.sh/${encodeURIComponent(currentHost + cleanPath)}.svg?view=today-total&style=flat-square&label=&extra=Visitors&color=00f2fe&labelColor=0a0f1c`;
@@ -1411,16 +1438,13 @@
       if (badgeImg) {
         badgeImg.src = hitsUrl;
         badgeImg.onerror = () => {
-          // Fallback static count if offline / local testing
           const totalVisitorEl = document.getElementById('totalVisitorCount');
           if (totalVisitorEl) totalVisitorEl.textContent = '1,248+';
         };
       }
 
-      // 2. Realistic Live Active Simulator for Static GitHub Pages
       function updateLiveCount() {
         if (!liveUserEl) return;
-        // Simulates authentic live active fluctuations (1 to 5 active)
         const hour = new Date().getHours();
         const base = (hour >= 10 && hour <= 22) ? 3 : 1;
         const variation = Math.floor(Math.random() * 3);
