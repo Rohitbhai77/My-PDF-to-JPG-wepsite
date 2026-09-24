@@ -739,7 +739,7 @@
     }
 
     /* ========================================================
-       FLOATING BOTTOM-RIGHT VISITOR STAT (Clean & Real)
+       FLOATING BOTTOM-RIGHT VISITOR STAT (Starts Fresh From 1)
        ======================================================== */
     .visitor-stats-wrapper {
       position: fixed;
@@ -785,6 +785,8 @@
       font-weight: 800;
       color: var(--neon-cyan);
       font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
     }
 
     @media (max-width: 768px) {
@@ -1280,12 +1282,12 @@
     <div class="footer" id="footerText"></div>
   </div>
 
-  <!-- FLOATING BOTTOM-RIGHT VISITOR STAT (100% REAL TOTAL VISITORS) -->
+  <!-- FLOATING BOTTOM-RIGHT VISITOR STAT (Starts Fresh From 1) -->
   <div class="visitor-stats-wrapper">
     <div class="visitor-badge" title="Total unique visitors on this site">
       <span>👁️ Visitors:</span>
       <span class="badge-val" id="totalVisitorCount">
-        <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px;" />
+        <img id="hitsBadgeImg" src="" alt="Visitors" style="vertical-align: middle; height: 18px; border-radius: 4px; display: inline-block;" />
       </span>
     </div>
   </div>
@@ -1401,19 +1403,25 @@
 
   <script>
     /* ========================================================
-       VISITOR COUNTER ENGINE (100% Real Lifetime Hits)
+       VISITOR COUNTER ENGINE (Zero-Based / 1 Se Shuru)
        ======================================================== */
     (function initVisitorCounter() {
       const badgeImg = document.getElementById('hitsBadgeImg');
-      const currentHost = window.location.hostname || "bulk-converter.local";
-      const cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/main';
-      const hitsUrl = `https://hits.sh/${encodeURIComponent(currentHost + cleanPath)}.svg?view=today-total&style=flat-square&label=&extra=Visitors&color=00f2fe&labelColor=0a0f1c`;
+      
+      // Auto-detect hostname or fallback for fresh tracking
+      const isGitHub = window.location.hostname.includes('github.io');
+      const host = isGitHub ? window.location.hostname : 'file-converter-v2.live';
+      const cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '') || '/live-root';
+      
+      // New fresh namespace starting strictly at 1
+      const hitsUrl = `https://hits.sh/${encodeURIComponent(host + cleanPath + '-fresh-v2')}.svg?view=today-total&style=flat-square&label=&color=00f2fe&labelColor=0a0f1c`;
       
       if (badgeImg) {
         badgeImg.src = hitsUrl;
         badgeImg.onerror = () => {
+          // If completely offline or blocked, show starting 1
           const totalVisitorEl = document.getElementById('totalVisitorCount');
-          if (totalVisitorEl) totalVisitorEl.textContent = '1,248+';
+          if (totalVisitorEl) totalVisitorEl.textContent = '1';
         };
       }
     })();
